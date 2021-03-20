@@ -11,7 +11,7 @@
 		body { background: linear-gradient( 45deg, #1e7752, #e73c7e, #23a6d5, #23d5ab); background-attachment: fixed; background-size: 400% 400%; animation: AnimationName 10s ease infinite;}
 		@keyframes AnimationName { 0%{background-position:0% 50%}  50%{background-position:100% 50%}  100%{background-position:0% 50%} }
 
-		h1 { margin-top:2vh; padding:0; text-align:center; text-transform: uppercase;  font-weight: 300; font-size:5vw; letter-spacing: 0.3vw; color:#a1215170; }
+		h1 { margin-top:2vh; padding:0; text-align:center; text-transform: uppercase;  font-weight: 300; font-size:4vw; letter-spacing: 0.2vw; color:#a1215170; }
 		h1::after { content:""; display:flex; border-top: 2px solid #585858; margin-top: .2em;}
 		#inputAddRow { height:48px; background:#bfb5; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
 		#inputAddRow:focus {outline:none;}
