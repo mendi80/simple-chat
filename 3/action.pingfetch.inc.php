@@ -9,7 +9,7 @@ else
 {
     $data = $db->getForumTitles(); //var_dump($data);
     array_push($data, array("serverUpdatedTime" => $serverUpdatedTime));
-    echo json_encode($data);
+    echo json_encode($data,JSON_PRETTY_PRINT);
 }
 
 //echo json_encode([array("first_name" => "mendi")]);

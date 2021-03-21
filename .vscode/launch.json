@@ -23,8 +23,8 @@
             "name": "Launch Frontend",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost/index.php",
-            "webRoot": "${workspaceRoot}/forum1/category.php",
+            "url": "http://localhost/3/index.php",
+            "webRoot": "${workspaceRoot}/3/",
         }
     ]
 }
