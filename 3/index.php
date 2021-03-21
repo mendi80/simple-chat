@@ -39,13 +39,14 @@
 <body>
 <!-- *************************************************************BODY****************************************************************** -->
 <h1 id='datetime' />
-<h3 id="myInfo" style="display:none">-</h3>
+<h3 id="myInfo" style="display:block">-</h3>
+<h3 id="myInfo2" style="display:block">-</h3>
 
 <div id="user_namepwd">
 	<input type="text" id="inputUserNickname" placeholder="כינוי">
 	<input type="password" id="inputUserPassword" placeholder="ססמה">
 </div>
-<div id="normal_state" dir="rtl" style="display:none">
+<div id="div_titles" dir="rtl" style="display:none">
 	<input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked="true">	<!--label for="FetchTitles"> AutoUpdate</label--><br>
 	<button type="button" id="btnCreatePost" onclick="btnCreatePost()">כתוב הודעה חדשה</button>
 	<table>
@@ -53,46 +54,54 @@
 		<tbody class="forumTitles" id="forumtitles"></tbody>
 	</table>
 </div>
-<div id="writingpost_state" style="display:none">
+<div id="div_writingpost" style="display:none">
 	<button type="button" id="btnCancelPost" onclick="btnCancelPost()">בטל</button>
 	<input type="text" id="inputPostTitle" placeholder="Title">
 	<textarea id="inputPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" rows="20" cols="50" maxlength="1000" > </textarea>
 	<button type="button" id="buttonAddRow" onclick="sendPost()">Add</button>
 </div>
-
+<div id="div_readingpost" style="display:none">
+	<button type="button" id="btnCancelPost" onclick="btnCancelPost()">בטל</button>
+	<h2 id="outPostTitle" dir="rtl"></h1>
+	<article id="outPostContent" dir="rtl"> asdgasgdf</article>
+</div> 
 <!-- ************************************************************SCRIPTS******************************************************************* -->
 
 <script id="script_pagestates">
-	const pagestates={INIT:"Init",NORMAL:"Normal",WRITINGPOST:"WritingPost"}
-	var pagestate = pagestates.INIT;
+	myInfo=document.getElementById("myInfo");
+	myInfo2=document.getElementById("myInfo2");
+	function setInfo(x) {myInfo.innerHTML=x;}
+	function setInfo2(x) {myInfo2.innerHTML=x;}
 
+	var isMobile = 'ontouchstart' in window;
+	const pagestates = {INIT:"Init",TITLES:"Titles", WRITINGPOST:"WritingPost", READINGPOST:"ReadingPost"}
+	const forum_div_ids = new Array( "div_titles", "div_writingpost", "div_readingpost");
+	var pagestate = pagestates.INIT;
+	
 	function setPageState(newstate)
 	{
-		if (Object.values(pagestates).indexOf(newstate) <= -1) 
-   			console.error('error in setPageState. newstate not exist');
+		if (Object.values(pagestates).indexOf(newstate) <= 0) // init also illegael, otherwise <= -1 will include init
+   			console.error(`error in setPageState. newstate=${newstate} not exist`);
 		else
 			pagestate=newstate;
-			
+
+		for (let i = 0, len = forum_div_ids.length; i < len; i++)
+			document.getElementById(forum_div_ids[i]).style.display = "none";
+		document.getElementById("div_"+newstate.toLowerCase()).style.display = "block";
+
 		switch(pagestate)
 		{
-			case pagestate.INIT:
-			case pagestates.NORMAL:
-				document.getElementById("normal_state").style.display = "block";
-				document.getElementById("writingpost_state").style.display = "none";
-				break;
-
-			case pagestates.WRITINGPOST:
-				document.getElementById("normal_state").style.display = "none";
-				document.getElementById("writingpost_state").style.display = "block";
-				break;
-
+			case pagestate.INIT: break;
+			case pagestates.TITLES:			break;
+			case pagestates.WRITINGPOST:	break;
+			case pagestates.READINGPOST:	break;
 		}
 	}
 
 	function btnCreatePost(){	setPageState(pagestates.WRITINGPOST) }
-	function btnCancelPost(){	setPageState(pagestates.NORMAL)	}
-
+	function btnCancelPost(){	setPageState(pagestates.TITLES)	}
 </script>
+
 <script id="script_clearcontent"> inputPostTitle
 	function clearPostContent()
 	{
@@ -100,6 +109,47 @@
 		document.getElementById("inputPostContent").value="";
 	}
 </script>
+
+<script id="script_showpost">
+
+	function displayPost(data)
+	{
+		//post_id, created_datetime, nickname, title, content
+		document.getElementById("outPostTitle").innerHTML=data["title"];
+		document.getElementById("outPostContent").innerHTML=data["content"];
+		setPageState(pagestates.READINGPOST);
+		let tPostRequestEnd = performance.now();
+		setInfo( (tPostRequestEnd-tPostRequestStart).toFixed(1)+"ms");
+		setInfo2(data["runtime"]);
+	}
+
+	var tTitleTouchStarted = performance.now();
+	var tTitleTouchEnded = performance.now();
+	var tScrolled = performance.now();
+	var tPostRequestStart = performance.now();
+	const reqPostContent = new FormData();
+	reqPostContent.set('post_id', "");
+	function titleRowClicked(post_id)
+	{
+		tTitleTouchEnded = performance.now();
+		if(!isMobile || tTitleTouchEnded-tTitleTouchStarted<300 && tTitleTouchEnded-tScrolled>200)
+		{
+			tPostRequestStart = performance.now();
+			reqPostContent.set('post_id', post_id);
+			fetch('./action.req_post.inc.php', {method: 'POST', body: reqPostContent})
+			.then(res => res.json())
+			.then(res => displayPost(res))
+			.catch(e => console.error('Error, titleRowClicked(), ' + e))
+		}
+	}
+	//var y = window.scrollY
+	function touchTitleStarted(){ tTitleTouchStarted = performance.now();}
+	window.onscroll = function(){ tScrolled = performance.now(); };
+</script>
+
+
+
+
 <script id="script_addnewposttodb">
 	const newPost = new FormData();
 	newPost.set('nickname', "");
@@ -125,31 +175,36 @@
 	chkFetchTitles = document.getElementById("chkFetchTitles");
 	forumtitles = document.getElementById("forumtitles");
 	const pingFormData = new FormData(); pingFormData.set('clientUpdatedTime', "hmm");
-
+	let touchEvent = isMobile ? 'ontouchstart=touchTitleStarted() ontouchend' : 'onclick';
 	function updateForumTitles(data){
 		if (!Array.isArray(data)) return;
 		let new_rows=""; 
 		const LAST_ELEMENT=data.length-1;
-		for (let i=0; i<LAST_ELEMENT; i++) 
+		
+		for (let i=LAST_ELEMENT-1; i>=0; i--) 
 		{
 			d=data[i];
-			new_rows += `\t<tr><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created_datetime"]}</td><td>${5349}</td>\n`;
+			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created_datetime"]}</td><td>${5349}</td>\n`;
 		}
 		pingFormData.set('clientUpdatedTime', data[LAST_ELEMENT]['serverUpdatedTime']);
 		forumtitles.innerHTML = new_rows;
 	}
 
 	function pingAndFetch() {
-		fetch('./action.pingfetch.inc.php', {method: 'POST', body: pingFormData })
+		var t0 = performance.now();
+		fetch('./action.req_titles.inc.php', {method: 'POST', body: pingFormData })
 		.then(res => res.json())
 		.then(res => updateForumTitles(res))
-		.catch(e => console.error('Error, pingAndFetch(), ' + e))
+		.catch(e => console.error('Error, pingAndFetch(), ' + e));
+		var t1 = performance.now();
+		console.log(`pingAndFetch took ${(t1-t0).toFixed(1)} ms`);
+		
 	}
 
 	var titles_datetime = new Date();
 	function forumTimer()
 	{
-		setTimeout(forumTimer, 2*1000);
+		//setTimeout(forumTimer, 2*1000);
 		if (chkFetchTitles.checked)	
 		{
 			pingAndFetch();
@@ -163,7 +218,7 @@
 
 <script id="script_init">
 {
-	setPageState(pagestates.NORMAL);
+	setPageState(pagestates.TITLES);
 	forumTimer();
 }
 </script>

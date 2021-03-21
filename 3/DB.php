@@ -54,10 +54,18 @@ class DB {
 	}	
 	
 	public function getForumTitles() {
-		$sql = "SELECT created_datetime, nickname, title FROM posts;";
+		$sql = "SELECT post_id, created_datetime, nickname, title FROM posts;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute();
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);//(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
+	public function getPost($post_id) {
+		$sql = "SELECT post_id, created_datetime, nickname, title, content FROM posts WHERE post_id = ?;";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$post_id]);
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $data;
 	}
 

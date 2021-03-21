@@ -103,3 +103,15 @@ fetch(url).then(function(response) {
 		var t1 = performance.now();
 		document.getElementById("myInfo").innerHTML = "runtime/N="+( (t1-t0)/N ).toFixed(3)+"ms";
 		
+
+# install xdebug
+put phpinfo in : 
+download dll to php/ext
+in php.ini:
+	[XDebug]
+	xdebug.mode = debug
+	xdebug.start_with_request = yes
+	xdebug.client_port = 9000
+	zend_extension = A:\Programs\xampp\php\ext\php_xdebug-3.0.3-8.0-vs16-x86_64.dll
+
+
