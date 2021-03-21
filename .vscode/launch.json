@@ -11,11 +11,20 @@
             "port": 9000
         },
         {
+            "name": "Launch currently open script",
+            "type": "php",
+            "request": "launch",
+            "runtimeExecutable": "A:/Programs/xampp/php/php.exe",
+            "program": "${file}",
+            "cwd": "${fileDirname}",
+            "port": 9000
+        },
+        {
             "name": "Launch Frontend",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost/index.php",
-            "webRoot": "${workspaceRoot}",
+            "webRoot": "${workspaceRoot}/forum1/category.php",
         }
     ]
 }
