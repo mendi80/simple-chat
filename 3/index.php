@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -31,7 +32,6 @@
 		td {border: 1px solid #dddddd; text-align: right; padding: 8px;}
 		tr:nth-child(even) {background-color: #dddddd;}
 		tbody.forumTitles tr:hover {background-color: #fbc93d; cursor:default;}
-		*/
 	</style>
 	<title>Live</title>
 </head>
@@ -65,9 +65,10 @@
 	<h2 id="outPostTitle" dir="rtl"></h1>
 	<article id="outPostContent" dir="rtl"> asdgasgdf</article>
 </div> 
+
 <!-- ************************************************************SCRIPTS******************************************************************* -->
 
-<script id="script_pagestates">
+<script id="script_state">
 	myInfo=document.getElementById("myInfo");
 	myInfo2=document.getElementById("myInfo2");
 	function setInfo(x) {myInfo.innerHTML=x;}
@@ -110,7 +111,7 @@
 	}
 </script>
 
-<script id="script_showpost">
+<script id="script_readpost">
 
 	function displayPost(data)
 	{
@@ -128,6 +129,7 @@
 	var tScrolled = performance.now();
 	var tPostRequestStart = performance.now();
 	const reqPostContent = new FormData();
+	reqPostContent.set('op', "getpost");
 	reqPostContent.set('post_id', "");
 	function titleRowClicked(post_id)
 	{
@@ -150,8 +152,9 @@
 
 
 
-<script id="script_addnewposttodb">
+<script id="script_newpost">
 	const newPost = new FormData();
+	newPost.set('op', "setpost");
 	newPost.set('nickname', "");
 	newPost.set('pwd', "");
 	newPost.set('title', "");
@@ -171,10 +174,12 @@
 </script>
 
 
-<script id="script_forumtimer">
+<script id="script_timer_fetchtitles">
 	chkFetchTitles = document.getElementById("chkFetchTitles");
 	forumtitles = document.getElementById("forumtitles");
-	const pingFormData = new FormData(); pingFormData.set('clientUpdatedTime', "hmm");
+	const pingFormData = new FormData(); 
+	pingFormData.set('op', "gettitles");
+	pingFormData.set('clientUpdatedTime', "hmm");
 	let touchEvent = isMobile ? 'ontouchstart=touchTitleStarted() ontouchend' : 'onclick';
 	function updateForumTitles(data){
 		if (!Array.isArray(data)) return;
