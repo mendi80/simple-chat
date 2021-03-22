@@ -33,7 +33,7 @@ class DB {
 	}
 
 	public function addNewUser($nickname, $pwd) { 
-		$sql = "INSERT into users (created_datetime, nickname, pwd) VALUES (NOW(), ?, ?)";
+		$sql = "INSERT into users (created, nickname, pwd) VALUES (NOW(), ?, ?)";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$nickname, $pwd]);
 		//var_dump($stmt);
@@ -48,13 +48,18 @@ class DB {
 	}
 	
 	public function addNewPost($user_id, $nickname, $title, $content) {
-		$sql = "INSERT into posts (created_datetime, user_id, nickname, title, content) values (NOW(), ?, ?, ?, ?)";
+		$sql = "INSERT into posts (created, user_id, nickname, title, content) values (NOW(), ?, ?, ?, ?)";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$user_id,$nickname,$title,$content]);
 	}	
-	
+	public function replacePost($post_id, $title, $content) {
+		$sql = "UPDATE posts SET title = ?, content = ? WHERE post_id = ?";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$title,$content,$post_id]);
+	}	
+
 	public function getForumTitles() {
-		$sql = "SELECT post_id, created_datetime, nickname, title FROM posts;";
+		$sql = "SELECT post_id, created, nickname, title FROM posts;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute();
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);//(PDO::FETCH_ASSOC);
@@ -62,7 +67,7 @@ class DB {
 	}
 
 	public function getPost($post_id) {
-		$sql = "SELECT post_id, created_datetime, nickname, title, content FROM posts WHERE post_id = ?;";
+		$sql = "SELECT post_id, created, nickname, title, content FROM posts WHERE post_id = ?;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$post_id]);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
