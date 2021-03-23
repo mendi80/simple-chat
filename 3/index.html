@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--link rel="stylesheet" href="style.css"-->
 	<style> 
 		#jojojj { width:80vw; padding:0; margin:0 auto; box-sizing: border-box; }
@@ -22,9 +22,9 @@
 		#user_namepwd {width: 100px;}
 		#inputAddRow { height:48px; background:#bfb5; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
 		#inputAddRow:focus {outline:none;}
-		#buttonAddRow {background-color:#aaaaaaaa; height:64px; font-size:32px; display:inline-block; border:0.1em solid #FFFFFF; margin:2px auto 10px auto;
+		.btn1 {background-color:#aaaaaaaa; height:40px; font-size:24px; display:inline-block; border:0.1em solid #FFFFFF; margin:2px auto 10px auto;
 							border-radius:5px; font-family:'Roboto',sans-serif; font-weight:300; color:#000; text-align:center; transition: all 0.5s;}		
-		#buttonAddRow:hover {color:#f00;background-color:#527;}
+		.btn1:hover {color:#f00;background-color:#527;}
 		#searchBox { height:48px; background:#fff; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
 		#searchBox:focus {outline:none;}
 		#searchResult {padding:32px; list-style:none; background:#555; color:#fff; height:400px; overflow-y:scroll;}
@@ -44,11 +44,24 @@
 		::placeholder { color: #f2f2f2 !important; opacity: 1; /* Firefox */} /* Chrome, Firefox, Opera, Safari 10.1+ */
 		article {white-space: pre-wrap;	}
 	</style>
-	<title>Live</title>
+
+	<style>
+		.switch { position: relative; display: inline-block; height: 34px; width: 60px; }
+		.switch input { opacity: 0; width: 0; height: 0;}
+		.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;}
+		.slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; -webkit-transition: .4s; transition: .4s;}
+		input:checked + .slider { background-color: #2196F3;}
+		input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
+		input:checked + .slider:before { -webkit-transform: translateX(26px); -ms-transform: translateX(26px); transform: translateX(26px);}
+	</style>
+
+	<title>Mendi Forum</title>
 </head>
 
-<body>
+
+
 <!-- *************************************************************BODY****************************************************************** -->
+<body dir="rtl">
 <header><a href="/">Mendi Forum ©</a></header>
 <h1 id='datetime' />
 <h3 id="myInfo" style="display:block">-</h3>
@@ -58,32 +71,42 @@
 	<input type="text" id="inputUserNickname" placeholder="כינוי">
 	<input type="password" id="inputUserPassword" placeholder="ססמה">
 </div>
-<div id="div_fetchtitles" dir="rtl" style="display:none">
-	<input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked="true">	<!--label for="FetchTitles"> AutoUpdate</label--><br>
-	<button type="button" id="btnCreatePost" onclick="btnCreatePost()">כתוב הודעה חדשה</button>
-	<table>
-		<thead><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
-		<tbody class="forumTitles" id="forumtitles"></tbody>
+<div id="div_fetchtitles" style="display:none">
+	<label class="switch"><input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked><span class="slider"></span></label>
+	<button type="button" class="btn1" onclick="btnStartNewPost()">כתוב הודעה חדשה</button>
+	<button type="button" class="btn1" onclick="btnCreateRandomTable(100)">צור טבלה</button>
+	<table><thead><th>מספר</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
+	<tbody class="forumTitles" id="forumtitles"></tbody>
 	</table>
 </div>
 
+<div id="div_replytitles" style="display:none">
+	<ol id="base_replytitles"> 
+	</ol>
+</div>
+<div id="template_replytitle" style="display:none">
+	<p class="PostID"></p>
+	<h2 class="PostTitle"></h1>
+</div>
+
 <div id="div_readingpost" style="display:none">
-	<button type="button" id="btnCancelPost" onclick="btnCancelPost()">בטל וחזור</button>
-	<button type="button" id="btnEditPostFromReading" onclick="btnEditPostFromReading()">ערוך הודעה</button>
 	<p id="readingPostID" class="PostID"></p>
-	<h2 id="readingPostTitle" dir="rtl" class="PostTitle"></h1>
-	<article id="readingPostContent" dir="rtl" class="PostContent"></article>
+	<h2 id="readingPostTitle" class="PostTitle"></h1>
+	<article id="readingPostContent" class="PostContent"></article>
+	<button type="button" class="btn1" onclick="btnCancelPost()">בטל וחזור</button>
+	<button type="button" class="btn1" onclick="btnEditPostFromReading()">ערוך הודעה</button>
+	<button type="button" class="btn1" onclick="btnReply()">תגובה</button>
 </div>
 
 <div id="div_writingpost" style="display:none">
-	<button type="button" id="btnCancelPost" onclick="btnCancelPost()">בטל</button>
-	<p id="writingPostID" class="PostID"></p>
-	<input type="text" id="writingPostTitle" dir="rtl" placeholder="Title" oninput="oninputTitle()">
-	<textarea id="writingPostContent" dir="rtl" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="oninputContent()" rows="20" cols="50" maxlength="1000" > </textarea>
-	<h2 id="previewPostTitle" dir="rtl" class="PostTitle"></h1>
-	<article id="previewPostContent" dir="rtl" class="PostContent"></article>
-	<button type="button" id="buttonAddRow" onclick="btnSendPost()">Add</button>
+	<input type="text" id="writingPostTitle" placeholder="Title" oninput="oninputTitle()">
+	<textarea id="writingPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="oninputContent()" rows="20" cols="50" maxlength="1000" > </textarea>
+	<button type="button" class="btn1" onclick="btnCancelPost()">בטל</button>
+	<button type="button" class="btn1" id="btnSendPost" onclick="btnSendPost()">Add</button>
+	<h2 id="previewPostTitle" class="PostTitle"></h1>
+	<article id="previewPostContent" class="PostContent"></article>
 </div>
+<div id="tmp1"></div>
 <!--footer><address><p>Author: Mendi<br><a href="mendi@mendi.com">mendi@gmail.com</a></p></address> </footer-->
 
 <!-- ************************************************************SCRIPTS******************************************************************* -->
@@ -95,7 +118,7 @@
 	function setInfo2(x) {myInfo2.innerHTML=x;}
 
 	var isMobile = 'ontouchstart' in window;
-	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READINGPOST:"ReadingPost", WRITINGPOST:"WritingPost", EDITINGPOST:"EditingPost"}
+	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READING:"ReadingPost", STARTING_NEWPOST:"WritingPost", EDITING_OLDPOST:"EditingPost"}
 	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_readingpost");
 	var pagestate = pagestates.INIT;
 	
@@ -116,36 +139,39 @@
 			case pagestates.FETCHTITLES:			
 				document.getElementById("div_fetchtitles").style.display = "block";
 				break;
-			case pagestates.READINGPOST:	
+			case pagestates.READING:	
 				document.getElementById("div_readingpost").style.display = "block";
 				break;
-			case pagestates.WRITINGPOST:
+			case pagestates.STARTING_NEWPOST:
 				document.getElementById("div_writingpost").style.display = "block";
 				break;
-			case pagestates.EDITINGPOST:
+			case pagestates.EDITING_OLDPOST:
 				document.getElementById("div_writingpost").style.display = "block";
 				break;
 		}
 	}
 
-	function btnCreatePost(){
-		document.getElementById("readingPostID").innerHTML="";
-		document.getElementById("writingPostID").innerHTML="";
-		setPageState(pagestates.WRITINGPOST) 
+	function btnStartNewPost(){
+		setPageState(pagestates.STARTING_NEWPOST) 
+		createEditPanel(0);
 	}
 
+	function btnReply(){
+		setPageState(pagestates.STARTING_NEWPOST) 
+	}
+
+	
 	function btnCancelPost(){
 		setPageState(pagestates.FETCHTITLES);
 	}
 
 	function btnEditPostFromReading()
 	{
-		document.getElementById("writingPostID").innerHTML = document.getElementById("readingPostID").innerHTML;
 		document.getElementById("writingPostTitle").value = document.getElementById("readingPostTitle").innerHTML;
 		document.getElementById("writingPostContent").value = document.getElementById("readingPostContent").innerHTML;
 		oninputTitle(); //prepare preview
 		oninputContent(); //prepare preview
-		setPageState(pagestates.EDITINGPOST);
+		setPageState(pagestates.EDITING_OLDPOST);
 	}
 
 	function btnSendPost()
@@ -164,17 +190,53 @@
 </script>
 
 <script id="script_readingpost">
-
+	var current_thread={postid2idx:"MAP"};
+	var a="0";
 	function displayPost(data)
 	{
-		//post_id, created_datetime, nickname, title, content
-		document.getElementById("readingPostID").innerHTML=data["post_id"];
+		console.log(data);
+		a=data;
+		//fields: post_id, ppost_id, rpost_id, created, nickname, title, content
+
+		//map from post_id to array index
+		postid2idx = new Map();
+		for (let i=0, N=data.length; i<N; i++) {
+			postid2idx.set(data[i]["post_id"],i);
+		}
+		current_thread.postid2idx = postid2idx;
+
+		// prepare all elements
+		let template_replytitle = document.getElementById("template_replytitle");
+		all_replytitles = [];
+		for (let i=0, N=data.length; i<N; i++) {
+			let cln = template_replytitle.cloneNode(true);
+			cln.children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln.children[1].innerHTML=data[i]["title"];
+			all_replytitles.push(cln.innerHTML);
+		}
+
+		// structure elements
+		let ol = document.getElementById("div_replytitles").getElementByTagName("base_replytitles");
+		let listFrag = document.createDocumentFragment();
+		listFrag.appendChild(ol);
+		for (let i=0, N=data.length; i<N; i++) {
+			var li = document.createElement('li');
+			
+
+		}
+
+
+
+		//s += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+		
+		// N=1000; a=new Map(); for(let i=0;i<N;i++) a.set(1000+Math.floor(Math.random()*10+10*i),i+1); b=Array.from(a.keys());
+		// t0=performance.now(); for(let i=0;i<1000*1000;i++) a.get(b[i%N]); t1=performance.now(); t1-t0
+		document.getElementById("readingPostID").innerHTML=`post_id=${data["post_id"]}, ppost_id=${data["ppost_id"]}, rpost_id=${data["rpost_id"]}`;
 		document.getElementById("readingPostTitle").innerHTML=data["title"];
 		document.getElementById("readingPostContent").innerHTML=data["content"];
-		setPageState(pagestates.READINGPOST);
+		setPageState(pagestates.READING);
 		let tPostRequestEnd = performance.now();
 		setInfo( (tPostRequestEnd-tPostRequestStart).toFixed(1)+"ms");
-		setInfo2(data["runtime"]);
 	}
 
 	var tTitleTouchStarted = performance.now();
@@ -204,6 +266,15 @@
 
 <script id="script_writingpost">
 
+
+	function createEditPanel(ppost_id)
+	{
+		//let div_writingpost0 = document.getElementById("div_writingpost");
+		//let cln = div_writingpost0.cloneNode(true);
+		//cln.style.display="block";
+		//document.getElementById("tmp1").appendChild(cln);
+	}
+
 	elem_writingPostTitle=document.getElementById("writingPostTitle");
 	elem_writingPostContent=document.getElementById("writingPostContent");
 	elem_previewPostTitle=document.getElementById("previewPostTitle");
@@ -221,6 +292,16 @@
 		elem_previewPostContent.dir = elem_writingPostContent.dir;
 	}
 
+	function btnCreateRandomTable(N)
+	{
+		newRows = new FormData();
+		newRows.set('op', "create_random_table");
+		newRows.set('nrows', N);
+		fetch('./op.php', {method: 'POST', body: newRows})
+		.then(res => res.text())
+		.then(res => console.log(`CreateRandomTable N=${N} time=${res}`))
+		.catch(e => console.error('Error, sendPost(), ' + e))
+	}
 	const newPost = new FormData();
 	newPost.set('op', "setpost");
 	newPost.set('post_id', "");
@@ -231,7 +312,7 @@
 	newPost.set('content', "");
 
 	function sendPost() {
-		newPost.set('post_id', document.getElementById("writingPostID").innerHTML);
+		newPost.set('post_id', '??');
 		newPost.set('ppost_id', "0");
 		newPost.set('nickname',document.getElementById("inputUserNickname").value);
 		newPost.set('secret',document.getElementById("inputUserPassword").value);
@@ -253,30 +334,32 @@
 	pingFormData.set('op', "gettitles");
 	pingFormData.set('clientUpdatedTime', "hmm");
 	let touchEvent = isMobile ? 'ontouchstart=touchTitleStarted() ontouchend' : 'onclick';
+	var t0Fetch = performance.now();
+	var t1Fetch = performance.now();
 
 	function updateForumTitles(data) {
 		if (!Array.isArray(data)) return;
 		let new_rows=""; 
 		const LAST_ELEMENT=data.length-1;
-		for (let i=LAST_ELEMENT-1; i>=0; i--) 
+		for (let i=LAST_ELEMENT-1,k=1; i>=0; i--,k++) 
 		{
 			d=data[i];
-			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${k}</td><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
 		}
 		pingFormData.set('clientUpdatedTime', data[LAST_ELEMENT]['serverUpdatedTime']);
 		forumtitles.innerHTML = new_rows;
+		t1Fetch = performance.now();
+		console.log(`pingAndFetch done. runtime=${(t1Fetch-t0Fetch).toFixed(1)} ms`);
 	}
-
+	
 	function pingAndFetch() {
-		var t0 = performance.now();
+		console.log('pingAndFetch started');
+		t0Fetch = performance.now();
 		fetch('./op.php', {method: 'POST', body: pingFormData })
-		.then(res => {console.log(res); return res;})
+		//.then(res => {console.log(res); return res;})
 		.then(res => res.json())
 		.then(res => updateForumTitles(res))
 		.catch(e => console.error('Error, pingAndFetch(), ' + e));
-		var t1 = performance.now();
-		console.log(`pingAndFetch took ${(t1-t0).toFixed(1)} ms`);
-		
 	}
 
 	var titles_datetime = new Date();

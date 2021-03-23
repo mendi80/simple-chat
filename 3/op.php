@@ -8,6 +8,7 @@ require_once('DB.php');
 
 
 $op=$_POST['op'];
+
 switch ($op) {
 	case "gettitles":
 		$clientUpdatedTime = $_POST['clientUpdatedTime'];
@@ -25,7 +26,7 @@ switch ($op) {
 		$data = $db->getPost($post_id); // var_dump($data);
 		$output = json_encode($data,JSON_PRETTY_PRINT);
 	  break;
-	//post_id ppost_id rpost_id user_id created nickname secret title content blockedit blockreply
+	//post_id ppost_id tmprpost_id rpost_id user_id created nickname secret title content blockedit blockreply
 	case "setpost":
 		$post_id = trim($_POST['post_id']); 
 		$ppost_id = trim($_POST['ppost_id']); //parent post id
@@ -52,7 +53,27 @@ switch ($op) {
 		$data = $db->searchData($name);
 		$output = json_encode($data);
 		break;
-	default: $output = -1; break;
+
+	case "create_random_table":
+		$nrows = $_POST['nrows'];
+		$last_post_id = $db->getLastPostID();
+		for ($i = 0; $i < $nrows; $i++) {
+			$MAXPOSTID = $last_post_id+$i;
+			$ppost_id=(rand(1,100)==1) ? 0 : rand(0,$MAXPOSTID);
+			$user_id=3;	$nickname="mendi80"; $secret="abc";
+			$title="This title is child of $ppost_id";
+			$content="This content is child of $ppost_id";
+			$db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
+		  }
+		$lastchanged_time=time();
+		file_put_contents( 'tmp.txt', $lastchanged_time);
+		$t1 = microtime(true);
+		$runtime_ms = round(1000*($t1 - $t0));
+		$output = "$runtime_ms ms";
+		break;
+
+	default: 
+		$output = -1; 
   }
 
 $t1 = microtime(true);

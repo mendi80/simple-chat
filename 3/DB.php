@@ -22,7 +22,13 @@ class DB {
 			echo "databse connection failed: " . $e->getMessage();
 		}
 	}
-
+	public function getLastPostID(){
+		$sql = "SELECT max(post_id) FROM posts;";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute();
+		$data = $stmt->fetchColumn();
+		return $data;
+	}
 	private function getSingleRowFromPosts($post_id){
 		$sql = "SELECT * FROM posts WHERE post_id=? LIMIT 1;";
 		$stmt = $this->con->prepare($sql);
@@ -59,10 +65,12 @@ class DB {
 	}
 	
 	public function createPost($ppost_id, $user_id, $nickname, $secret, $title, $content) {
-		$rpost_id = $this->getRootPostID($ppost_id); //root same as root of parent
-		$sql = "INSERT into posts (created, ppost_id, rpost_id, user_id, nickname, secret, title, content) values (NOW(), ?, ?, ?, ?, ?, ?, ?)";
+		$tmprpost_id = $this->getRootPostID($ppost_id); //root same as root of parent
+		$sql = "INSERT into posts (created, ppost_id, tmprpost_id, user_id, nickname, secret, title, content) values (NOW(), ?, ?, ?, ?, ?, ?, ?)";
 		$stmt = $this->con->prepare($sql);
-		$stmt->execute([$ppost_id,$rpost_id,$user_id,$nickname,$secret,$title,$content]);
+		$stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$secret,$title,$content]);
+		// rpost_id is updated by trigger
+
 		return 1;
 	}
 	public function updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content) {
@@ -74,19 +82,19 @@ class DB {
 			return 1;
 		} else return 0;
 	}	
-	//post_id ppost_id rpost_id user_id created nickname secret title content blockedit blockreply
+	//post_id ppost_id tmprpost_id rpost_id user_id created nickname secret title content blockedit blockreply
 	public function getForumTitles() {
-		$sql = "SELECT post_id, created, nickname, title FROM posts;";
+		$sql = "SELECT post_id, created, nickname, title FROM posts WHERE ppost_id=0;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute();
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);//(PDO::FETCH_ASSOC);
 		return $data;
 	}
 	public function getPost($post_id) { //post and replies
-		$sql = "SELECT post_id, ppost_id, created, nickname, title, content FROM posts WHERE post_id = ? OR rpost_id = ? ORDER BY post_id;";
+		$sql = "SELECT post_id, ppost_id, rpost_id, created, nickname, title, content FROM posts WHERE post_id = ? OR rpost_id = ? ORDER BY post_id;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$post_id,$post_id]);
-		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
 	}
 	public function getPostSingle($post_id) {

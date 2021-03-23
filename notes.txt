@@ -27,6 +27,7 @@ CREATE TABLE users (
 CREATE TABLE posts (
   post_id 		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
   ppost_id 		INT				NOT NULL,
+  tmprpost_id	INT				NOT NULL,
   rpost_id 		INT				NOT NULL,
   user_id 		INT				NOT NULL,
   created 		DATETIME 		NOT NULL,
@@ -36,19 +37,18 @@ CREATE TABLE posts (
   content		VARCHAR(2000)	NOT NULL,
   blockedit		INT				NOT NULL,
   blockreply	INT				NOT NULL,
-  CONSTRAINT 	FK_USERID FOREIGN KEY (user_id) REFERENCES users(user_id),
-  CONSTRAINT 	FK_PPOSTID FOREIGN KEY (ppost_id) REFERENCES posts(post_id)
+  CONSTRAINT 	FK_USERID FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE replies (
-  reply_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  created_datetime datetime NOT NULL,
-  user_id int,
-  nickname varchar(16) NOT NULL,
-  title text,
-  content text,
-  FOREIGN KEY (user_id) REFERENCES Users(user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TRIGGER posts_after_insert;
+
+CREATE TRIGGER posts_after_insert BEFORE INSERT ON posts FOR EACH ROW 
+SET NEW.rpost_id = IF(NEW.ppost_id=0,(SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='posts'),NEW.tmprpost_id);
+
+
+
+CONSTRAINT 	FK_PPOSTID FOREIGN KEY (ppost_id) REFERENCES posts(post_id)
+
 
 
 create table tb_posts (
