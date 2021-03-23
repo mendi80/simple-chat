@@ -208,13 +208,13 @@
 		current_thread.postid2idx = postid2idx;
 
 		// prepare all elements
-		let template_replytitle = document.getElementById("template_replytitle");
+		let template_replytitle = document.getElementById("template_replytitle").children[0];
 		all_replytitles = [];
 		for (let i=0, N=data.length; i<N; i++) {
 			let cln = template_replytitle.cloneNode(true);
-			cln.children[0].children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
-			cln.children[0].children[1].innerHTML=data[i]["title"];
-			all_replytitles.push(cln.innerHTML);
+			cln.children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln.children[1].innerHTML=data[i]["title"];
+			all_replytitles.push(cln);
 		}
 
 		// structure elements
