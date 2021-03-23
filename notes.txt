@@ -27,6 +27,7 @@ CREATE TABLE users (
 CREATE TABLE posts (
   post_id 		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
   ppost_id 		INT				NOT NULL,
+  rpost_id 		INT				NOT NULL,
   user_id 		INT				NOT NULL,
   created 		DATETIME 		NOT NULL,
   nickname		VARCHAR(16) 	NOT NULL,

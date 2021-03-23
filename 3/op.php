@@ -25,25 +25,26 @@ switch ($op) {
 		$data = $db->getPost($post_id); // var_dump($data);
 		$output = json_encode($data,JSON_PRETTY_PRINT);
 	  break;
+	//post_id ppost_id rpost_id user_id created nickname secret title content blockedit blockreply
 	case "setpost":
 		$post_id = trim($_POST['post_id']); 
+		$ppost_id = trim($_POST['ppost_id']); //parent post id
 		$nickname = trim($_POST['nickname']); 
-		$pwd = $_POST['secret']; 
+		$secret = $_POST['secret']; 
 		$title = $_POST['title']; 
 		$content = $_POST['content']; 	//$rowexist = $db->isexist($title);	//var_dump($rowexist);
-		if ( strlen($nickname)==0 || strlen($pwd)==0 || strlen($title)==0|| strlen($content)==0 ) {
+		if ( strlen($nickname)==0 || strlen($secret)==0 || strlen($title)==0|| strlen($content)==0 ) {
 			$output = 0;
 		} else {
 			if (!$db->isUserExist($nickname))
-				$db->addNewUser($nickname, $pwd);
+				$db->addNewUser($nickname, $secret);
 			$user_id = $db->getUserID($nickname);
 			if ($post_id>0)
-				$db->replacePost($post_id, $title, $content);
+				$output = $db->updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content);
 			else
-				$db->addNewPost($user_id, $nickname, $title, $content);
+				$output = $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
 			$lastchanged_time=time();
 			file_put_contents( 'tmp.txt', $lastchanged_time);
-			$output = 1;
 		}
 	  break;
 	case "searchname":
