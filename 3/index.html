@@ -81,12 +81,14 @@
 </div>
 
 <div id="div_replytitles" style="display:none">
-	<ol id="base_replytitles"> 
-	</ol>
+	<ol></ol>
 </div>
 <div id="template_replytitle" style="display:none">
-	<p class="PostID"></p>
-	<h2 class="PostTitle"></h1>
+	<li>
+		<p class="PostID"></p>
+		<h2 class="PostTitle"></h1>
+		<ol></ol>
+	</li>
 </div>
 
 <div id="div_readingpost" style="display:none">
@@ -119,7 +121,7 @@
 
 	var isMobile = 'ontouchstart' in window;
 	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READING:"ReadingPost", STARTING_NEWPOST:"WritingPost", EDITING_OLDPOST:"EditingPost"}
-	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_readingpost");
+	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_readingpost", "div_replytitles");
 	var pagestate = pagestates.INIT;
 	
 	function setPageState(newstate)
@@ -140,7 +142,7 @@
 				document.getElementById("div_fetchtitles").style.display = "block";
 				break;
 			case pagestates.READING:	
-				document.getElementById("div_readingpost").style.display = "block";
+				document.getElementById("div_replytitles").style.display = "block";
 				break;
 			case pagestates.STARTING_NEWPOST:
 				document.getElementById("div_writingpost").style.display = "block";
@@ -210,20 +212,23 @@
 		all_replytitles = [];
 		for (let i=0, N=data.length; i<N; i++) {
 			let cln = template_replytitle.cloneNode(true);
-			cln.children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
-			cln.children[1].innerHTML=data[i]["title"];
+			cln.children[0].children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln.children[0].children[1].innerHTML=data[i]["title"];
 			all_replytitles.push(cln.innerHTML);
 		}
 
 		// structure elements
-		let ol = document.getElementById("div_replytitles").getElementByTagName("base_replytitles");
-		let listFrag = document.createDocumentFragment();
-		listFrag.appendChild(ol);
-		for (let i=0, N=data.length; i<N; i++) {
+		let ol = document.getElementById("div_replytitles").children[0];
+		//let listFrag = document.createDocumentFragment();
+		//listFrag.appendChild(ol);
+		//all_replytitles[0].appendChild(all_replytitles[0]);
+		for (let i=1, N=data.length; i<N; i++) {
 			var li = document.createElement('li');
-			
-
+			ppost_id=data[i]["ppost_id"];
+			idx_ppost_id=postid2idx.get(ppost_id);
+			all_replytitles[idx_ppost_id].appendChild(all_replytitles[i]);
 		}
+		ol.appendChild(all_replytitles[0]);
 
 
 
@@ -231,9 +236,9 @@
 		
 		// N=1000; a=new Map(); for(let i=0;i<N;i++) a.set(1000+Math.floor(Math.random()*10+10*i),i+1); b=Array.from(a.keys());
 		// t0=performance.now(); for(let i=0;i<1000*1000;i++) a.get(b[i%N]); t1=performance.now(); t1-t0
-		document.getElementById("readingPostID").innerHTML=`post_id=${data["post_id"]}, ppost_id=${data["ppost_id"]}, rpost_id=${data["rpost_id"]}`;
-		document.getElementById("readingPostTitle").innerHTML=data["title"];
-		document.getElementById("readingPostContent").innerHTML=data["content"];
+		//document.getElementById("readingPostID").innerHTML=`post_id=${data["post_id"]}, ppost_id=${data["ppost_id"]}, rpost_id=${data["rpost_id"]}`;
+		//document.getElementById("readingPostTitle").innerHTML=data["title"];
+		//document.getElementById("readingPostContent").innerHTML=data["content"];
 		setPageState(pagestates.READING);
 		let tPostRequestEnd = performance.now();
 		setInfo( (tPostRequestEnd-tPostRequestStart).toFixed(1)+"ms");
