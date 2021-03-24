@@ -8,9 +8,9 @@
 	<!--link rel="stylesheet" href="style.css"-->
 	<style> 
 		#jojojj { width:80vw; padding:0; margin:0 auto; box-sizing: border-box; }
-		body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
-		body { background: linear-gradient( 45deg, #1e7752, #e73c7e, #23a6d5, #23d5ab); background-attachment: fixed; background-size: 400% 400%; animation: AnimationName 10s ease infinite;}
-		@keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+		body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: rgb(153, 98, 139)}
+		//body { background: linear-gradient( 45deg, #1e7752, #e73c7e, #23a6d5, #23d5ab); background-attachment: fixed; background-size: 400% 400%; animation: AnimationName 10s ease infinite;}
+		//@keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
 		h1 { margin-top:2vh; padding:0; text-align:center; text-transform: uppercase; font-weight: 300; font-size:4vw; letter-spacing: 0.2vw; color:#a1215170; }
 		h1::after { content:""; display:flex; border-top: 2px solid #585858; margin-top: .2em;}
@@ -42,7 +42,7 @@
 		font-weight:400;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:3px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
 		textarea, input { background: #6f6f6f !important;color: #f2f2f2 !important; border: none !important;}
 		::placeholder { color: #f2f2f2 !important; opacity: 1; /* Firefox */} /* Chrome, Firefox, Opera, Safari 10.1+ */
-		article {white-space: pre-wrap;	}
+		article {white-space: pre-wrap;	min-height: 5em; min-width: 20em;min-width: 80em; background-color:#386;}
 	</style>
 
 	<style>
@@ -59,7 +59,6 @@
 </head>
 
 
-
 <!-- *************************************************************BODY****************************************************************** -->
 <body dir="rtl">
 <header><a href="/">Mendi Forum ©</a></header>
@@ -71,6 +70,7 @@
 	<input type="text" id="inputUserNickname" placeholder="כינוי">
 	<input type="password" id="inputUserPassword" placeholder="ססמה">
 </div>
+
 <div id="div_fetchtitles" style="display:none">
 	<label class="switch"><input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked><span class="slider"></span></label>
 	<button type="button" class="btn1" onclick="btnStartNewPost()">כתוב הודעה חדשה</button>
@@ -80,9 +80,6 @@
 	</table>
 </div>
 
-<div id="div_replytitles" style="display:none">
-	
-</div>
 <div id="template_replytitle" style="display:none">
 	<li>
 		<p class="PostID"></p>
@@ -90,22 +87,23 @@
 		<ol></ol>
 	</li>
 </div>
-<div id="div_replywithcontent" style="display:none"></div>
+<div id="div_replytitles" style="display:none">
+	
+</div>
+
 <div id="template_replywithcontent" style="display:none">
 	<li>
 		<p class="PostID"></p>
 		<h4 class="ReplyTitle"></h4>
+		<article class="ReplyContent"></article>
+		<button type="button" class="btn1" onclick="btnCancelPost()">בטל וחזור</button>
+		<button type="button" class="btn1" onclick="btnEditPostFromReading()">ערוך הודעה</button>
+		<button type="button" class="btn1" onclick="btnReply()">תגובה</button>
 		<ol></ol>
 	</li>
 </div>
-
-<div id="div_readingpost" style="display:none">
-	<p id="readingPostID" class="PostID"></p>
-	<h2 id="readingPostTitle" class="PostTitle"></h1>
-	<article id="readingPostContent" class="PostContent"></article>
-	<button type="button" class="btn1" onclick="btnCancelPost()">בטל וחזור</button>
-	<button type="button" class="btn1" onclick="btnEditPostFromReading()">ערוך הודעה</button>
-	<button type="button" class="btn1" onclick="btnReply()">תגובה</button>
+<div id="div_replywithcontent" style="display:none">
+	
 </div>
 
 <div id="div_writingpost" style="display:none">
@@ -130,7 +128,7 @@
 
 	var isMobile = 'ontouchstart' in window;
 	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READING:"ReadingPost", STARTING_NEWPOST:"WritingPost", EDITING_OLDPOST:"EditingPost"}
-	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_readingpost", "div_replytitles");
+	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_replytitles","div_replywithcontent");
 	var pagestate = pagestates.INIT;
 	
 	function setPageState(newstate)
@@ -152,6 +150,7 @@
 				break;
 			case pagestates.READING:	
 				document.getElementById("div_replytitles").style.display = "block";
+				document.getElementById("div_replywithcontent").style.display = "block";
 				break;
 			case pagestates.STARTING_NEWPOST:
 				document.getElementById("div_writingpost").style.display = "block";
@@ -215,21 +214,33 @@
 
 		// prepare all reply titles
 		let template_replytitle = document.getElementById("template_replytitle").children[0];
-		let all_replytitles = [], all_replytitles = []
+		let template_replywithcontent = document.getElementById("template_replywithcontent").children[0];
+		let all_replytitles = [], all_replywithcontent = []
 		for (let i=0, N=data.length; i<N; i++) {
 			let cln = template_replytitle.cloneNode(true);
 			cln.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
 			cln.children[1].innerHTML=data[i]["title"];
 			all_replytitles.push(cln);
+			
+			let cln2 = template_replywithcontent.cloneNode(true);
+			cln2.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln2.children[1].innerHTML=data[i]["title"];
+			cln2.children[2].innerHTML=data[i]["content"];
+			all_replywithcontent.push(cln2);
+			
+			
+			
 		}
 
 		// structure reply titles
+		
 		const idx_ol=Array.from(template_replytitle.children).indexOf(template_replytitle.getElementsByTagName("ol")[0]); console.assert(idx_ol>=0, "idx_ol<0")
 		for (let i=1, N=data.length; i<N; i++) 	all_replytitles[postid2idx.get(data[i]["ppost_id"])].children[idx_ol].appendChild(all_replytitles[i]);
-		document.getElementById("div_replytitles").innerHTML=all_replytitles[0].innerHTML.replaceAll("\t\t<ol></ol>\n","").replaceAll("\t","");
+		document.getElementById("div_replytitles").innerHTML=all_replytitles[0].innerHTML.replaceAll("<ol></ol>\n","").replaceAll("\t","");
 		
-		
-		
+		const idx_ol2=Array.from(template_replywithcontent.children).indexOf(template_replywithcontent.getElementsByTagName("ol")[0]); console.assert(idx_ol2>=0, "idx_ol2<0")
+		for (let i=1, N=data.length; i<N; i++) 	all_replywithcontent[postid2idx.get(data[i]["ppost_id"])].children[idx_ol2].appendChild(all_replywithcontent[i]);
+		document.getElementById("div_replywithcontent").innerHTML=all_replywithcontent[0].innerHTML.replaceAll("<ol></ol>\n","").replaceAll("\t","");
 		
 		
 
