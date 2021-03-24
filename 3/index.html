@@ -60,7 +60,7 @@
 
 
 <!-- *************************************************************BODY****************************************************************** -->
-<body dir="rtl">
+<body dir="rtl" data-rpost_id="0">
 <header><a href="/">Mendi Forum ©</a></header>
 <h1 id='datetime' />
 <h3 id="myInfo" style="display:block">-</h3>
@@ -74,7 +74,7 @@
 <div id="div_fetchtitles" style="display:none">
 	<label class="switch"><input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked><span class="slider"></span></label>
 	<button type="button" class="btn1" onclick="btnStartNewPost()">כתוב הודעה חדשה</button>
-	<button type="button" class="btn1" onclick="btnCreateRandomTable(1000)">צור טבלה</button>
+	<button type="button" class="btn1" onclick="btnCreateRandomTable(10)">צור טבלה</button>
 	<table><thead><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
 	<tbody class="forumTitles" id="forumtitles"></tbody>
 	</table>
@@ -111,7 +111,7 @@
 	<input type="text" id="writingPostTitle" placeholder="Title" oninput="oninputTitle()">
 	<textarea id="writingPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="oninputContent()" rows="20" cols="50" maxlength="1000" > </textarea>
 	<button type="button" class="btn1" onclick="btnCancelReply()">בטל תגובה</button>
-	<button type="button" class="btn1" id="btnSendPost" onclick="btnSendPost()">Add</button>
+	<button type="button" class="btn1" id="btnSendPost" onclick="btnSendPost()"> שדר</button>
 	<h2 id="previewPostTitle" class="PostTitle"></h1>
 	<article id="previewPostContent" class="PostContent"></article>
 </div>
@@ -122,17 +122,26 @@
 
 <script id="script_state">
 	"use strict";
-
+	
 	var myInfo=document.getElementById("myInfo");
 	var myInfo2=document.getElementById("myInfo2");
 	function setInfo(x) {myInfo.innerHTML=x;}
 	function setInfo2(x) {myInfo2.innerHTML=x;}
 
 	var isMobile = 'ontouchstart' in window;
+	
+	var tmp_last_rpost_id = 0;
+	function setRootPostID(newrpost_id)
+	{
+		console.assert(document.body.dataset.rpost_id==tmp_last_rpost_id,'rpost_id changed from outside and its not allowed')
+		console.assert(newrpost_id>=0, 'rpost_id must be non negative');
+		document.body.dataset.rpost_id = newrpost_id;
+		tmp_last_rpost_id = newrpost_id;
+	}
+	
 	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READING:"ReadingPost", STARTING_NEWPOST:"WritingPost", EDITING_OLDPOST:"EditingPost"}
 	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_replytitles","div_replywithcontent");
 	var pagestate = pagestates.INIT, prev_pagestate = pagestates.INIT;
-	
 	function setPageState(newstate)
 	{
 		if (Object.values(pagestates).indexOf(newstate) <= 0) // init also illegael, otherwise <= -1 will include init
@@ -350,18 +359,18 @@
 	}
 </script>
 
-
 <script id="script_timer_fetchtitles">
 	chkFetchTitles = document.getElementById("chkFetchTitles");
 	forumtitles = document.getElementById("forumtitles");
 	const pingFormData = new FormData(); 
-	pingFormData.set('op', "gettitles");
+	pingFormData.set('op', "fetch");
+	pingFormData.set('rpost_id', document.body.dataset.rpost_id);
 	pingFormData.set('clientUpdatedTime', "hmm");
 	let touchEvent = isMobile ? 'ontouchstart=touchTitleStarted() ontouchend' : 'onclick';
 	var t0Fetch = performance.now();
 	var t1Fetch = performance.now();
 
-	function updateForumTitles(data) {
+	function updateForum(data) {
 		if (!Array.isArray(data)) return;
 		let new_rows=""; 
 		const LAST_ELEMENT=data.length-1;
@@ -379,10 +388,11 @@
 	function pingAndFetch() {
 		console.log('pingAndFetch started');
 		t0Fetch = performance.now();
+		pingFormData.set('rpost_id', document.body.getAttribute('data-rpost_id')); // getAttribute faster than dataset
 		fetch('./op.php', {method: 'POST', body: pingFormData })
 		//.then(res => {console.log(res); return res;})
 		.then(res => res.json())
-		.then(res => updateForumTitles(res))
+		.then(res => updateForum(res))
 		.catch(e => console.error('Error, pingAndFetch(), ' + e));
 	}
 
@@ -395,7 +405,7 @@
 			pingAndFetch();
 			titles_datetime.setTime(Date.now());
 			document.getElementById('datetime').innerHTML = titles_datetime.toDateString() + ' ' + titles_datetime.toLocaleTimeString();
-			chkFetchTitles.checked = false;
+			//chkFetchTitles.checked = false;
 		}
 	}
  
@@ -405,7 +415,9 @@
 </script>
 
 <script id="script_init">
+
 	
+	setRootPostID(0);
 	setPageState(pagestates.FETCHTITLES);
 	forumTimer();
 </script>

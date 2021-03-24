@@ -10,7 +10,8 @@ require_once('DB.php');
 $op=$_POST['op'];
 
 switch ($op) {
-	case "gettitles":
+	case "fetch":
+		$whatofetch = $_POST['whatofetch'];
 		$clientUpdatedTime = $_POST['clientUpdatedTime'];
 		$serverUpdatedTime = file_get_contents('tmp.txt');
 		if ($serverUpdatedTime == $clientUpdatedTime) {
