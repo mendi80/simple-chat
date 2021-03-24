@@ -74,19 +74,27 @@
 <div id="div_fetchtitles" style="display:none">
 	<label class="switch"><input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked><span class="slider"></span></label>
 	<button type="button" class="btn1" onclick="btnStartNewPost()">כתוב הודעה חדשה</button>
-	<button type="button" class="btn1" onclick="btnCreateRandomTable(100)">צור טבלה</button>
+	<button type="button" class="btn1" onclick="btnCreateRandomTable(1000)">צור טבלה</button>
 	<table><thead><th>מספר</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
 	<tbody class="forumTitles" id="forumtitles"></tbody>
 	</table>
 </div>
 
 <div id="div_replytitles" style="display:none">
-	<ol></ol>
+	
 </div>
 <div id="template_replytitle" style="display:none">
 	<li>
 		<p class="PostID"></p>
-		<h2 class="PostTitle"></h1>
+		<h4 class="ReplyTitle"></h4>
+		<ol></ol>
+	</li>
+</div>
+<div id="div_replywithcontent" style="display:none"></div>
+<div id="template_replywithcontent" style="display:none">
+	<li>
+		<p class="PostID"></p>
+		<h4 class="ReplyTitle"></h4>
 		<ol></ol>
 	</li>
 </div>
@@ -114,8 +122,9 @@
 <!-- ************************************************************SCRIPTS******************************************************************* -->
 
 <script id="script_state">
-	myInfo=document.getElementById("myInfo");
-	myInfo2=document.getElementById("myInfo2");
+	"use strict";
+	var myInfo=document.getElementById("myInfo");
+	var myInfo2=document.getElementById("myInfo2");
 	function setInfo(x) {myInfo.innerHTML=x;}
 	function setInfo2(x) {myInfo2.innerHTML=x;}
 
@@ -192,58 +201,43 @@
 </script>
 
 <script id="script_readingpost">
-	var current_thread={postid2idx:"MAP"};
-	var a="0";
+	"use strict";
+
 	function displayPost(data)
 	{
-		console.log(data);
-		a=data;
+		//console.log(data);
+		
 		//fields: post_id, ppost_id, rpost_id, created, nickname, title, content
+		console.assert(data[0]["post_id"]==data[0]["rpost_id"]  && data[0]["ppost_id"]==0, "error in post data reply");
 
 		//map from post_id to array index
-		postid2idx = new Map();
-		for (let i=0, N=data.length; i<N; i++) {
-			postid2idx.set(data[i]["post_id"],i);
-		}
-		current_thread.postid2idx = postid2idx;
+		let postid2idx = new Map();	for (let i=0, N=data.length; i<N; i++) postid2idx.set(data[i]["post_id"],i);		
 
-		// prepare all elements
+		// prepare all reply titles
 		let template_replytitle = document.getElementById("template_replytitle").children[0];
-		all_replytitles = [];
+		let all_replytitles = [], all_replytitles = []
 		for (let i=0, N=data.length; i<N; i++) {
 			let cln = template_replytitle.cloneNode(true);
-			cln.children[0].innerHTML=post_id=`post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
 			cln.children[1].innerHTML=data[i]["title"];
 			all_replytitles.push(cln);
 		}
 
-		// structure elements
-		let ol = document.getElementById("div_replytitles").children[0];
-		//let listFrag = document.createDocumentFragment();
-		//listFrag.appendChild(ol);
-		//all_replytitles[0].appendChild(all_replytitles[0]);
-		for (let i=1, N=data.length; i<N; i++) {
-			var li = document.createElement('li');
-			ppost_id=data[i]["ppost_id"];
-			idx_ppost_id=postid2idx.get(ppost_id);
-			all_replytitles[idx_ppost_id].appendChild(all_replytitles[i]);
-		}
-		ol.appendChild(all_replytitles[0]);
-
-
-
-		//s += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+		// structure reply titles
+		const idx_ol=Array.from(template_replytitle.children).indexOf(template_replytitle.getElementsByTagName("ol")[0]); console.assert(idx_ol>=0, "idx_ol<0")
+		for (let i=1, N=data.length; i<N; i++) 	all_replytitles[postid2idx.get(data[i]["ppost_id"])].children[idx_ol].appendChild(all_replytitles[i]);
+		document.getElementById("div_replytitles").innerHTML=all_replytitles[0].innerHTML.replaceAll("\t\t<ol></ol>\n","").replaceAll("\t","");
 		
-		// N=1000; a=new Map(); for(let i=0;i<N;i++) a.set(1000+Math.floor(Math.random()*10+10*i),i+1); b=Array.from(a.keys());
-		// t0=performance.now(); for(let i=0;i<1000*1000;i++) a.get(b[i%N]); t1=performance.now(); t1-t0
-		//document.getElementById("readingPostID").innerHTML=`post_id=${data["post_id"]}, ppost_id=${data["ppost_id"]}, rpost_id=${data["rpost_id"]}`;
-		//document.getElementById("readingPostTitle").innerHTML=data["title"];
-		//document.getElementById("readingPostContent").innerHTML=data["content"];
+		
+		
+		
+		
+
 		setPageState(pagestates.READING);
 		let tPostRequestEnd = performance.now();
-		setInfo( (tPostRequestEnd-tPostRequestStart).toFixed(1)+"ms");
+		console.log(`displayPost took ${(tPostRequestEnd-tPostRequestStart).toFixed(1)} ms`);
 	}
-
+	
 	var tTitleTouchStarted = performance.now();
 	var tTitleTouchEnded = performance.now();
 	var tScrolled = performance.now();
@@ -386,10 +380,9 @@
 </script>
 
 <script id="script_init">
-{
+	
 	setPageState(pagestates.FETCHTITLES);
 	forumTimer();
-}
 </script>
 
 </body>
