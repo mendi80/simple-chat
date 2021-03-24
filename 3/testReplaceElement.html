@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			#source {color: white; background: green;	padding: 4px 8px;	}
+			#destination {color: white;	background: red;padding: 4px 8px;}
+			button {margin-top: 20px;}
+		</style>
+		<title>Mendi Website</title>
+	</head>
+	<body>
+		<div id="source">
+			<p>Source</p>
+			<h2>other text...</h2>
+		  </div>
+		  
+		  <div id="destination">
+			<p>Destination</p>
+		  </div>
+		  
+		  <button onclick="appendIt()">Move Element</button>
+		  
+		  <script>
+			function appendIt() {
+				var source = document.getElementById("source");
+				document.getElementById("destination").appendChild(source);
+			}
+		  </script>
+	</body>
+</html>

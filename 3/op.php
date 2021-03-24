@@ -34,15 +34,16 @@ switch ($op) {
 		$secret = $_POST['secret']; 
 		$title = $_POST['title']; 
 		$content = $_POST['content']; 	//$rowexist = $db->isexist($title);	//var_dump($rowexist);
-		if ( strlen($nickname)==0 || strlen($secret)==0 || strlen($title)==0|| strlen($content)==0 ) {
+		if ( strlen($post_id)==0 || strlen($ppost_id)==0 || strlen($nickname)==0 || strlen($secret)==0 || strlen($title)==0|| strlen($content)==0 ) {
 			$output = 0;
 		} else {
 			if (!$db->isUserExist($nickname))
 				$db->addNewUser($nickname, $secret);
 			$user_id = $db->getUserID($nickname);
-			if ($post_id>0)
+			
+			if ($post_id>0 && $ppost_id==$post_id)
 				$output = $db->updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content);
-			else
+			else //edit or new
 				$output = $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
 			$lastchanged_time=time();
 			file_put_contents( 'tmp.txt', $lastchanged_time);

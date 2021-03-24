@@ -81,35 +81,36 @@
 </div>
 
 <div id="template_replytitle" style="display:none">
-	<li>
+	<li data-post_id="0000000">
 		<p class="PostID"></p>
 		<h4 class="ReplyTitle"></h4>
-		<ol></ol>
+		<ul></ul>
 	</li>
 </div>
 <div id="div_replytitles" style="display:none">
-	
-</div>
 
-<div id="template_replywithcontent" style="display:none">
-	<li>
-		<p class="PostID"></p>
-		<h4 class="ReplyTitle"></h4>
-		<article class="ReplyContent"></article>
-		<button type="button" class="btn1" onclick="btnCancelPost()">בטל וחזור</button>
-		<button type="button" class="btn1" onclick="btnEditPostFromReading()">ערוך הודעה</button>
-		<button type="button" class="btn1" onclick="btnReply()">תגובה</button>
-		<ol></ol>
-	</li>
 </div>
 <div id="div_replywithcontent" style="display:none">
-	
+
+</div>
+<div id="template_replywithcontent" style="display:none">
+	<li data-post_id="0000000">
+		<p class="PostID"></p>
+		<h4 class="ReplyTitle" ></h4>
+		<article class="ReplyContent"></article>
+		<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">בטל וחזור</button>
+		<button type="button" class="btn1" onclick="btnStartEditPost(this,event)">ערוך הודעה</button>
+		<button type="button" class="btn1" onclick="btnStartReply(this,event)">תגובה</button>
+		<div></div>
+		<ul></ul>
+	</li>
 </div>
 
-<div id="div_writingpost" style="display:none">
+
+<div id="div_writingpost" style="display:none" data-post_id="0000000" data-ppost_id="0000000">
 	<input type="text" id="writingPostTitle" placeholder="Title" oninput="oninputTitle()">
 	<textarea id="writingPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="oninputContent()" rows="20" cols="50" maxlength="1000" > </textarea>
-	<button type="button" class="btn1" onclick="btnCancelPost()">בטל</button>
+	<button type="button" class="btn1" onclick="btnCancelReply()">בטל תגובה</button>
 	<button type="button" class="btn1" id="btnSendPost" onclick="btnSendPost()">Add</button>
 	<h2 id="previewPostTitle" class="PostTitle"></h1>
 	<article id="previewPostContent" class="PostContent"></article>
@@ -121,6 +122,7 @@
 
 <script id="script_state">
 	"use strict";
+
 	var myInfo=document.getElementById("myInfo");
 	var myInfo2=document.getElementById("myInfo2");
 	function setInfo(x) {myInfo.innerHTML=x;}
@@ -129,15 +131,17 @@
 	var isMobile = 'ontouchstart' in window;
 	const pagestates = {INIT:"Init",FETCHTITLES:"FectTitles", READING:"ReadingPost", STARTING_NEWPOST:"WritingPost", EDITING_OLDPOST:"EditingPost"}
 	const forum_div_ids = new Array( "div_fetchtitles", "div_writingpost", "div_replytitles","div_replywithcontent");
-	var pagestate = pagestates.INIT;
+	var pagestate = pagestates.INIT, prev_pagestate = pagestates.INIT;
 	
 	function setPageState(newstate)
 	{
 		if (Object.values(pagestates).indexOf(newstate) <= 0) // init also illegael, otherwise <= -1 will include init
  			console.error(`error in setPageState. newstate=${newstate} not exist`);
-		let prev_pagestate = pagestate;
+		
+		console.assert(newstate!=pagestate)
+		prev_pagestate = pagestate;
 		pagestate = newstate;
-
+		
 		for (let i = 0, len = forum_div_ids.length; i < len; i++) document.getElementById(forum_div_ids[i]).style.display = "none";
 
 		switch(pagestate)
@@ -149,10 +153,12 @@
 				document.getElementById("div_fetchtitles").style.display = "block";
 				break;
 			case pagestates.READING:	
-				document.getElementById("div_replytitles").style.display = "block";
-				document.getElementById("div_replywithcontent").style.display = "block";
+				document.getElementById("div_replytitles").style.display = "list-item";
+				document.getElementById("div_replywithcontent").style.display = "list-item";
 				break;
 			case pagestates.STARTING_NEWPOST:
+				document.getElementById("div_replytitles").style.display = "list-item";
+				document.getElementById("div_replywithcontent").style.display = "list-item";
 				document.getElementById("div_writingpost").style.display = "block";
 				break;
 			case pagestates.EDITING_OLDPOST:
@@ -162,33 +168,52 @@
 	}
 
 	function btnStartNewPost(){
+		document.getElementById("div_writingpost").dataset.post_id = "-1";
+		document.getElementById("div_writingpost").dataset.ppost_id = "0";
 		setPageState(pagestates.STARTING_NEWPOST) 
 		createEditPanel(0);
 	}
 
-	function btnReply(){
+	function btnStartReply(me,ev){
+		document.getElementById("div_writingpost").dataset.post_id = "-1";
+		document.getElementById("div_writingpost").dataset.ppost_id = me.parentElement.dataset.post_id;
+		me.parentElement.getElementsByTagName("div")[0].appendChild(document.getElementById("div_writingpost"));
 		setPageState(pagestates.STARTING_NEWPOST) 
 	}
-
-	
-	function btnCancelPost(){
-		setPageState(pagestates.FETCHTITLES);
-	}
-
-	function btnEditPostFromReading()
+	function btnStartEditPost(me,ev)
 	{
-		document.getElementById("writingPostTitle").value = document.getElementById("readingPostTitle").innerHTML;
-		document.getElementById("writingPostContent").value = document.getElementById("readingPostContent").innerHTML;
+		document.getElementById("div_writingpost").dataset.post_id = me.parentElement.dataset.post_id;
+		document.getElementById("div_writingpost").dataset.ppost_id = me.parentElement.dataset.post_id;
+		document.getElementById("div_writingpost").getElementById("writingPostTitle").value = me.parentElement.children[1].innerHTML;
+		document.getElementById("div_writingpost").getElementById("writingPostContent").value = me.parentElement.children[2].innerHTML;
 		oninputTitle(); //prepare preview
 		oninputContent(); //prepare preview
 		setPageState(pagestates.EDITING_OLDPOST);
 	}
-
+	
+	function btnBackToTitles(me,ev){
+		document.getElementById("div_writingpost").dataset.post_id = "0";
+		document.getElementById("div_writingpost").dataset.ppost_id = "0";
+		document.body.appendChild(document.getElementById("div_writingpost"));
+		setPageState(pagestates.FETCHTITLES);
+	}
+	function btnCancelReply(me,ev){
+		document.getElementById("div_writingpost").dataset.post_id = "0";
+		document.getElementById("div_writingpost").dataset.ppost_id = "0";
+		document.body.appendChild(document.getElementById("div_writingpost"));
+		setPageState(pagestates.READING);
+	}
 	function btnSendPost()
 	{
-		sendPost();
+		sendPost(document.getElementById("div_writingpost").dataset.post_id, document.getElementById("div_writingpost").dataset.ppost_id);
 	}
-
+	function afterPostSent()
+	{
+		document.getElementById("div_writingpost").dataset.post_id = "0";
+		document.getElementById("div_writingpost").dataset.ppost_id = "0";
+		document.body.appendChild(document.getElementById("div_writingpost"));
+		setPageState(prev_pagestate);
+	}
 </script>
 
 <script id="script_clearcontent"> 
@@ -210,37 +235,37 @@
 		console.assert(data[0]["post_id"]==data[0]["rpost_id"]  && data[0]["ppost_id"]==0, "error in post data reply");
 
 		//map from post_id to array index
-		let postid2idx = new Map();	for (let i=0, N=data.length; i<N; i++) postid2idx.set(data[i]["post_id"],i);		
+		let postid2idx = new Map();	for (let i=0, N=data.length; i<N; i++) postid2idx.set(data[i]["post_id"],i);
 
-		// prepare all reply titles
+		// prepare reply
+		
 		let template_replytitle = document.getElementById("template_replytitle").children[0];
 		let template_replywithcontent = document.getElementById("template_replywithcontent").children[0];
 		let all_replytitles = [], all_replywithcontent = []
 		for (let i=0, N=data.length; i<N; i++) {
-			let cln = template_replytitle.cloneNode(true);
-			cln.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
-			cln.children[1].innerHTML=data[i]["title"];
-			all_replytitles.push(cln);
+			let cln1 = template_replytitle.cloneNode(true);
+			cln1.dataset.post_id=data[i]["post_id"];
+			cln1.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
+			cln1.children[1].innerHTML=data[i]["title"];
+			all_replytitles.push(cln1);
 			
 			let cln2 = template_replywithcontent.cloneNode(true);
+			cln2.dataset.post_id=data[i]["post_id"];
 			cln2.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
 			cln2.children[1].innerHTML=data[i]["title"];
 			cln2.children[2].innerHTML=data[i]["content"];
+			
 			all_replywithcontent.push(cln2);
-			
-			
-			
 		}
 
-		// structure reply titles
-		
-		const idx_ol=Array.from(template_replytitle.children).indexOf(template_replytitle.getElementsByTagName("ol")[0]); console.assert(idx_ol>=0, "idx_ol<0")
-		for (let i=1, N=data.length; i<N; i++) 	all_replytitles[postid2idx.get(data[i]["ppost_id"])].children[idx_ol].appendChild(all_replytitles[i]);
-		document.getElementById("div_replytitles").innerHTML=all_replytitles[0].innerHTML.replaceAll("<ol></ol>\n","").replaceAll("\t","");
-		
-		const idx_ol2=Array.from(template_replywithcontent.children).indexOf(template_replywithcontent.getElementsByTagName("ol")[0]); console.assert(idx_ol2>=0, "idx_ol2<0")
-		for (let i=1, N=data.length; i<N; i++) 	all_replywithcontent[postid2idx.get(data[i]["ppost_id"])].children[idx_ol2].appendChild(all_replywithcontent[i]);
-		document.getElementById("div_replywithcontent").innerHTML=all_replywithcontent[0].innerHTML.replaceAll("<ol></ol>\n","").replaceAll("\t","");
+		// structure reply
+		const idx_ul1=Array.from(template_replytitle.children).indexOf(template_replytitle.getElementsByTagName("ul")[0]); console.assert(idx_ul1>=0, "idx_ul1<0")
+		for (let i=1, N=data.length; i<N; i++) 	all_replytitles[postid2idx.get(data[i]["ppost_id"])].children[idx_ul1].appendChild(all_replytitles[i]);
+		document.getElementById("div_replytitles").innerHTML="<ul>"+all_replytitles[0].outerHTML.replaceAll("<ul></ul>\n","").replaceAll("\t","")+"</ul>";
+
+		const idx_ul2=Array.from(template_replywithcontent.children).indexOf(template_replywithcontent.getElementsByTagName("ul")[0]); console.assert(idx_ul2>=0, "idx_ul2<0")
+		for (let i=1, N=data.length; i<N; i++) 	all_replywithcontent[postid2idx.get(data[i]["ppost_id"])].children[idx_ul2].appendChild(all_replywithcontent[i]);
+		document.getElementById("div_replywithcontent").innerHTML="<ul>"+all_replywithcontent[0].outerHTML.replaceAll("<ul></ul>\n","").replaceAll("\t","")+"</ul>";
 		
 		
 
@@ -321,9 +346,9 @@
 	newPost.set('title', "");
 	newPost.set('content', "");
 
-	function sendPost() {
-		newPost.set('post_id', '??');
-		newPost.set('ppost_id', "0");
+	function sendPost(post_id, ppost_id) {
+		newPost.set('post_id', post_id);
+		newPost.set('ppost_id', ppost_id);
 		newPost.set('nickname',document.getElementById("inputUserNickname").value);
 		newPost.set('secret',document.getElementById("inputUserPassword").value);
 		newPost.set('title',document.getElementById("writingPostTitle").value);
@@ -331,7 +356,7 @@
 
 		fetch('./op.php', {method: 'POST', body: newPost})
 		.then(res => res.text())
-		.then(res => {console.log(res);if (res=="1") {clearPostContent(); setPageState(pagestates.FETCHTITLES); }})
+		.then(res => {console.log(res);if (res=="1") {afterPostSent();  }})
 		.catch(e => console.error('Error, sendPost(), ' + e))
 	}
 </script>
