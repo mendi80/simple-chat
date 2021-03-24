@@ -75,7 +75,7 @@ class DB {
 	}
 	public function updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content) {
 		$post_row = $this->getSingleRowFromPosts($post_id);
-		if($post_row["ppost_id"]==$ppost_id && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
+		if($post_row["ppost_id"]==$ppost_id){// && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
 			$sql = "UPDATE posts SET title = ?, content = ? WHERE post_id = ?";
 			$stmt = $this->con->prepare($sql);
 			$stmt->execute([$title,$content,$post_id]);

@@ -75,7 +75,7 @@
 	<label class="switch"><input type="checkbox" id="chkFetchTitles" name="FetchTitles" checked><span class="slider"></span></label>
 	<button type="button" class="btn1" onclick="btnStartNewPost()">כתוב הודעה חדשה</button>
 	<button type="button" class="btn1" onclick="btnCreateRandomTable(1000)">צור טבלה</button>
-	<table><thead><th>מספר</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
+	<table><thead><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
 	<tbody class="forumTitles" id="forumtitles"></tbody>
 	</table>
 </div>
@@ -153,11 +153,11 @@
 				document.getElementById("div_fetchtitles").style.display = "block";
 				break;
 			case pagestates.READING:	
-				document.getElementById("div_replytitles").style.display = "list-item";
+				//document.getElementById("div_replytitles").style.display = "list-item";
 				document.getElementById("div_replywithcontent").style.display = "list-item";
 				break;
 			case pagestates.STARTING_NEWPOST:
-				document.getElementById("div_replytitles").style.display = "list-item";
+				//document.getElementById("div_replytitles").style.display = "list-item";
 				document.getElementById("div_replywithcontent").style.display = "list-item";
 				document.getElementById("div_writingpost").style.display = "block";
 				break;
@@ -171,7 +171,6 @@
 		document.getElementById("div_writingpost").dataset.post_id = "-1";
 		document.getElementById("div_writingpost").dataset.ppost_id = "0";
 		setPageState(pagestates.STARTING_NEWPOST) 
-		createEditPanel(0);
 	}
 
 	function btnStartReply(me,ev){
@@ -184,8 +183,8 @@
 	{
 		document.getElementById("div_writingpost").dataset.post_id = me.parentElement.dataset.post_id;
 		document.getElementById("div_writingpost").dataset.ppost_id = me.parentElement.dataset.post_id;
-		document.getElementById("div_writingpost").getElementById("writingPostTitle").value = me.parentElement.children[1].innerHTML;
-		document.getElementById("div_writingpost").getElementById("writingPostContent").value = me.parentElement.children[2].innerHTML;
+		document.getElementById("div_writingpost").querySelector("#writingPostTitle").value = me.parentElement.children[1].innerHTML;
+		document.getElementById("div_writingpost").querySelector("#writingPostContent").value = me.parentElement.children[2].innerHTML;
 		oninputTitle(); //prepare preview
 		oninputContent(); //prepare preview
 		setPageState(pagestates.EDITING_OLDPOST);
@@ -243,6 +242,11 @@
 		let template_replywithcontent = document.getElementById("template_replywithcontent").children[0];
 		let all_replytitles = [], all_replywithcontent = []
 		for (let i=0, N=data.length; i<N; i++) {
+			if(i>0)
+				console.assert(data[i]["post_id"]>0&&data[i]["ppost_id"]>0,'data[i]["post_id"]>0&&data[i]["ppost_id"]>0')
+			else
+				console.assert(data[i]["post_id"]>0&&data[i]["ppost_id"]==0,'data[i]["post_id"]>0&&data[i]["ppost_id"]==0')
+			
 			let cln1 = template_replytitle.cloneNode(true);
 			cln1.dataset.post_id=data[i]["post_id"];
 			cln1.children[0].innerHTML=`idx=${i}/${N} post_id=${data[i]["post_id"]}, ppost_id=${data[i]["ppost_id"]}, rpost_id=${data[i]["rpost_id"]}`;
@@ -256,6 +260,8 @@
 			cln2.children[2].innerHTML=data[i]["content"];
 			
 			all_replywithcontent.push(cln2);
+			
+			
 		}
 
 		// structure reply
@@ -280,7 +286,6 @@
 	var tPostRequestStart = performance.now();
 	const reqPostContent = new FormData();
 	reqPostContent.set('op', "getpost");
-	reqPostContent.set('post_id', "");
 	function titleRowClicked(post_id)
 	{
 		tTitleTouchEnded = performance.now();
@@ -301,20 +306,10 @@
 
 <script id="script_writingpost">
 
-
-	function createEditPanel(ppost_id)
-	{
-		//let div_writingpost0 = document.getElementById("div_writingpost");
-		//let cln = div_writingpost0.cloneNode(true);
-		//cln.style.display="block";
-		//document.getElementById("tmp1").appendChild(cln);
-	}
-
 	elem_writingPostTitle=document.getElementById("writingPostTitle");
 	elem_writingPostContent=document.getElementById("writingPostContent");
 	elem_previewPostTitle=document.getElementById("previewPostTitle");
 	elem_previewPostContent=document.getElementById("previewPostContent");
-	//console.time();for (i=0;i<1000;i++) elem_previewPostContent.dir=elem_writingPostContent.dir;console.timeEnd();
 
 	function oninputTitle()
 	{
@@ -339,12 +334,6 @@
 	}
 	const newPost = new FormData();
 	newPost.set('op', "setpost");
-	newPost.set('post_id', "");
-	newPost.set('ppost_id', "");
-	newPost.set('nickname', "");
-	newPost.set('secret', "");
-	newPost.set('title', "");
-	newPost.set('content', "");
 
 	function sendPost(post_id, ppost_id) {
 		newPost.set('post_id', post_id);
@@ -379,7 +368,7 @@
 		for (let i=LAST_ELEMENT-1,k=1; i>=0; i--,k++) 
 		{
 			d=data[i];
-			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${k}</td><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${k}</td><td>${d["post_id"]}</td><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
 		}
 		pingFormData.set('clientUpdatedTime', data[LAST_ELEMENT]['serverUpdatedTime']);
 		forumtitles.innerHTML = new_rows;
