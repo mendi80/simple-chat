@@ -22,6 +22,13 @@ class DB {
 			echo "databse connection failed: " . $e->getMessage();
 		}
 	}
+	public function getSingleRowFromThreads($post_id){
+		$sql = "SELECT * FROM threads WHERE post_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$post_id]);
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC;
+		return $data;
+	}
 	public function getLastPostID(){
 		$sql = "SELECT max(post_id) FROM posts;";
 		$stmt = $this->con->prepare($sql);
@@ -76,7 +83,7 @@ class DB {
 	public function updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content) {
 		$post_row = $this->getSingleRowFromPosts($post_id);
 		if($post_row["ppost_id"]==$ppost_id){// && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
-			$sql = "UPDATE posts SET title = ?, content = ? WHERE post_id = ?";
+			$sql = "UPDATE posts SET updated = NOW(), title = ?, content = ? WHERE post_id = ?";
 			$stmt = $this->con->prepare($sql);
 			$stmt->execute([$title,$content,$post_id]);
 			return 1;

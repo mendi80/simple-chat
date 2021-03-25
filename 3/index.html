@@ -269,8 +269,6 @@
 			cln2.children[2].innerHTML=data[i]["content"];
 			
 			all_replywithcontent.push(cln2);
-			
-			
 		}
 
 		// structure reply
@@ -281,32 +279,19 @@
 		const idx_ul2=Array.from(template_replywithcontent.children).indexOf(template_replywithcontent.getElementsByTagName("ul")[0]); console.assert(idx_ul2>=0, "idx_ul2<0")
 		for (let i=1, N=data.length; i<N; i++) 	all_replywithcontent[postid2idx.get(data[i]["ppost_id"])].children[idx_ul2].appendChild(all_replywithcontent[i]);
 		document.getElementById("div_replywithcontent").innerHTML="<ul>"+all_replywithcontent[0].outerHTML.replaceAll("<ul></ul>\n","").replaceAll("\t","")+"</ul>";
-		
-		
 
 		setPageState(pagestates.READING);
-		let tPostRequestEnd = performance.now();
-		console.log(`displayPost took ${(tPostRequestEnd-tPostRequestStart).toFixed(1)} ms`);
 	}
 	
 	var tTitleTouchStarted = performance.now();
 	var tTitleTouchEnded = performance.now();
 	var tScrolled = performance.now();
-	var tPostRequestStart = performance.now();
-	const reqPostContent = new FormData();
-	reqPostContent.set('op', "getpost");
+	
 	function titleRowClicked(post_id)
 	{
 		tTitleTouchEnded = performance.now();
 		if(!isMobile || tTitleTouchEnded-tTitleTouchStarted<300 && tTitleTouchEnded-tScrolled>200)
-		{
-			tPostRequestStart = performance.now();
-			reqPostContent.set('post_id', post_id);
-			fetch('./op.php', {method: 'POST', body: reqPostContent})
-			.then(res => res.json())
-			.then(res => displayPost(res))
-			.catch(e => console.error('Error, titleRowClicked(), ' + e))
-		}
+			setRootPostID(post_id)
 	}
 
 
@@ -314,11 +299,12 @@
 
 
 <script id="script_writingpost">
+	"use strict";
 
-	elem_writingPostTitle=document.getElementById("writingPostTitle");
-	elem_writingPostContent=document.getElementById("writingPostContent");
-	elem_previewPostTitle=document.getElementById("previewPostTitle");
-	elem_previewPostContent=document.getElementById("previewPostContent");
+	var elem_writingPostTitle=document.getElementById("writingPostTitle");
+	var elem_writingPostContent=document.getElementById("writingPostContent");
+	var elem_previewPostTitle=document.getElementById("previewPostTitle");
+	var elem_previewPostContent=document.getElementById("previewPostContent");
 
 	function oninputTitle()
 	{
@@ -333,7 +319,7 @@
 
 	function btnCreateRandomTable(N)
 	{
-		newRows = new FormData();
+		let newRows = new FormData();
 		newRows.set('op', "create_random_table");
 		newRows.set('nrows', N);
 		fetch('./op.php', {method: 'POST', body: newRows})
@@ -360,37 +346,57 @@
 </script>
 
 <script id="script_timer_fetchtitles">
-	chkFetchTitles = document.getElementById("chkFetchTitles");
-	forumtitles = document.getElementById("forumtitles");
-	const pingFormData = new FormData(); 
-	pingFormData.set('op', "fetch");
-	pingFormData.set('rpost_id', document.body.dataset.rpost_id);
-	pingFormData.set('clientUpdatedTime', "hmm");
+	"use strict";
+	
+	var chkFetchTitles = document.getElementById("chkFetchTitles");
+	var forumtitles = document.getElementById("forumtitles");
 	let touchEvent = isMobile ? 'ontouchstart=touchTitleStarted() ontouchend' : 'onclick';
 	var t0Fetch = performance.now();
 	var t1Fetch = performance.now();
 
 	function updateForum(data) {
-		if (!Array.isArray(data)) return;
-		let new_rows=""; 
-		const LAST_ELEMENT=data.length-1;
-		for (let i=LAST_ELEMENT-1,k=1; i>=0; i--,k++) 
+		if (!Array.isArray(data)) return; // no new data
+		console.assert(data.length==2, "length should b 2")
+		let rpost_id = Number(data[0]['rpost_id']);
+		let n_replies = Number(data[0]['n_replies']);
+		let n_edits = Number(data[0]['n_edits']);
+		let data1 = data[1];
+		let is_n_replies_changes = !all_n_replies.has(rpost_id) || all_n_replies.get(rpost_id)!=n_replies;
+		let is_n_edits_changes = !all_n_edits.has(rpost_id) || all_n_edits.get(rpost_id)!=n_edits;
+		console.assert(is_n_replies_changes || is_n_edits_changes, "at least one should be different")
+		all_n_replies.set(rpost_id,n_replies);
+		all_n_edits.set(rpost_id,n_edits);
+		if (rpost_id==0) //main titles
 		{
-			d=data[i];
-			new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${k}</td><td>${d["post_id"]}</td><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+			let new_rows=""; 
+			for (let i=data1.length-1, k=1; i>=0; i--,k++) 
+			{
+				let d=data1[i];
+				new_rows += `\t<tr ${touchEvent}=titleRowClicked(${d["post_id"]})><td>${k}</td><td>${d["post_id"]}</td><td>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${770}</td>\n`;
+			}
+			forumtitles.innerHTML = new_rows;
 		}
-		pingFormData.set('clientUpdatedTime', data[LAST_ELEMENT]['serverUpdatedTime']);
-		forumtitles.innerHTML = new_rows;
+		else // inside post
+		{
+			displayPost(data1);
+		}
+		
 		t1Fetch = performance.now();
 		console.log(`pingAndFetch done. runtime=${(t1Fetch-t0Fetch).toFixed(1)} ms`);
 	}
 	
+	const all_n_replies = new Map();
+	const all_n_edits = new Map();
+	const pingFormData = new FormData(); 
+	pingFormData.set('op', "fetch");
 	function pingAndFetch() {
 		console.log('pingAndFetch started');
 		t0Fetch = performance.now();
-		pingFormData.set('rpost_id', document.body.getAttribute('data-rpost_id')); // getAttribute faster than dataset
-		fetch('./op.php', {method: 'POST', body: pingFormData })
-		//.then(res => {console.log(res); return res;})
+		let rpost_id = Number(document.body.getAttribute('data-rpost_id')); //faster than dataset
+		pingFormData.set('rpost_id', rpost_id);
+		pingFormData.set('n_replies', all_n_replies.has(rpost_id)?all_n_replies.get(rpost_id):-1);
+		pingFormData.set('n_edits', all_n_edits.has(rpost_id)?all_n_edits.get(rpost_id):-1);
+		fetch('./op.php', {method: 'POST', body: pingFormData }) //.then(res => {console.log(res); return res;})
 		.then(res => res.json())
 		.then(res => updateForum(res))
 		.catch(e => console.error('Error, pingAndFetch(), ' + e));
@@ -405,7 +411,7 @@
 			pingAndFetch();
 			titles_datetime.setTime(Date.now());
 			document.getElementById('datetime').innerHTML = titles_datetime.toDateString() + ' ' + titles_datetime.toLocaleTimeString();
-			//chkFetchTitles.checked = false;
+			chkFetchTitles.checked = false;
 		}
 	}
  
@@ -415,9 +421,6 @@
 </script>
 
 <script id="script_init">
-
-	
-	setRootPostID(0);
 	setPageState(pagestates.FETCHTITLES);
 	forumTimer();
 </script>

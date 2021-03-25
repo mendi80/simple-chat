@@ -11,16 +11,22 @@ $op=$_POST['op'];
 
 switch ($op) {
 	case "fetch":
-		$whatofetch = $_POST['whatofetch'];
-		$clientUpdatedTime = $_POST['clientUpdatedTime'];
-		$serverUpdatedTime = file_get_contents('tmp.txt');
-		if ($serverUpdatedTime == $clientUpdatedTime) {
-			$output = 0;
-		}  else  {
-			$data = $db->getForumTitles();
-			array_push($data, array("serverUpdatedTime" => $serverUpdatedTime));
-			$output = json_encode($data,JSON_PRETTY_PRINT);
+		$rpost_id = $_POST['rpost_id'];
+		$n_replies = $_POST['n_replies'];
+		$n_edits = $_POST['n_edits'];
+		$post_state = $db->getSingleRowFromThreads($rpost_id);
+		
+		if($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits'])	{
+			if($rpost_id==0)	
+				$data = $db->getForumTitles();
+			 else 
+				$data = $db->getPost($rpost_id);
+			$header = array("rpost_id" => $rpost_id, "n_replies" => $post_state['n_replies'], "n_edits" => $post_state['n_edits']);
+			$output = json_encode([$header,$data],JSON_PRETTY_PRINT);
 		}
+		else 
+			$output = 0;
+
 	  break;
 	case "getpost":
 		$post_id = $_POST['post_id']; // var_dump($_POST);
@@ -58,11 +64,13 @@ switch ($op) {
 
 	case "create_random_table":
 		$nrows = $_POST['nrows'];
+		$nickname="mendi80"; $secret="abc";
+		if (!$db->isUserExist($nickname)) $db->addNewUser($nickname, $secret);
+		$user_id = $db->getUserID($nickname);
 		$last_post_id = $db->getLastPostID();
 		for ($i = 0; $i < $nrows; $i++) {
 			$MAXPOSTID = $last_post_id+$i;
 			$ppost_id=(rand(1,100)==1) ? 0 : rand(0,$MAXPOSTID);
-			$user_id=3;	$nickname="mendi80"; $secret="abc";
 			$title="This title is child of $ppost_id";
 			$content="This content is child of $ppost_id";
 			$db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
