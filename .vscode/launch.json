@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Listen for XDebug",
+            "name": "PHP Listen for XDebug",
             "type": "php",
             "request": "launch",
             "port": 9000
         },
         {
-            "name": "Launch currently open script",
+            "name": "PHP Launch currently open script",
             "type": "php",
             "request": "launch",
             "runtimeExecutable": "A:/Programs/xampp/php/php.exe",
@@ -20,10 +20,11 @@
             "port": 9000
         },
         {
-            "name": "Launch Frontend",
+            "name": "Attach to Chrome",
             "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost/3/index.php",
+            "request": "attach",
+			"port": 9222,
+            "url": "http://localhost/3/index.html",
             "webRoot": "${workspaceRoot}/3/",
         }
     ]

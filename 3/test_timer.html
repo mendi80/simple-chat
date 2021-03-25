@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Test Timer</title>
+	</head>
+	<body data-rpost_id="3523"  >
+		<script>
+			{
+				let count=0; //error
+			}
+			{
+			function forumTimer()
+			{
+				setTimeout(forumTimer, 1*1000);
+				count++;
+				console.log(count);
+			}
+			}
+			
+			setTimeout(forumTimer, 1*1000);
+			setTimeout(forumTimer, 1*1000);
+			setTimeout(forumTimer, 1*1000);
+			setTimeout(forumTimer, 1*1000);
+			forumTimer();
+		</script>
+	</body>
+</html>

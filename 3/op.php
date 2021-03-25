@@ -25,7 +25,7 @@ switch ($op) {
 			$output = json_encode([$header,$data],JSON_PRETTY_PRINT);
 		}
 		else 
-			$output = 0;
+			$output = 1; //same
 
 	  break;
 	case "getpost":
@@ -52,8 +52,7 @@ switch ($op) {
 				$output = $db->updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content);
 			else //edit or new
 				$output = $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
-			$lastchanged_time=time();
-			file_put_contents( 'tmp.txt', $lastchanged_time);
+
 		}
 	  break;
 	case "searchname":
@@ -75,8 +74,7 @@ switch ($op) {
 			$content="This content is child of $ppost_id";
 			$db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
 		  }
-		$lastchanged_time=time();
-		file_put_contents( 'tmp.txt', $lastchanged_time);
+
 		$t1 = microtime(true);
 		$runtime_ms = round(1000*($t1 - $t0));
 		$output = "$runtime_ms ms";

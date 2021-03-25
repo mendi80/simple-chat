@@ -34,8 +34,8 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
   post_id 		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  ppost_id 		INT				NOT NULL,
-  tmprpost_id	INT				NOT NULL,
+  ppost_id 		INT				NOT NULL CHECK (ppost_id >= 0),
+  tmprpost_id	INT				NOT NULL CHECK (tmprpost_id >= 0),
   rpost_id 		INT				NOT NULL,
   user_id 		INT				NOT NULL,
   created 		DATETIME 		NOT NULL,

@@ -71,11 +71,12 @@ class DB {
 		return $data;
 	}
 	
-	public function createPost($ppost_id, $user_id, $nickname, $secret, $title, $content) {
-		$tmprpost_id = $this->getRootPostID($ppost_id); //root same as root of parent
+	public function createPost($ppost_id0, $user_id, $nickname, $secret, $title, $content) {
+		$tmprpost_id = ($ppost_id0>0) ? $this->getRootPostID($ppost_id0) : "0"; //root same as root of parent
+		$ppost_id = ($ppost_id0>=0) ? $ppost_id0 : "0";
 		$sql = "INSERT into posts (created, ppost_id, tmprpost_id, user_id, nickname, secret, title, content) values (NOW(), ?, ?, ?, ?, ?, ?, ?)";
 		$stmt = $this->con->prepare($sql);
-		$stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$secret,$title,$content]);
+		$result = $stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$secret,$title,$content]);
 		// rpost_id is updated by trigger
 
 		return 1;
