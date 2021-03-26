@@ -81,9 +81,9 @@ class DB {
 
 		return 1;
 	}
-	public function updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content) {
+	public function updatePost($post_id, $user_id, $nickname, $secret, $title, $content) {
 		$post_row = $this->getSingleRowFromPosts($post_id);
-		if($post_row["ppost_id"]==$ppost_id){// && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
+		if($post_row["user_id"]==$user_id){// && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
 			$sql = "UPDATE posts SET updated = NOW(), title = ?, content = ? WHERE post_id = ?";
 			$stmt = $this->con->prepare($sql);
 			$stmt->execute([$title,$content,$post_id]);

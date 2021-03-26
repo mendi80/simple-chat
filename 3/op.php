@@ -11,6 +11,7 @@ $op=$_POST['op'];
 
 switch ($op) {
 	case "fetch":
+		$msg_id = $_POST['msg_id'];
 		$rpost_id = $_POST['rpost_id'];
 		$n_replies = $_POST['n_replies'];
 		$n_edits = $_POST['n_edits'];
@@ -21,11 +22,11 @@ switch ($op) {
 				$data = $db->getForumTitles();
 			 else 
 				$data = $db->getPost($rpost_id);
-			$header = array("rpost_id" => $rpost_id, "n_replies" => $post_state['n_replies'], "n_edits" => $post_state['n_edits']);
+			$header = array("msg_id" => $msg_id, "rpost_id" => $rpost_id, "n_replies" => $post_state['n_replies'], "n_edits" => $post_state['n_edits']);
 			$output = json_encode([$header,$data],JSON_PRETTY_PRINT);
 		}
 		else 
-			$output = 1; //same
+			$output = $msg_id; //same
 
 	  break;
 	case "getpost":
@@ -49,7 +50,7 @@ switch ($op) {
 			$user_id = $db->getUserID($nickname);
 			
 			if ($post_id>0 && $ppost_id==$post_id)
-				$output = $db->updatePost($post_id, $ppost_id, $nickname, $secret, $title, $content);
+				$output = $db->updatePost($post_id, $user_id, $nickname, $secret, $title, $content);
 			else //edit or new
 				$output = $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
 
