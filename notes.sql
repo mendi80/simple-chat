@@ -166,3 +166,25 @@ in php.ini:
 	zend_extension = A:\Programs\xampp\php\ext\php_xdebug-3.0.3-8.0-vs16-x86_64.dll
 
 
+<script id="script_cookies">
+	var cookiesManager = new class{
+		setCookie(cookiename,value,exp_days=365, fullpath=false) {
+			document.cookie = `${cookiename}=${value}; expires=${(new Date(Date.now() + (exp_days*24*3600*1000))).toGMTString()}; ${fullpath?'path=/;':''}`;
+		}	
+		getCookie(cookiename){
+			let ca = decodeURIComponent(document.cookie).split(';');
+			for(let i = 0; i < ca.length; i++){
+				let c = ca[i];
+				while(c.charAt(0) == ' ') c = c.substring(1);
+				if(c.startsWith(cookiename + "="))	return c.substring(cookiename.length + 1, c.length);
+			}
+			return "";
+		}		
+		getCookieOneLiner(cookiename){ //error if cookie not exists
+			return decodeURIComponent(document.cookie).split(';').find(x => x.trim().startsWith(cookiename+'=')).split('=')[1];
+		}
+		deleteCookie(cookiename) {
+			this.setCookie(cookiename,"empty",-3);
+		}
+	}
+</script>

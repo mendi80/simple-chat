@@ -62,8 +62,9 @@
 <h3 id="myInfo" style="display:block">-</h3>
 
 <div id="user_namepwd">
-	<input type="text" id="inputUserNickname" placeholder="כינוי" style="text-align:center;" onfocusout="cookiesManager.setCookie('usernickname',this.value)"> 
-	<input type="password" id="inputUserCipher" placeholder="ססמה" style="text-align:center;" onfocusout="cookiesManager.setCookie('usercipher',this.value)"> 
+	<button class="btn1" onclick="localStorage.setItem('usernickname','john doe');localStorage.setItem('usercipher','123456'); ">מחק</button>
+	<input type="text" id="inputUserNickname" placeholder="כינוי" style="text-align:center;" onfocusout="localStorage.setItem('usernickname',this.value)"> 
+	<input type="password" id="inputUserCipher" placeholder="ססמה" style="text-align:center;" onfocusout="localStorage.setItem('usercipher',this.value)"> 
 	<label class="switch"><input type="checkbox" id="chkFetch" checked><span class="slider"></span></label>
 </div>
 
@@ -154,32 +155,11 @@
 	}
 </script>
 
-<script id="script_cookies">
-	var cookiesManager = new class{
-		setCookie(cookiename,value,exp_days=365, fullpath=false) {
-			document.cookie = `${cookiename}=${value}; expires=${(new Date(Date.now() + (exp_days*24*3600*1000))).toGMTString()}; ${fullpath?'path=/;':''}`;
-		}	
-		getCookie(cookiename){
-			let ca = decodeURIComponent(document.cookie).split(';');
-			for(let i = 0; i < ca.length; i++){
-				let c = ca[i];
-				while(c.charAt(0) == ' ') c = c.substring(1);
-				if(c.startsWith(cookiename + "="))	return c.substring(cookiename.length + 1, c.length);
-			}
-			return "";
-		}		
-		getCookieOneLiner(cookiename){ //error if cookie not exists
-			return decodeURIComponent(document.cookie).split(';').find(x => x.trim().startsWith(cookiename+'=')).split('=')[1];
-		}
-		deleteCookie(cookiename) {
-			this.setCookie(cookiename,"empty",-3);
-		}
-	}
-</script>
+
 
 <script id="script_user">
-	document.getElementById("inputUserNickname").value = cookiesManager.getCookie('usernickname') 
-	document.getElementById("inputUserCipher").value = cookiesManager.getCookie('usercipher') 
+	document.getElementById("inputUserNickname").value = localStorage.getItem('usernickname') 
+	document.getElementById("inputUserCipher").value = localStorage.getItem('usercipher') 
 </script>
 
 <script id="script_forumstate">

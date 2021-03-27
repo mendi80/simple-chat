@@ -6,27 +6,107 @@
 		<style>
 		
 		</style>
-		<title>Mendi Website</title>
+		<title>PasteImage</title>
 	</head>
 	
-	<body>
-		<p>Paste your image here..</p>
-		<img id="container"/>
-	<script>
-	document.onpaste = function(pasteEvent) {
-		var item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
+	<body >
+		<input type="file" onchange="imageConvertAndResize(this.files[0])" accept=".jpg, .jpeg, .png">
+		
+		<img id="imsrc" src="./3/0504_MATLAB.png" width=600/>
+		<img id="ijpg"/>
+		
+		
+		<script>
+			var canvas = document.createElement('canvas');
+			let canvas_context = canvas.getContext('2d');
+			
+			var elem_ipng = document.getElementById('imsrc');
+			var elem_ijpg = document.getElementById('ijpg');
+			
+			function onnewfile(fileblob) {
+				console.log(`file.size=${fileblob.size/1000}KB`)
+				createImage(fileblob)
+				.then(toJpg)
+				.then(jpg=>elem_ijpg.src=URL.createObjectURL(jpg))
+				.catch(e => console.log(e))
+			}
+			
+			const createImage = (fileblob) => new Promise((resolve, reject) => {
+				if(fileblob.type != 'image/png') reject("WOnly accepts PNGs!");
+				let pngimg = new Image(); // same: document.createElement('img');
+				pngimg.onload = e => resolve(pngimg);
+				pngimg.src = URL.createObjectURL(fileblob);
+				elem_ipng.src = URL.createObjectURL(fileblob)
+				
+			});
+			// Converts the (PNG) image to JPG using Canvas
+			const toJpg = (pngimg) => new Promise((resolve, _) => {
+				W=370/2; H=670/2
+				canvas.width = pngimg.width;
+				canvas.height = pngimg.height;
+				//https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				//canvas_context.drawImage(pngimg, 62, 357, 370,330, 200,10,370/2,330/2);
+				canvas_context.drawImage(pngimg, 0, 0, 370/2,330/2);
+				canvas.toBlob( jpg => {
+					console.log(jpg)
+					console.log(`jpg.size=${jpg.size/1000}KB`); 
+					resolve(jpg)
+				},
+				'image/jpeg', 0.80); // 15% quality
+			});
+			
+			
+			var target_width = 200, target_height=0, max_height=200, jpg_quality = 0.80;
 
-		if (item.type.indexOf("image") === 0) {
-			var blob = item.getAsFile();
+			function onPaste(pasteEvent) {
+				let item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
+				if (!item.type.startsWith("image")) return;
+				let fileblob = item.getAsFile();
+				imageConvertAndResize(fileblob);
+				//let reader = new FileReader();
+				//reader.onload = function(event)  //{elem_img.src = event.target.result;		var resultBase64 = event.target.result};
+				//reader.readAsDataURL(blob);
+			}
+			function imageConvertAndResize(fileblob)
+			{
+				actOnJpeg = (jpg) =>{
+					console.log(`jpg.size=${jpg.size/1000}KB`);
+					elem_ijpg.src = URL.createObjectURL(jpg);			
+				}
+				console.log(`fileblob.size=${fileblob.size/1000}KB`)
+				toImage(fileblob)
+				.then(convertAndResize)
+				.then(actOnJpeg)
+				.catch(e => console.log(e))
+			}
+			const toImage = (fileblob) => new Promise((resolve, _) => {
+				let pngimg = new Image();
+				pngimg.onload = e => 
+				resolve(pngimg);
+				pngimg.src = URL.createObjectURL(fileblob);
+			});
+			const convertAndResize = (pngimg) => new Promise((resolve, _) => {
+				src_width=pngimg.width;
+				src_height=pngimg.height;
+				ar = src_width/src_height;
+				let witdh = target_width, height=Math.round(target_width/ar);
+				if(target_height>max_height)
+				{
+					hr = height/max_height;
+					witdh = Math.round(witdh/hr);
+					height = max_height;
+				}
+				canvas.width = width;
+				canvas.height = height;
+				canvas_context.drawImage(pngimg,0,0,width,height);
+				canvas.toBlob( jpg => 
+				resolve(jpg) ,'image/jpeg', jpg_quality);
+			});
+			
+			
 
-			var reader = new FileReader();
-			reader.onload = function(event) {
-				document.getElementById("container").src = event.target.result;
-			};
-
-			reader.readAsDataURL(blob);
-		}
-	}
-	</script>
+			
+			document.onpaste = onPaste;
+		</script>
 	</body>
 </html>
