@@ -54,9 +54,11 @@
 				},
 				'image/jpeg', 0.80); // 15% quality
 			});
+			</script>
 			
-			
-			var target_width = 200, target_height=0, max_height=200, jpg_quality = 0.80;
+			<script id="script_images">
+			// mendi, final
+			image_import_settings = {target_width:1024, max_height:720, jpg_quality:0.80}
 
 			function onPaste(pasteEvent) {
 				let item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
@@ -86,13 +88,14 @@
 				pngimg.src = URL.createObjectURL(fileblob);
 			});
 			const convertAndResize = (pngimg) => new Promise((resolve, _) => {
-				src_width=pngimg.width;
-				src_height=pngimg.height;
+				let iis = image_import_settings;
+				src_width  =pngimg.width;
+				src_height = pngimg.height;
 				ar = src_width/src_height;
-				let witdh = target_width, height=Math.round(target_width/ar);
-				if(target_height>max_height)
-				{
-					hr = height/max_height;
+				let width = iis.target_width
+				let height = Math.round(iis.target_width/ar);
+				if(height > iis.max_height) {
+					hr = height/iis.max_height;
 					witdh = Math.round(witdh/hr);
 					height = max_height;
 				}
@@ -100,13 +103,11 @@
 				canvas.height = height;
 				canvas_context.drawImage(pngimg,0,0,width,height);
 				canvas.toBlob( jpg => 
-				resolve(jpg) ,'image/jpeg', jpg_quality);
+					resolve(jpg) 
+				,'image/jpeg', iis.jpg_quality);
 			});
-			
-			
-
-			
 			document.onpaste = onPaste;
+			
 		</script>
 	</body>
 </html>
