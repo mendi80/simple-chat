@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PHP Listen for XDebug",
+            "name": "PHP XDebug",
             "type": "php",
             "request": "launch",
             "port": 9000
         },
         {
-            "name": "PHP Launch currently open script",
+            "name": "PHP Launch script",
             "type": "php",
             "request": "launch",
             "runtimeExecutable": "A:/Programs/xampp/php/php.exe",

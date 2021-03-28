@@ -2,25 +2,31 @@
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<style>
-		
-		</style>
-		<title>Mendi Website</title>
-	</head>
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
 	
-	<body>
+	</style>
+	<title>Mendi Website</title>
+</head>
+	
+<body>
+	
+	<div>
+	</div>
+	
 	
 	<script>
 	
 	</script>
+
 	</body>
 </html>
 
 *sql create table
 
+DROP TABLE IF EXISTS files;
 DROP TABLE IF EXISTS threads;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users;
@@ -28,8 +34,8 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
   created 		DATETIME 		NOT NULL,
-  nickname		VARCHAR(16) 	NOT NULL,
-  secret		VARCHAR(16) 	NOT NULL
+  nickname		VARCHAR(15) 	NOT NULL,
+  secret		VARCHAR(15) 	NOT NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE posts (
@@ -40,13 +46,13 @@ CREATE TABLE posts (
   user_id 		INT				NOT NULL,
   created 		DATETIME 		NOT NULL,
   updated 		DATETIME 		NOT NULL,
-  nickname		VARCHAR(16) 	NOT NULL,
-  secret		VARCHAR(16) 	NOT NULL,
+  nickname		VARCHAR(15) 	NOT NULL,
+  secret		VARCHAR(15) 	NOT NULL,
   title 		VARCHAR(200)	NOT NULL,
   content		VARCHAR(2000)	NOT NULL,
   blockedit		INT				NOT NULL,
   blockreply	INT				NOT NULL,
-  CONSTRAINT 	FK_USERID FOREIGN KEY (user_id) REFERENCES users(user_id)
+  CONSTRAINT 	FK_USERID_POSTS FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE threads (
@@ -58,6 +64,22 @@ CREATE TABLE threads (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- now add first root post 0
 INSERT INTO threads (post_id, updated) VALUES (0, NOW());
+
+
+CREATE TABLE files (
+  file_id 		INT				NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  uploaded 		DATETIME 		NOT NULL,
+  user_id		INT				NOT NULL,
+  nickname		VARCHAR(15) 	NOT NULL,
+  prefix		BIGINT			NOT NULL,
+  extension		VARCHAR(7)		NOT NULL,
+  basename		VARCHAR(63)		NOT NULL,
+  CONSTRAINT 	FK_USERID_FILES FOREIGN KEY (user_id) REFERENCES users(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
 
 DROP TRIGGER IF EXISTS trig_beforeinsert_posts;
 DROP TRIGGER IF EXISTS trig_afterinsert_posts;

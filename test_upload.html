@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		
+		</style>
+		<title>Upload</title>
+	</head>
+	
+	<body >
+		<input type="file" onchange="imageConvertAndResize(this.files[0])" accept=".jpg, .jpeg, .png">
+		
+		<img id="imsrc" width=200/>
+		<img id="ijpg"/>
+		
+		
+		<script>
+			var canvas = document.createElement('canvas');
+			let canvas_context = canvas.getContext('2d');
+			
+			var elem_ipng = document.getElementById('imsrc');
+			var elem_ijpg = document.getElementById('ijpg');
+			
+			function onnewfile(fileblob) {
+				console.log(`file.size=${fileblob.size/1000}KB`)
+				createImage(fileblob)
+				.then(toJpg)
+				.then(jpg=>elem_ijpg.src=URL.createObjectURL(jpg))
+				.catch(e => console.log(e))
+			}
+			
+			const createImage = (fileblob) => new Promise((resolve, reject) => {
+				if(fileblob.type != 'image/png') reject("WOnly accepts PNGs!");
+				let pngimg = new Image(); // same: document.createElement('img');
+				pngimg.onload = e => resolve(pngimg);
+				pngimg.src = URL.createObjectURL(fileblob);
+				elem_ipng.src = URL.createObjectURL(fileblob)
+				
+			});
+			// Converts the (PNG) image to JPG using Canvas
+			const toJpg = (pngimg) => new Promise((resolve, _) => {
+				W=370/2; H=670/2
+				canvas.width = pngimg.width;
+				canvas.height = pngimg.height;
+				//https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				//canvas_context.drawImage(pngimg, 62, 357, 370,330, 200,10,370/2,330/2);
+				canvas_context.drawImage(pngimg, 0, 0, 370/2,330/2);
+				canvas.toBlob( jpg => {
+					console.log(jpg)
+					console.log(`jpg.size=${jpg.size/1000}KB`); 
+					resolve(jpg)
+				},
+				'image/jpeg', 0.80); // 15% quality
+			});
+			</script>
+			
+			<script id="script_images">
+			// mendi, final
+			image_import_settings = {target_width:1024, max_height:720, jpg_quality:0.80}
+
+			function onPaste(pasteEvent) {
+				let item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
+				if (!item.type.startsWith("image")) return;
+				let fileblob = item.getAsFile();
+				imageConvertAndResize(fileblob);
+				//let reader = new FileReader();
+				//reader.onload = function(event)  //{elem_img.src = event.target.result;		var resultBase64 = event.target.result};
+				//reader.readAsDataURL(blob);
+			}
+			function imageConvertAndResize(fileblob)
+			{
+				actOnJpeg = (jpg) =>{
+					console.log(`jpg.size=${jpg.size/1000}KB`);
+					elem_ijpg.src = URL.createObjectURL(jpg);			
+				}
+				console.log(`fileblob.size=${fileblob.size/1000}KB`)
+				toImage(fileblob)
+				.then(convertAndResize)
+				.then(actOnJpeg)
+				.catch(e => console.log(e))
+			}
+			const toImage = (fileblob) => new Promise((resolve, _) => {
+				let pngimg = new Image();
+				pngimg.onload = e => 
+				resolve(pngimg);
+				pngimg.src = URL.createObjectURL(fileblob);
+			});
+			const convertAndResize = (pngimg) => new Promise((resolve, _) => {
+				let iis = image_import_settings;
+				src_width  =pngimg.width;
+				src_height = pngimg.height;
+				ar = src_width/src_height;
+				let width = iis.target_width
+				let height = Math.round(iis.target_width/ar);
+				if(height > iis.max_height) {
+					hr = height/iis.max_height;
+					witdh = Math.round(witdh/hr);
+					height = max_height;
+				}
+				canvas.width = width;
+				canvas.height = height;
+				canvas_context.drawImage(pngimg,0,0,width,height);
+				canvas.toBlob( jpg => 
+					resolve(jpg) 
+				,'image/jpeg', iis.jpg_quality);
+			});
+			document.onpaste = onPaste;
+			
+		</script>
+	</body>
+</html>

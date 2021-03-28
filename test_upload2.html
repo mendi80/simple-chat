@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+</head>
+	
+<body>
+
+	
+<input type="file" id="inp" onchange="uploadfiles(this.files)" multiple>
+<button onclick="uploadfiles(inp.files)"> Upload</button>
+<div id=links></div>
+<img id="ijpg"/>
+<script id="script_uploadfiles">
+	const inp = document.getElementById("inp");
+	var elem_ijpg = document.getElementById('ijpg');
+	const wait = (ms, result) =>  new Promise( (res,rej)=> ms>=0 ? setTimeout(function(){res(result);}, ms) : rej(new Error('ms<0')) )
+	consolelog = e=>console.log(e);
+	
+	function uploadfiles(files)
+	{
+		const div_links = document.getElementById("links");
+		const putlinks = (newlinks) => new Promise((resolve, reject) => 
+		{
+			for(let i=0;i<newlinks.length;i++)
+			{
+				let a = document.createElement("A");
+				a.setAttribute("href", newlinks[i]);
+				a.appendChild(document.createTextNode(`link=${newlinks[i]}`));
+				div_links.appendChild(a);
+				div_links.appendChild(document.createElement("br"));
+			}
+			resolve(newlinks)
+		})
+	
+		let formData = new FormData();
+		formData.set('nickname', 'mendi80');
+		formData.set('secret', '123456');
+		for (const file of files) formData.append('files[]', file);
+			
+		console.log('fetch start')
+		fetch('./upload.php', {method: 'POST',body: formData})
+		.then((response) => response.json())
+		.then(x=>{console.log("waiting..."); return x;})
+		.then(y=>wait(5,y))
+		.then(putlinks)
+		.then(z=>console.log(z))
+		.catch(consolelog);
+		console.log('fetch done')
+	}
+</script>
+<script id="script_images">  	// paste image. convert to jpeg and resize
+
+	const image_import_settings = {target_width:1024, max_height:720, jpg_quality:0.80}
+
+	function actOnJpeg(jpg) {
+		console.log(`jpg.size=${jpg.size/1000}KB`);
+		file = new File([jpg], "clipboard.jpg")
+		uploadfiles([file])
+	}
+	function resize(pngimg) { 
+		return new Promise((resolve, _) => {
+			var canvas = document.createElement('canvas');
+			let canvas_context = canvas.getContext('2d');
+			let iis = image_import_settings, ar = pngimg.width/pngimg.height;
+			let width = iis.target_width, height = Math.round(iis.target_width/ar);
+			if(height > iis.max_height) {hr = height/iis.max_height; width = Math.round(width/hr); height = iis.max_height;}
+			canvas.width = width;	canvas.height = height;
+			canvas_context.drawImage(pngimg,0,0,width,height);
+			canvas.toBlob( resolve ,'image/jpeg', iis.jpg_quality);
+	})}
+	function toImage(fileblob) {
+		return new Promise((resolve, _) => {
+			let pngimg = new Image();
+			pngimg.onload = () => resolve(pngimg);
+			pngimg.src = URL.createObjectURL(fileblob);
+	})}
+	function checkIfImage(pasteEvent) {
+		return new Promise((resolve, reject) => {
+			let item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
+			item.type.startsWith("image") ? resolve(item.getAsFile()) : reject("not image");
+	})}
+	onPaste = pasteEvent => checkIfImage(pasteEvent).then(toImage).then(resize).then(actOnJpeg).catch(consolelog);
+	document.onpaste = onPaste;
+</script>
+
+</body>
+</html>

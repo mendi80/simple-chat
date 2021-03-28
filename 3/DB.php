@@ -70,7 +70,15 @@ class DB {
 		$data = $stmt->fetchColumn();
 		return $data;
 	}
-	
+	public function validUser($somenickname,$somesecret) {
+		if(strlen($somenickname)>15 || strlen($somesecret)>15 || strlen($somenickname)<3 || strlen($somesecret)<6) 
+			return false;
+		$sql = "SELECT user_id FROM users WHERE nickname = ? AND secret = ?;";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$somenickname, $somesecret]);
+		$data = $stmt->fetchColumn();
+		return $data;
+	}
 	public function createPost($ppost_id0, $user_id, $nickname, $secret, $title, $content) {
 		$tmprpost_id = ($ppost_id0>0) ? $this->getRootPostID($ppost_id0) : "0"; //root same as root of parent
 		$ppost_id = ($ppost_id0>=0) ? $ppost_id0 : "0";
@@ -128,8 +136,14 @@ class DB {
 		return $data;
 	}
 	
-
 	
+	public function addNewFile($user_id, $nickname, $prefix, $extension, $basename) { 
+		$MAX_BASENAME_LEN=63; //sql
+		if(strlen($basename)>$MAX_BASENAME_LEN) $basename = substr($basename,0,$MAX_BASENAME_LEN-1)."+";
+		$sql = "INSERT into files (uploaded, user_id, nickname, prefix, extension, basename) VALUES (NOW(), ?, ?, ?, ?, ?)";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$user_id, $nickname, $prefix, $extension, $basename]);
+	}
 }
 $db = new DB();
 //echo "DB object created\n";
