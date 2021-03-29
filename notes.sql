@@ -1,3 +1,11 @@
+*todo
+
+filtering framework/ voting system
+
+
+limit image/video display size
+
+
 *html basic
 
 <!doctype html>
