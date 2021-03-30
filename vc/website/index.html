@@ -63,12 +63,11 @@
 <h3 id="myInfo" style="display:block">-</h3>
 
 <div id="user_namepwd">
-	<button class="btn1" onclick="localStorage.setItem('usernickname','john doe');localStorage.setItem('usercipher','123456'); ">מחק</button>
-	<input type="text" id="inputUserNickname" placeholder="כינוי" style="text-align:center;" onfocusout="localStorage.setItem('usernickname',this.value)"> 
-	<input type="password" id="inputUserCipher" placeholder="ססמה" style="text-align:center;" onfocusout="localStorage.setItem('usercipher',this.value)"> 
+	<button class="btn1" onclick="handleUser.eraseStorage()">מחק</button>
+	<input type="text" id="inputUserNickname" placeholder="כינוי" style="text-align:center;" onfocusout="handleUser.setStorageNickname(this.value)">
+	<input type="password" id="inputUserCipher" placeholder="ססמה" style="text-align:center;" onfocusout="handleUser.setStorageCipher(this.value)"> 
 	<label class="switch"><input type="checkbox" id="chkFetch" checked><span class="slider"></span></label>
 	<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">כותרות</button>
-	
 </div>
 
 <div id="div_main">
@@ -122,10 +121,6 @@
 	const op = ip + "/dispatch"
 	const up = ip + "/dispatch" 
 	
-</script>
-<script id="script_user">
-	document.getElementById("inputUserNickname").value = localStorage.getItem('usernickname') 
-	document.getElementById("inputUserCipher").value = localStorage.getItem('usercipher') 
 </script>
 
 <script id="script_forumstate">
@@ -275,7 +270,7 @@
 </script>
 
 <div id="script_helpers">
-	
+
 <script id="script_linkify">
 	//	/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig
 	
@@ -343,8 +338,8 @@
 		if(!Array.isArray(files)) files=[files]; //make single file array of files
 		let formData = new FormData();
 		formData.set('up', 'down');
-		formData.set('nickname', 'user1');
-		formData.set('secret', '123456');
+		formData.set('nickname', handleUser.getNickname());
+		formData.set('secret', handleUser.getCipher());
 		for (const file of files) 
 			if(file.size<=upload_settings.max_size)
 				formData.append('files[]', file);
@@ -353,7 +348,6 @@
 		.then((response) => response.json())
 		.then(links2editbox)
 		.catch(consolelog);
-
 	}
 	</script>
 	
@@ -425,6 +419,31 @@
 </script>
 </div>
 
+<div id="script_handlers">
+
+<script id="script_namesecret">
+	const handleUser = new class{
+		constructor(){
+			this.elem_div_user_namepwd = document.getElementById("user_namepwd");
+			this.elem_nickname = document.getElementById("inputUserNickname");
+			this.elem_cipher = document.getElementById("inputUserCipher");
+			
+		}
+		loadFromStorage(){
+			this.elem_nickname.value = localStorage.getItem('usernickname');
+			this.elem_cipher.value = localStorage.getItem('usercipher');
+		 }
+		eraseStorage(){
+			localStorage.setItem('usernickname','john doe');
+			localStorage.setItem('usercipher','123456'); 
+		}
+		setStorageNickname(newnickname){ localStorage.setItem('usernickname',newnickname) }
+		setStorageCipher(newcipher){ localStorage.setItem('usercipher',newcipher) }
+		getNickname(){ return this.elem_nickname.value;}
+		getCipher(){ return this.elem_cipher.value;}
+	}
+</script>
+		
 <script id="script_editbox">
 	"use strict";
 
@@ -504,8 +523,8 @@
 		sendPost() {
 			this.newPost.set('post_id', this.post_id);
 			this.newPost.set('ppost_id', this.ppost_id);
-			this.newPost.set('nickname',document.getElementById("inputUserNickname").value);
-			this.newPost.set('secret',document.getElementById("inputUserCipher").value);
+			this.newPost.set('nickname',handleUser.getNickname());
+			this.newPost.set('secret',handleUser.getCipher());
 			this.newPost.set('title',this.elem_writingPostTitle.value);
 			this.newPost.set('content',this.elem_writingPostContent.value);
 
@@ -745,6 +764,8 @@
 		startForumTimer() {if(this.isForumTimerStarted==false) {this.isForumTimerStarted=true; this.forumTimer();}}
 	}
 </script>
+
+</div>
 
 <script id="script_init">
 	const DEBUG_DISPLAY = true;

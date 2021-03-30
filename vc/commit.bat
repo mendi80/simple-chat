@@ -3,7 +3,8 @@
 SET "tmpdir=A:\temp\website"
 
 REM cd A:\temp\website
-REM rm -rf .git && git init -b main && git commit --allow-empty -m "root" && git add --all -- :!index.html && git commit -m "base" git add . & git commit -m "html"
+REM rm -rf .git && git init -b main && git commit -v --allow-empty -m "root" 
+REM git add -v --all -- :!index.html && git commit -vm "base" && git add . && git commit -vm "html"
 REM git remote add origin https://github.com/vcorona-israel/website.git && git push -u --force origin main
 
 copy /Y A:\Programs\xampp\htdocs\vc\website\index.html %tmpdir%
