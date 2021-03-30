@@ -1,7 +1,13 @@
 <?php
 
 
+
+if(!isset($_POST["op"])) {echo 0; return;}
+unset( $_GET );
+
+
 require_once('DB.php'); 
+
 $errcounter = -1;
 if(!isset($_POST["nickname"]) || !isset($_POST["secret"])) {echo $errcounter; return;} ;$errcounter--;
 if(empty($_FILES)) {echo $errcounter; return;} ;$errcounter--;

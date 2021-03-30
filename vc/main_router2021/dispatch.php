@@ -1,0 +1,13 @@
+<?php
+
+header('Access-Control-Allow-Origin: *');
+header('Content-type: application/json');
+
+$n = 0;
+if (isset($_POST["op"])) $n = 1; 
+elseif (isset($_POST["up"])) $n = 2;
+
+if ($n==1 || $n==2)
+{
+	include('../select.php');
+} else {echo 0; return;}

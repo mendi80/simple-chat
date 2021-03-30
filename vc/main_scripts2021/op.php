@@ -1,12 +1,14 @@
 <?php
 
+
 if(!isset($_POST["op"])) {echo 0; return;}
+unset( $_GET );
 
 $t0 = microtime(true);
-//echo json_encode([array("first_name" => "mendi")]);
 
 require_once('DB.php'); 
 
+//echo json_encode([array("first_name" => "mendi")]);
 
 $op=$_POST['op'];
 

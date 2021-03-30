@@ -2,14 +2,20 @@
 
 filtering framework/ voting system
 
-
 limit image/video display size
-hide php htaccess
 change db names?
 hide obfscure scramble js
 dns website name
 
+*security steps:
+https://www.php.net/manual/en/security.hiding.php
+setting expose_php=off in your php.ini
+.htaccess in its files: php_flag engine off
+add .php filter in .htaccess
+disable browsing: httpd.conf
 
+
+*github clear history
 *html basic
 
 <!doctype html>

@@ -1,7 +1,6 @@
 <?php
 
-header('Access-Control-Allow-Origin: *');
-header('Content-type: application/json');
+
 //http://vcorona.co.il Vary: Origin
 class DB {
 	private $con;
