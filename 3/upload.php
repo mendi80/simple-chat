@@ -1,5 +1,6 @@
 <?php
 
+
 require_once('DB.php'); 
 $errcounter = -1;
 if(!isset($_POST["nickname"]) || !isset($_POST["secret"])) {echo $errcounter; return;} ;$errcounter--;

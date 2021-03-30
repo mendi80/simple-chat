@@ -4,6 +4,10 @@ filtering framework/ voting system
 
 
 limit image/video display size
+hide php htaccess
+change db names?
+hide obfscure scramble js
+dns website name
 
 
 *html basic
@@ -37,37 +41,80 @@ limit image/video display size
 DROP TABLE IF EXISTS files;
 DROP TABLE IF EXISTS threads;
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-  user_id		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  created 		DATETIME 		NOT NULL,
-  nickname		VARCHAR(15) 	NOT NULL,
-  secret		VARCHAR(15) 	NOT NULL
+  user_id		INT UNSIGNED		NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  created 		DATETIME 			NOT NULL,
+  quality0		TINYINT UNSIGNED	NOT NULL,
+  quality1		TINYINT UNSIGNED	NOT NULL,
+  quality2		TINYINT UNSIGNED	NOT NULL,
+  quality3		TINYINT UNSIGNED	NOT NULL,
+  okwrite		BIT					NOT NULL,
+  okreply		BIT					NOT NULL,
+  okreply2		BIT					NOT NULL,
+  okreply3		BIT					NOT NULL,
+  okreply4		BIT					NOT NULL,
+  okreply5		BIT					NOT NULL,
+  okreply6		BIT					NOT NULL,
+  okreply7		BIT					NOT NULL,
+  nickname		VARCHAR(15) 		NOT NULL,
+  secret		VARCHAR(63) 		NOT NULL
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ 
+ CREATE TABLE users_counters (
+  user_id		INT	UNSIGNED		NOT NULL PRIMARY KEY,
+  nposts		INT	UNSIGNED		NOT NULL,
+  nreplies		INT UNSIGNED		NOT NULL,
+  ncharacters	INT UNSIGNED		NOT NULL,
+  nreads		INT UNSIGNED		NOT NULL
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ 
+ CREATE TABLE users_actions (
+  user_id		INT	UNSIGNED		NOT NULL PRIMARY KEY,
+  action_id		INT	UNSIGNED		NOT NULL,
+  target_id		INT UNSIGNED		NOT NULL,
+  action_value	INT UNSIGNED		NOT NULL,
+  created 		DATETIME 			NOT NULL,
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE votes (
+  vote_id		INT	UNSIGNED		NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id_src	INT	UNSIGNED		NOT NULL,
+  user_id_tar	INT	UNSIGNED		NOT NULL,
+  user_id_tar	INT	UNSIGNED		NOT NULL,
+  created 		DATETIME 			NOT NULL,
+  score_type	TINYINT 			NOT NULL,
+  score_value	TINYINT 			NOT NULL,
+  quality_src	TINYINT UNSIGNED	NOT NULL,
+  quality_tar	TINYINT UNSIGNED	NOT NULL,
+  reason		VARCHAR(240)		NOT NULL,
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE posts (
-  post_id 		INT				NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  ppost_id 		INT				NOT NULL CHECK (ppost_id >= 0),
-  tmprpost_id	INT				NOT NULL CHECK (tmprpost_id >= 0),
-  rpost_id 		INT				NOT NULL,
-  user_id 		INT				NOT NULL,
-  created 		DATETIME 		NOT NULL,
-  updated 		DATETIME 		NOT NULL,
-  nickname		VARCHAR(15) 	NOT NULL,
-  secret		VARCHAR(15) 	NOT NULL,
-  title 		VARCHAR(200)	NOT NULL,
-  content		VARCHAR(2000)	NOT NULL,
-  blockedit		INT				NOT NULL,
-  blockreply	INT				NOT NULL,
+  post_id 		INT	UNSIGNED		NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  ppost_id 		INT					NOT NULL CHECK (ppost_id >= 0),
+  tmprpost_id	INT					NOT NULL CHECK (tmprpost_id >= 0),
+  rpost_id 		INT					NOT NULL,
+  user_id 		INT UNSIGNED		NOT NULL,
+  created 		DATETIME 			NOT NULL,
+  updated 		DATETIME 			NOT NULL,
+  nickname		VARCHAR(15) 		NOT NULL,
+  secret		VARCHAR(15) 		NOT NULL,
+  title 		VARCHAR(200)		NOT NULL,
+  content		VARCHAR(2000)		NOT NULL,
+  quality		INT					NOT NULL,
+  blockedit		BIT					NOT NULL,
+  blockreply	BIT					NOT NULL,
   CONSTRAINT 	FK_USERID_POSTS FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE threads (
-  post_id 		INT				NOT NULL PRIMARY KEY,
-  n_replies		INT				NOT NULL DEFAULT 0,
-  n_edits 		INT				NOT NULL DEFAULT 0,
-  updated 		DATETIME 		NOT NULL
+  post_id 		INT	UNSIGNED		NOT NULL PRIMARY KEY,
+  n_replies		INT					NOT NULL DEFAULT 0,
+  n_edits 		INT					NOT NULL DEFAULT 0,
+  updated 		DATETIME 			NOT NULL
 -- here post_id could be zero.  CONSTRAINT 	FK_POSTID FOREIGN KEY (post_id) REFERENCES posts(post_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- now add first root post 0
@@ -75,9 +122,9 @@ INSERT INTO threads (post_id, updated) VALUES (0, NOW());
 
 
 CREATE TABLE files (
-  file_id 		INT				NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  file_id 		INT	UNSIGNED	NOT NULL AUTO_INCREMENT PRIMARY KEY,
   uploaded 		DATETIME 		NOT NULL,
-  user_id		INT				NOT NULL,
+  user_id		INT	UNSIGNED	NOT NULL,
   nickname		VARCHAR(15) 	NOT NULL,
   prefix		BIGINT			NOT NULL,
   extension		VARCHAR(7)		NOT NULL,
@@ -218,3 +265,8 @@ in php.ini:
 		}
 	}
 </script>
+
+
+
+
+

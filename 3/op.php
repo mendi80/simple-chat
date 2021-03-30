@@ -1,5 +1,6 @@
 <?php
 
+if(!isset($_POST["op"])) {echo 0; return;}
 
 $t0 = microtime(true);
 //echo json_encode([array("first_name" => "mendi")]);

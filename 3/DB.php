@@ -1,11 +1,8 @@
 <?php
 
-function curdate() {
-    // gets current timestamp
-    date_default_timezone_set('Asia/Manila'); // What timezone you want to be the default value for your current date.
-    return date('Y-m-d H:i:s');
-}
-
+header('Access-Control-Allow-Origin: *');
+header('Content-type: application/json');
+//http://vcorona.co.il Vary: Origin
 class DB {
 	private $con;
 	private const host = '127.0.0.1';
