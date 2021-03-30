@@ -47,10 +47,10 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id		INT UNSIGNED		NOT NULL PRIMARY KEY AUTO_INCREMENT,
   created 		DATETIME 			NOT NULL,
-  quality0		TINYINT UNSIGNED	NOT NULL,
-  quality1		TINYINT UNSIGNED	NOT NULL,
-  quality2		TINYINT UNSIGNED	NOT NULL,
-  quality3		TINYINT UNSIGNED	NOT NULL,
+  user_level	TINYINT 			NOT NULL DEFAULT 99,
+  quality1		TINYINT 			NOT NULL,
+  quality2		TINYINT 			NOT NULL,
+  quality3		TINYINT 			NOT NULL,
   okwrite		BIT					NOT NULL,
   okreply		BIT					NOT NULL,
   okreply2		BIT					NOT NULL,
@@ -83,12 +83,12 @@ CREATE TABLE votes (
   vote_id		INT	UNSIGNED		NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_id_src	INT	UNSIGNED		NOT NULL,
   user_id_tar	INT	UNSIGNED		NOT NULL,
-  user_id_tar	INT	UNSIGNED		NOT NULL,
+  tmp	INT	UNSIGNED		NOT NULL,
   created 		DATETIME 			NOT NULL,
   score_type	TINYINT 			NOT NULL,
   score_value	TINYINT 			NOT NULL,
-  quality_src	TINYINT UNSIGNED	NOT NULL,
-  quality_tar	TINYINT UNSIGNED	NOT NULL,
+  quality_src	TINYINT 			NOT NULL,
+  quality_tar	TINYINT 			NOT NULL,
   reason		VARCHAR(240)		NOT NULL,
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -112,8 +112,9 @@ CREATE TABLE posts (
 
 CREATE TABLE threads (
   post_id 		INT	UNSIGNED		NOT NULL PRIMARY KEY,
-  n_replies		INT					NOT NULL DEFAULT 0,
-  n_edits 		INT					NOT NULL DEFAULT 0,
+  n_views 		INT	UNSIGNED		NOT NULL,
+  n_replies		INT	UNSIGNED		NOT NULL,
+  n_edits 		INT UNSIGNED		NOT NULL,
   updated 		DATETIME 			NOT NULL
 -- here post_id could be zero.  CONSTRAINT 	FK_POSTID FOREIGN KEY (post_id) REFERENCES posts(post_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -131,10 +132,6 @@ CREATE TABLE files (
   basename		VARCHAR(63)		NOT NULL,
   CONSTRAINT 	FK_USERID_FILES FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-
-
 
 DROP TRIGGER IF EXISTS trig_beforeinsert_posts;
 DROP TRIGGER IF EXISTS trig_afterinsert_posts;
