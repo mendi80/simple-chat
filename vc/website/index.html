@@ -746,8 +746,9 @@
 			.then(res => res.json())
 			.then(res => this.updateForum(res))
 			.catch(e => console.error('Error, pingAndFetch(), ' + e));
+			//fetch("http://46.117.188.240:60123/dispatch", {method: 'POST', body: fetchManager.pingFormData }).then(res => res.json()).then(consolelog)
 		}
-		
+	
 		requestFetch(delay = 0)
 		{
 			(delay>0) ? setTimeout(function(){fetchManager.pingAndFetch()}, delay): fetchManager.pingAndFetch();
