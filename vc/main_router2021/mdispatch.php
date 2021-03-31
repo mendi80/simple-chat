@@ -13,4 +13,3 @@ if ($n==1 || $n==2)
 {
 	include('../main_select2021/select.php');
 } else {echo 0; return;}
-g
