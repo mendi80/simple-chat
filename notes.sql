@@ -13,7 +13,8 @@ setting expose_php=off in your php.ini
 .htaccess in its files: php_flag engine off
 add .php filter in .htaccess
 disable browsing: httpd.conf
-
+ddos: apache2.conf: RequestReadTimeout header=10-20,MinRate=500 body=20,MinRate=500
+httpd.conf: disable mod_autoindex mod_dir cgi etc
 
 *github clear history
 *html basic

@@ -9,5 +9,5 @@ elseif (isset($_POST["up"])) $n = 2;
 
 if ($n==1 || $n==2)
 {
-	include('../select.php');
+	include('../main_select2021/select.php');
 } else {echo 0; return;}

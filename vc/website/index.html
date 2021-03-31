@@ -137,8 +137,9 @@
 			this.prev_forumstate = forumstates.INIT;
 			this.rpost_id = 0;
 			this.last_rpost_id = 0;
+			this.last_modified = document.lastModified;
     	}
-		setInfo(x) {myInfo.innerHTML=x;}
+		setInfo(x) {this.elem_myInfo.innerHTML=x;}
 		getRpostID() {return this.rpost_id;}
 		getToDisplayTitles() {return this.rpost_id==0;}
 		getToDisplayThread() {return this.rpost_id>0;}
@@ -196,8 +197,8 @@
 		handleTitles.show();
 		
 		// debug dropHandler
-		forumDisplay.setForumState(forumstates.WRITE)
-		handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
+		//forumDisplay.setForumState(forumstates.WRITE)
+		//handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
 	}
 	function btnGetThread(post_id)
 	{
@@ -295,8 +296,8 @@
 		let pat_mp4= /(https?:\/\/\S+\.mp4)/igm 
 		let pat_youtube= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
 		let pat_twitter= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
-		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%]+)(?![^<>]*>)/igm
-		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%]+)(?![^<>]*>)\b/igm
+		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)/igm
+		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)\b/igm
 
 		let imgs = text0.replace(pat_imgs, '<img src="$1" alt="" style="max-width:900px;width:100%"><br><a href="$1" target="_blank"></a>');
 		let mp3 = imgs.replace(pat_mp3, '<audio controls><source src="$1" type="audio/mpeg">Unsupported</audio><br><a href="$1" target="_blank">$1</a>');	
@@ -427,7 +428,7 @@
 			this.elem_div_user_namepwd = document.getElementById("user_namepwd");
 			this.elem_nickname = document.getElementById("inputUserNickname");
 			this.elem_cipher = document.getElementById("inputUserCipher");
-			
+			this.loadFromStorage();
 		}
 		loadFromStorage(){
 			this.elem_nickname.value = localStorage.getItem('usernickname');
@@ -777,6 +778,7 @@
 	
 	gotoTitles();
 	fetchManager.startForumTimer();
+	forumDisplay.setInfo(document.lastModified);
 	
 	(function () {
     if (typeof EventTarget !== "undefined") {

@@ -1,5 +1,6 @@
 
-# Options SymLinksIfOwnerMatch
+
+
 RewriteEngine on
 
 # Rewrite /foo/bar to /foo/bar.php
@@ -9,3 +10,5 @@ RewriteRule ^([^.?]+)$ %{REQUEST_URI}.php [L]
 RewriteCond %{THE_REQUEST} "^[^ ]* .*?\.php[? ].*$" [NC]
 RewriteRule .* - [L,R=404]
 
+RewriteCond %{REQUEST_METHOD} ^(GET|TRACE|TRACK|PUT|OPTIONS|DELETE|HEAD)
+RewriteRule .*$ - [F,L]
