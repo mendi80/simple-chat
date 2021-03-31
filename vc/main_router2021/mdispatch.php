@@ -3,6 +3,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-type: application/json');
 
+//var_dump($_SERVER);
+
 $n = 0;
 if (isset($_POST["op"])) $n = 1; 
 elseif (isset($_POST["up"])) $n = 2;
