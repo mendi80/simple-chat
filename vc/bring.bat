@@ -1,13 +1,11 @@
 
 
-SET "x=A:\Programs\xampp"
-SET "s=%x%\htdocs\vc\settings"
+SET "xampp=B:\xampp"
+SET "targetdir=%xampp%\htdocs\vc\settings"
 
-copy /Y 
-
-copy /Y  "%x%\apache\conf\httpd.conf" "%s%"
-copy /Y  "%x%\php\php.ini" "%s%"
-
+copy /Y  "%xampp%\apache\conf\httpd.conf" "%targetdir%"
+copy /Y  "%xampp%\php\php.ini" "%targetdir%"
+copy /Y  "%xampp%\mysql\data\my.ini" "%targetdir%"
 
 
 

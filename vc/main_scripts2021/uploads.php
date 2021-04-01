@@ -30,7 +30,7 @@ if($countfiles>=$MAX_FILES_PER_BATCH) {echo $errcounter; return;} ;$errcounter--
 
 $nickname = $_POST["nickname"];
 $secret = $_POST["secret"];
-$user_id = $db->validUser($nickname,$secret);
+$user_id = $db->validUserByNickName($nickname,$secret);
 if(!$user_id) {echo $errcounter; return;} ;$errcounter--;
 
 // index files. look at last used index. prevent collision.

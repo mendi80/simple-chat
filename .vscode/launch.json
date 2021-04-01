@@ -14,7 +14,7 @@
             "name": "PHP Launch script",
             "type": "php",
             "request": "launch",
-            "runtimeExecutable": "A:/Programs/xampp/php/php.exe",
+            "runtimeExecutable": "B:/xampp/php/php.exe",
             "program": "${file}",
             "cwd": "${fileDirname}",
             "port": 9000

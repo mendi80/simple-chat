@@ -1,1 +1,19 @@
-D:/Users/Mendi/AppData/Roaming/Code/User/settings.json
+{
+    "terminal.external.windowsExec": "",
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+    "php.validate.executablePath": "A:/Programs/xampp/php/php.exe",
+    "files.autoSave": "onFocusChange",
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+    },
+    "editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"explorer.confirmDelete": false,
+	"git.enabled": false,
+	"editor.mouseWheelScrollSensitivity": 3,
+	"editor.mouseWheelZoom": true,
+	"editor.trimAutoWhitespace": false,
+	"editor.renderWhitespace": "all",
+}

@@ -1,16 +1,18 @@
 <?php
 
 
-//http://vcorona.co.il Vary: Origin
+//http://vcorona.co.il Vary: Origin "4cf3081a9cfbcab9c874"
 class DB {
 	private $con;
 	private const host = '127.0.0.1';
-	private const dbname = 'mendi_forum_01';
+	private const port = "3306";
+	
+	private const dbname = 'outsiders';
 	private const user = 'root';
 	private const password = '';
 	
 	public function __construct() {
-		$dsn = "mysql:host=" . self::host . ";dbname=" . self::dbname . ";" ;
+		$dsn = "mysql:host=".self::host.";dbname=".self::dbname.";port=".self::port.";" ;
 		try {
 			$this->con = new PDO($dsn, self::user, self::password);
 			$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -19,9 +21,12 @@ class DB {
 		}
 	}
 	public function getSingleRowFromThreads($post_id){
-		$sql = "SELECT * FROM threads WHERE post_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
+		if($post_id>0)
+			$sql = "SELECT * FROM thread_counters WHERE post_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
+		else
+			$sql = "SELECT * FROM forum_counters WHERE forum_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
 		$stmt = $this->con->prepare($sql);
-		$stmt->execute([$post_id]);
+		$stmt->execute([max(1,$post_id)]);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC;
 		return $data;
 	}
@@ -55,9 +60,11 @@ class DB {
 		return $data!="0";
 	}
 	public function addNewUser($nickname, $secret) { 
+		//$hashd = hash("sha256",MD5($secret.random_bytes(44)), 1);
+		$secret_hash = password_hash($secret, PASSWORD_DEFAULT);
 		$sql = "INSERT into users (created, nickname, secret) VALUES (NOW(), ?, ?)";
 		$stmt = $this->con->prepare($sql);
-		$stmt->execute([$nickname, $secret]);
+		$stmt->execute([$nickname, $secret_hash]);
 	}
 	public function getUserID($somenickname) {
 		$sql = "SELECT user_id FROM users WHERE nickname = ?;";
@@ -66,28 +73,42 @@ class DB {
 		$data = $stmt->fetchColumn();
 		return $data;
 	}
-	public function validUser($somenickname,$somesecret) {
-		if(strlen($somenickname)>15 || strlen($somesecret)>15 || strlen($somenickname)<3 || strlen($somesecret)<6) 
-			return false;
-		$sql = "SELECT user_id FROM users WHERE nickname = ? AND secret = ?;";
+	public function validUserByUserID($someuserid,$somenickname,$somesecret) {
+		if($someuserid<=0 || strlen($somesecret)!=32) return false;
+		$sql = "SELECT nickname, secret FROM users WHERE user_id = ?;";
 		$stmt = $this->con->prepare($sql);
-		$stmt->execute([$somenickname, $somesecret]);
-		$data = $stmt->fetchColumn();
-		return $data;
+		$stmt->execute([$someuserid]);
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		return ($data && $data['secret'] != NULL && password_verify($somesecret, $data['secret']) && strcmp($somenickname, $data['nickname'])==0) ? $someuserid : false;
+	}
+	public function validUserByNickName($somenickname,$somesecret) {
+		if(strlen($somenickname)>15 || strlen($somesecret)!=32 || strlen($somenickname)<3) return false;
+		$sql = "SELECT user_id, secret FROM users WHERE nickname = ?;";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$somenickname]);
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		return ($data && $data['secret'] != NULL && password_verify($somesecret, $data['secret']))? $data['user_id']: false;
 	}
 	public function createPost($ppost_id0, $user_id, $nickname, $secret, $title, $content) {
+		if(!$this->validUserByUserID($user_id,$nickname,$secret)) return 0;
 		$tmprpost_id = ($ppost_id0>0) ? $this->getRootPostID($ppost_id0) : "0"; //root same as root of parent
 		$ppost_id = ($ppost_id0>=0) ? $ppost_id0 : "0";
-		$sql = "INSERT into posts (created, ppost_id, tmprpost_id, user_id, nickname, secret, title, content) values (NOW(), ?, ?, ?, ?, ?, ?, ?)";
+		// https://www.php.net/manual/en/filter.filters.sanitize.php
+		$title = filter_var($title, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$content = filter_var($content, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$sql = "INSERT into posts (created, ppost_id, tmprpost_id, user_id, nickname, title, content) values (NOW(), ?, ?, ?, ?, ?, ?)";
 		$stmt = $this->con->prepare($sql);
-		$result = $stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$secret,$title,$content]);
+		$result = $stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$title,$content]);
 		// rpost_id is updated by trigger
 
 		return 1;
 	}
 	public function updatePost($post_id, $user_id, $nickname, $secret, $title, $content) {
+		if(!$this->validUserByUserID($user_id, $nickname, $secret)) return 0;
 		$post_row = $this->getSingleRowFromPosts($post_id);
 		if($post_row["user_id"]==$user_id){// && $post_row["nickname"]==$nickname && $post_row["secret"]==$secret) {
+			$title = filter_var($title, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$content = filter_var($content, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$sql = "UPDATE posts SET updated = NOW(), title = ?, content = ? WHERE post_id = ?";
 			$stmt = $this->con->prepare($sql);
 			$stmt->execute([$title,$content,$post_id]);
@@ -107,6 +128,10 @@ class DB {
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$post_id,$post_id]);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$sql = "UPDATE thread_counters SET n_views = n_views + 1 WHERE post_id = ?";
+		$stmt = $this->con->prepare($sql);
+		$stmt->execute([$post_id]);
+		
 		return $data;
 	}
 	public function getPostSingle($post_id) {
