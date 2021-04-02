@@ -16,6 +16,8 @@ git push origin main --force
 
 cd %~dp0
 
+echo Done!
+exit /b DONE!
 
 :error
 echo Failed with error #%errorlevel%.
