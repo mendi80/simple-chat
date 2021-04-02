@@ -15,7 +15,7 @@ $valid = true;
 //if(isset($_POST['n_replies'])) $valid = $valid && filter_var($n_replies, FILTER_VALIDATE_INT);
 //if(isset($_POST['n_edits'])) $valid = $valid && filter_var($n_edits, FILTER_VALIDATE_INT);
 //if(isset($_POST['nickname'])) $valid = $valid && filter_var($n_edits, FILTER_VALIDATE_INT);
-
+//if (preg_match('/^[A-Za-z0-9_-]*$/', $yourString)) {}
 
 //echo json_encode([array('first_name' => 'mendi')]);
 

@@ -1,0 +1,29 @@
+
+// https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/
+
+
+1. Create rootCA
+
+openssl genrsa -out rootCA.key 4096   //create root private key -des3 removed ..
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 730 -out rootCA.pem  //create root certificate
+
+(import/install rootCA.pem in  Trusted Root Certificate Authorities in windows)
+
+2. Write config file for faster issues
+
+file1: req.csr.cnf 	//general certification config
+file2: req.v3.ext 	// for X509 v3 certificate.
+
+
+3. Create a csr (certificate signing request) and private key for localhost
+
+openssl req -new -sha256 -nodes -out localhost.csr -newkey rsa:2048 -keyout localhost.key -config req.csr.cnf
+
+
+4. Let root sign on csr (issue csr), thus create a signed certificate
+
+openssl x509 -req -in localhost.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out localhost.crt -days 365 -sha256 -extfile req.v3.ext
+
+
+
+

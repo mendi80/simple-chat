@@ -1,0 +1,51 @@
+RewriteEngine on
+# Rewrite /foo/bar to /foo/bar.php
+RewriteRule ^([^.?]+)$ %{REQUEST_URI}.php [L]
+
+# Return 404 if original request is /foo/bar.php
+RewriteCond %{THE_REQUEST} "^[^ ]* .*?\.php[? ].*$" [NC]
+RewriteRule .* - [L,R=404]
+
+
+
+<Files "mdispatch.php">
+    Require all denied
+</Files>
+
+RewriteCond %{REQUEST_URI} "=/dispatch"
+RewriteRule ^ /mdispatch.php
+
+
+RewriteEngine off
+
+RewriteRule ".*" "dispatch.php" [L]
+
+RewriteRule "!(/.jpg)" "-" [F]
+RewriteRule ".*" "dispatch.php" [L]
+
+RewriteCond %{REQUEST_URI} !echo.php
+RewriteRule .* echo.php?ua=%{HTTP_USER_AGENT}&https=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} =/dispatch
+RewriteRule ^ /dispatch.php [L]
+
+
+order allow,deny
+deny from All
+# newver: only 
+allow from 46.117.188.240
+allow from vcorona.co.il
+
+<Files "dispatch.php">
+     Allow from All
+</Files>
+
+# Rewrite /foo/bar to /foo/bar.php
+RewriteRule ^([^.?]+)$ %{REQUEST_URI}.php [L]
+
+# Return 404 if original request is /foo/bar.php
+RewriteCond %{THE_REQUEST} "^[^ ]* .*?\.php[? ].*$" [NC]
+RewriteRule .* - [L,R=404]
+
+RewriteCond %{REQUEST_METHOD} ^(GET|TRACE|TRACK|PUT|OPTIONS|DELETE|HEAD)
+RewriteRule .*$ - [F,L]
