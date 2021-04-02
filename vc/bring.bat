@@ -1,6 +1,8 @@
+echo on
 
+set "DRV=%CD:~0,2%"
 
-SET "xampp=B:\xampp"
+SET "xampp=%DRV%\xampp"
 SET "targetdir=%xampp%\htdocs\vc\settings"
 
 copy /Y  "%xampp%\apache\conf\httpd.conf" "%targetdir%"

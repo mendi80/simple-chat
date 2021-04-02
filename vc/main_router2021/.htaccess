@@ -1,0 +1,12 @@
+
+RewriteEngine on
+
+
+RewriteCond %{REQUEST_URI} "^/dispatch\.js$"
+RewriteRule ^ "/mdispatch.php" [L]
+
+RewriteCond %{THE_REQUEST} !/dispatch\.js [NC]
+RewriteCond %{THE_REQUEST} !/index\.html [NC]
+RewriteRule .* - [L,R=408]
+
+# RewriteCond %{REQUEST_METHOD} !^(post) [NC]
