@@ -10,11 +10,11 @@ REM git remote add origin https://github.com/vcorona-israel/website.git && git p
 
 copy /Y %DRV%\xampp\htdocs\vc\website\index.html %tmpdir% || goto :error
 cd /D %tmpdir% || goto :error
-git status 
+git status || goto :error
 git commit --all --amend --no-edit || goto :error
-git push origin main --force 
+git push origin main --force || goto :error
 
-cd %~dp0
+cd %~dp0 || goto :error
 
 echo Done!
 exit /b DONE!
