@@ -310,3 +310,7 @@ in php.ini:
 ** Context.php error
 before: if (! class_exists($context))
 add: $context= str_replace("Db100418","Db100300",$context); //mendi
+
+
+x = await fetch('https://api.ipify.org').then(x=>x.text())
+
