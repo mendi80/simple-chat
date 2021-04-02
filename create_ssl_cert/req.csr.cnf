@@ -1,0 +1,18 @@
+
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=IL
+ST=Merkaz
+L=Rishon Letzion
+O=MVD
+OU=Dev
+emailAddress=mendi.barel@gmail.com
+CN = localhost
+
+
+
