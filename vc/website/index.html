@@ -6,6 +6,7 @@
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--link rel="stylesheet" href="style.css"-->
+	<script id="script_config" src="config" defer></script>
 	<style> 
 		#jojoj { width:80vw; padding:0; margin:0 auto; box-sizing: border-box; }
 		body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: rgb(153, 98, 139)}
@@ -19,7 +20,7 @@
 	 	footer {background-color: #22222277; color: white; padding: 15px; position: fixed; left: 0; bottom: 0; width: 100%;}
 
 
-		#user_namepwd {width: 100px; height:48px; font-size:24px;}
+		#user_namepwd {width: 100px; }
 		#inputAddRow { height:48px; background:#bfb5; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
 		#inputAddRow:focus {outline:none;}
 		.btn1 {background-color:#aaaaaaaa; height:40px; font-size:24px; display:inline-block; border:0.1em solid #FFFFFF; margin:2px auto 10px auto;
@@ -114,19 +115,16 @@
 
 <!-- ************************************************************SCRIPTS******************************************************************* -->
 
-<script id="script_settings">
-	"use strict";
-	const ip = "http://46.117.188.240:60111";
-	const op = ip + "/mdispatch.php"
-	const up = ip + "/mdispatch.php" 
-</script>
+
 
 <script id="script_forumstate">
 	
 	"use strict";
 	const forumstates = {INIT:"Init",TITLES:"Titles", THREAD:"Thread", WRITE:"Write", REPLY:"Reply", EDIT:"Edit"}
 	const div_main = document.getElementById("div_main");
-	
+	const opbase = "setmdispatch.php"
+	var operfetch ="run js"
+	var operfile ="run file"
 	const forumDisplay = new class Forum{
 		
 		constructor() {
@@ -260,7 +258,7 @@
 		let newRows = new FormData();
 		newRows.set('op', "create_random_table");
 		newRows.set('nrows', N);
-		fetch(op, {method: 'POST', body: newRows})
+		fetch(operfetch, {method: 'POST', body: newRows})
 		.then(res => res.text())
 		.then(res => console.log(`CreateRandomTable N=${N} time=${res}`))
 		.catch(e => console.error('Error, sendPost(), ' + e))
@@ -288,7 +286,8 @@
 	function imagify(text0) {
 		// https://regex101.com/r/vS2jJ4/63
 		//input = input.replace(pat_image1, "<br><img style='max-width:100%;overflow:hidden;' src='$1'>");
-		
+		operfile
+		let pat_files= 'http://sidersfile/' 
 		let pat_imgs= /(https?:\/\/\S+\.(?:png|jpg|gif|svg|webp|jpeg))/igm 
 		let pat_mp3= /(https?:\/\/\S+\.mp3)/igm 
 		let pat_mp4= /(https?:\/\/\S+\.mp4)/igm 
@@ -297,7 +296,8 @@
 		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)/igm
 		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)\b/igm
 
-		let imgs = text0.replace(pat_imgs, '<img src="$1" alt="" style="max-width:900px;width:100%"><br><a href="$1" target="_blank"></a>');
+		let files = text0.replace(pat_files, 'http://'+operfile);
+		let imgs = files.replace(pat_imgs, '<img src="$1" alt="" style="max-width:900px;width:100%"><br><a href="$1" target="_blank"></a>');
 		let mp3 = imgs.replace(pat_mp3, '<audio controls><source src="$1" type="audio/mpeg">Unsupported</audio><br><a href="$1" target="_blank">$1</a>');	
 		let mp4 = imgs.replace(pat_mp4, '<video controls><source src="$1" type="video/mp4">Unsupported</video><br><a href="$1" target="_blank">$1</a>');	
 		let yt = mp4.replace(pat_youtube, '<iframe width="640" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
@@ -343,7 +343,7 @@
 			if(file.size<=upload_settings.max_size)
 				formData.append('files[]', file);
 			
-		fetch(up, {method: 'POST',body: formData})
+		fetch(operfetch, {method: 'POST',body: formData})
 		.then((response) => response.json())
 		.then(links2editbox)
 		.catch(consolelog);
@@ -585,7 +585,7 @@
 			this.newPost.set('title',this.elem_writingPostTitle.value);
 			this.newPost.set('content',this.elem_writingPostContent.value);
 
-			fetch(op, {method: 'POST', body: this.newPost})
+			fetch(operfetch, {method: 'POST', body: this.newPost})
 			.then(res => res.text())
 			.then(res => { console.log(res); (res=="1")?afterPostSent():''; })
 			.catch(e => console.error('Error, sendPost(), ' + e))
@@ -735,6 +735,8 @@
 			this.t0Fetch = performance.now()-5*1000;
 			this.t1Fetch = performance.now()-5*1000;
 			this.prev_rpost_id = "";
+			this.add2ip = x=>  `${x>>>24}.${(x>>16 & 255)}.${x>>8 & 255}.${x & 255}`
+			this.ip2add = x=> x.split('.').reduce( (ipInt, octet) => (ipInt<<8) + parseInt(octet, 10), 0) >>> 0;
 		}
 
 
@@ -798,7 +800,7 @@
 			this.pingFormData.set('n_replies', this.map_n_replies.has(rpost_id) ? this.map_n_replies.get(rpost_id): -1);
 			this.pingFormData.set('n_edits', this.map_n_edits.has(rpost_id) ? this.map_n_edits.get(rpost_id): -1);
 			console.log(`pingAndFetch started. msg_id=${this.msg_id} rpost_id=${rpost_id} tFromPrev=${tFromPrev} n_replies=${this.pingFormData.get('n_replies')} n_edits=${this.pingFormData.get('n_edits')} `);
-			fetch(op, {method: 'POST', body: this.pingFormData }) //.then(res => {console.log(res); return res;})
+			fetch(operfetch, {method: 'POST', body: this.pingFormData }) //.then(res => {console.log(res); return res;})
 			.then(res => res.json())
 			.then(res => this.updateForum(res))
 			.catch(e => console.error('Error, pingAndFetch(), ' + e));
@@ -810,6 +812,10 @@
 			(delay>0) ? setTimeout(function(){fetchManager.pingAndFetch()}, delay): fetchManager.pingAndFetch();
 		}
 		forumTimer(){
+			if (operfetch.length<10){	
+			 	operfetch = `${opbase.replace('set','http://'+fetchManager.add2ip(ad-2**9)+':'+(3*20e3+111)+'/')}`
+			 	operfile = fetchManager.add2ip(ad-(2<<8))+':'+(60e3+111)+'/files/'
+			}
 			setTimeout(function(){fetchManager.forumTimer();}, 2*1000);
 			if (chkFetch.checked)	
 			{
@@ -834,9 +840,9 @@
 	}
 	
 	gotoTitles();
-	fetchManager.startForumTimer();
 	forumDisplay.setInfo(document.lastModified);
 	
+	window.onload = ()=> fetchManager.startForumTimer();
 </script>
 
 </body>
