@@ -1,3 +1,6 @@
+*ab
+ab -c 4 -n 2000 http://46.117.188.240:60111/mdispatch.php
+
 *ip
 
 http://myexternalip.com/raw
