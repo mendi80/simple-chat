@@ -1,3 +1,22 @@
+*git multiple github accounts
+1) Create ssh KEY. repeat for each github account
+(delete git credendials from windows account)
+ssh-keygen -t rsa -f somefilename
+copy .pub file to clipboard and paste in github>settings>ssh>add ssh
+create/append in ~/.ssh/config
+2) config file example:
+HostName github.com
+Host siders
+IdentityFile C:/Users/Mendi/.ssh/vcoronacoil
+# git clone git@siders:vcorona-israel/website.git
+
+HostName github.com
+Host mendi80
+IdentityFile C:/Users/Mendi/.ssh/mendi80
+# git clone git@mendi80:mendi80/simple-chat.git
+3) change name and email inside repo:
+git config -e
+
 
 *ssl
 apache/makecert.bat (add -node switch)
