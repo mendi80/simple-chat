@@ -3,7 +3,6 @@ _old210121
 
 desktop.ini
 
-vc/main_router2021/index.html
-vc/main_router2021/config
-
+vc/main_router2021/*
+!vc/main_router2021/mdispatch.php
 
