@@ -14,7 +14,7 @@ if(empty($_FILES["files"])) {echo $errcounter; return;} ;$errcounter--;
 
 $FILES_INDEX = "../files_index.txt";
 $TARGET_DIR = "../main_files2021/";
-$WEB_DIR = "http://".$_SERVER["HTTP_HOST"]."/files/"; // files aliasing to main_files2021
+$WEB_DIR = "http://sidersfile/"; // files aliasing to main_files2021
 $MAX_FILES_PER_BATCH = 100; // php.ini: max_file_uploads=100
 $MAX_BATCHES_PER_SECOND = 5; // actually per same period
 $MUL_PREFIX = 100; assert($MUL_PREFIX>=$MAX_FILES_PER_BATCH);

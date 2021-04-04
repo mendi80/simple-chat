@@ -58,7 +58,9 @@
 
 <!-- *************************************************************BODY****************************************************************** -->
 <body dir="rtl">
-<header><a href="/">פורום סיידרס</a></header>
+	
+<navbar >
+<header><a href="/">פורום סיידרס</a>
 <h1 id='datetime' />
 <h3 id="myInfo" style="display:block">-</h3>
 
@@ -70,6 +72,7 @@
 	<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">כותרות</button>
 </div>
 
+</header>
 <div id="div_main">
 </div>
 
@@ -257,6 +260,8 @@
 	{
 		let newRows = new FormData();
 		newRows.set('op', "create_random_table");
+		newRows.set('nickname', handleUser.getNickname());
+		newRows.set('secret', handleUser.getCipher());
 		newRows.set('nrows', N);
 		fetch(operfetch, {method: 'POST', body: newRows})
 		.then(res => res.text())

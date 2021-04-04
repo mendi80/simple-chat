@@ -75,22 +75,26 @@ switch ($op) {
 		break;
 
 	case 'create_random_table':
+		$nickname = filter_var($_POST['nickname'] , FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$secret = $_POST['secret'];
 		$nrows = $_POST['nrows'];
-		$nickname='mendi80'; $secret='abc';
-		if (!$db->isUserExist($nickname)) $db->addNewUser($nickname, $secret);
-		$user_id = $db->getUserID($nickname);
-		$last_post_id = $db->getLastPostID();
-		for ($i = 0; $i < $nrows; $i++) {
-			$MAXPOSTID = $last_post_id+$i;
-			$ppost_id=(rand(1,100)==1) ? 0 : rand(0,$MAXPOSTID);
-			$title='This title is child of $ppost_id';
-			$content='This content is child of $ppost_id';
-			$db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
-		  }
-
+		$output = "";
+		if ($db->isUserExist($nickname)) {
+			$user_id = $db->getUserID($nickname);
+			$last_post_id = $db->getLastPostID();
+			$count = 0;
+			for ($i = 0; $i < 10*$nrows; $i++) {
+				$MAXPOSTID = $last_post_id+$i;
+				$ppost_id=(rand(1,3)==1) ? 0 : rand(0,$MAXPOSTID);
+				$title='This title is child of $ppost_id';
+				$content='This content is child of $ppost_id';
+				$count += $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
+			}
+			$output = "created=".$count.", ";
+		}
 		$t1 = microtime(true);
 		$runtime_ms = round(1000*($t1 - $t0));
-		$output = '$runtime_ms ms';
+		$output .= $runtime_ms.'ms'; 
 		break;
 
 	default: 
