@@ -78,7 +78,7 @@ switch ($op) {
 		$nickname = filter_var($_POST['nickname'] , FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$secret = $_POST['secret'];
 		$nrows = $_POST['nrows'];
-		$output = "";
+		$output = "created=";
 		if ($db->isUserExist($nickname)) {
 			$user_id = $db->getUserID($nickname);
 			$last_post_id = $db->getLastPostID();
@@ -90,7 +90,7 @@ switch ($op) {
 				$content='This content is child of $ppost_id';
 				$count += $db->createPost($ppost_id, $user_id, $nickname, $secret, $title, $content);
 			}
-			$output = "created=".$count.", ";
+			$output .= $count.", ";
 		}
 		$t1 = microtime(true);
 		$runtime_ms = round(1000*($t1 - $t0));
