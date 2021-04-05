@@ -99,8 +99,6 @@ class DB {
 		$sql = "INSERT into posts (created, ppost_id, tmprpost_id, user_id, nickname, title, content) values (NOW(), ?, ?, ?, ?, ?, ?)";
 		$stmt = $this->con->prepare($sql);
 		$result = $stmt->execute([$ppost_id,$tmprpost_id,$user_id,$nickname,$title,$content]);
-		// rpost_id is updated by trigger
-
 		return 1;
 	}
 	public function updatePost($post_id, $user_id, $nickname, $secret, $title, $content) {

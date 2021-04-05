@@ -23,12 +23,13 @@ $op=$_POST['op'];
 
 switch ($op) {
 	case 'fetch':
+		if(isset($_POST['msg_id'])){
 		$msg_id = $_POST['msg_id'];
 		$rpost_id = $_POST['rpost_id'];
 		$n_replies = $_POST['n_replies'];
 		$n_edits = $_POST['n_edits'];
+		} else { $msg_id = $rpost_id= $n_replies= $n_edits= $n_edits=0;}
 		$post_state = $db->getSingleRowFromThreads($rpost_id);
-		
 		if($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits'])	{
 			if($rpost_id==0)	
 				$data = $db->getForumTitles();
@@ -79,7 +80,7 @@ switch ($op) {
 		$secret = $_POST['secret'];
 		$nrows = $_POST['nrows'];
 		$output = "created=";
-		if ($db->isUserExist($nickname)) {
+		if ($nickname=="mendi80" && $db->isUserExist($nickname)) {
 			$user_id = $db->getUserID($nickname);
 			$last_post_id = $db->getLastPostID();
 			$count = 0;

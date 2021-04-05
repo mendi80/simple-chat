@@ -58,6 +58,7 @@ fclose($fid);
 assert($collision_level_high==false, "last_datetime_int > current_datetime_int, $last_datetime_int, $current_datetime_int");
 
 //save uploaded files
+$whitelist = explode("|", "gif|jpg|jpeg|png|webp|csv|pdf|md|doc|docx|xls"); //copy from httpd.conf under main_files2021
 $nfiles_uploaded = 0;
 $links = [];
 for	($i = 0; $i < $countfiles; $i++)
@@ -66,14 +67,13 @@ for	($i = 0; $i < $countfiles; $i++)
 	$file_name = $is_multi ? $_FILES["files"]["name"][$i] : $_FILES["files"]["name"];
 	$tmp_name =  $is_multi ? $_FILES["files"]["tmp_name"][$i] : $_FILES["files"]["tmp_name"];
 	$file_basename = basename($file_name);
-	$file_extension0 = strtolower(pathinfo($file_basename,PATHINFO_EXTENSION)) ;
-	$file_extension = $file_extension0 ? '.'.$file_extension0 : $file_extension0;
+	$file_extension = strtolower(pathinfo($file_basename,PATHINFO_EXTENSION)) ;
 	$fileprefix_int = $final_datetime_int*$MUL_PREFIX + $i;
-	$filename = strval($fileprefix_int).$file_extension;
+	$filename = strval($fileprefix_int).".".$file_extension;
 	$target_path = $TARGET_DIR.$filename;
 	$target_url = $WEB_DIR.$filename;
 	if ($file_size > $MAX_FILE_SIZE || $file_size <= 0) continue;
-	if (strpos($file_extension, "script") !== false) continue; 
+	if (!in_array($file_extension, $whitelist)) continue;
 	move_uploaded_file($tmp_name, $target_path);
 	$db->addNewFile($user_id, $nickname, $fileprefix_int, $file_extension, $file_basename);
 	array_push($links,$target_url);
