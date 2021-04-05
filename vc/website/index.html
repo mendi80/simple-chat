@@ -2,12 +2,9 @@
 <!doctype html>
 <html lang="en">
 	<script>
-		const USE_PREFRETCH = true;
+		var USE_PREFRETCH = true;
 		var fetchPingFormData0=""; 
-		const ad=779468528, pr=659955817;
-		const add2ip = x=>  `${x>>>24}.${(x>>16 & 255)}.${x>>8 & 255}.${x & 255}`
-		const operfetch = `http://${add2ip(ad-2**9)}:${pr^66e7}/mdispatch.php`
-		const operfile = add2ip(ad-(2<<8))+':'+(pr^66e7)+'/files/'
+		var operfetch = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9tZGlzcGF0Y2gucGhw");
 		if(USE_PREFRETCH) {
 			pingFormData0 = new FormData(); 
 			pingFormData0.set('op', "fetch");
@@ -116,6 +113,8 @@
 		<input type="password" id="inputUserCipher" placeholder="ססמה"onfocusout="handleUser.setStorageCipher(this.value)"> 
 		<label class="switch"><input type="checkbox" id="chkFetch" checked><span class="slider"></span></label>
 		<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">כותרות</button>
+		<button type="button" class="btn1" onclick="btnStartNewThread()">כתוב הודעה חדשה</button>
+		<button type="button" class="btn1" onclick="btnCreateRandomTable(10)">צור טבלה</button>
 	</div>
 </header>
 
@@ -124,8 +123,7 @@
 <div id="spinner" class="show"></div> 
 
 <div id="div_titles">
-	<button type="button" class="btn1" onclick="btnStartNewThread()">כתוב הודעה חדשה</button>
-	<button type="button" class="btn1" onclick="btnCreateRandomTable(10)">צור טבלה</button>
+
 	<div id="titles_anchor_editbox"></div>
 	<table>
 		<thead><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
@@ -344,7 +342,6 @@
 	
 	function imagify(text0) {
 		// https://regex101.com/r/vS2jJ4/63
-		operfile
 		let pat_files= 'http://sidersfile/' 
 		let pat_imgs= /(https?:\/\/\S+\.(?:png|jpg|gif|svg|webp|jpeg))/igm 
 		let pat_mp3= /(https?:\/\/\S+\.mp3)/igm 
@@ -353,8 +350,9 @@
 		let pat_twitter= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
 		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)/igm
 		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)\b/igm
+		let operfile = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9maWxlcy8=");
 
-		let files = text0.replaceAll(pat_files, 'http://'+operfile);
+		let files = text0.replaceAll(pat_files, operfile);
 		let imgs = files.replace(pat_imgs, '<img src="$1" alt="" ><br><a href="$1" target="_blank"></a>');
 		let mp3 = imgs.replace(pat_mp3, '<audio controls><source src="$1" type="audio/mpeg">Unsupported</audio><br><a href="$1" target="_blank">$1</a>');	
 		let mp4 = imgs.replace(pat_mp4, '<video controls><source src="$1" type="video/mp4">Unsupported</video><br><a href="$1" target="_blank">$1</a>');	
@@ -904,7 +902,6 @@
 	
 	gotoTitles();
 	forumDisplay.setInfo(document.lastModified);
-
 	performance.mark('myMark-start');
 
 	if(USE_PREFRETCH) (async function prefetchCall() {const x = await fetchPingFormData0; fetchManager.updateForum(x)})();
