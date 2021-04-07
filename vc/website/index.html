@@ -13,8 +13,8 @@
 	</script>
 <head>
 	<meta charset="UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>פורום סיידרס</title>
+	<meta name="viewport" content="width=device-width, initial-scale=0.1">
+	<title>סיידרס</title>
 	<!--script id="script_config" src="config" defer></script-->
 	<link rel="icon" type="image/png" href="favicon.png?v=2"/>
 <!--
@@ -31,12 +31,9 @@
 	 	footer {background-color: #22222277; color: white; padding: 15px; position: fixed; left: 0; bottom: 0; width: 100%;}
 
 
-		#user_namepwd {width: 100px; }
 		#inputAddRow { height:48px; background:#bfb5; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
 		#inputAddRow:focus {outline:none;}
-		.btn1 {background-color:#aaaaaaaa; height:40px; font-size:24px; display:inline-block; border:0.1em solid #FFFFFF; margin:2px auto 10px auto;
-							border-radius:5px; font-family:'Roboto',sans-serif; font-weight:300; color:#000; text-align:center; transition: all 0.5s;}		
-		.btn1:hover {color:#f00;background-color:#527;}
+
 
 		table {font-family: arial, sans-serif; border-collapse: collapse; width: 100%;}
 		th {border: 1px solid #dddddd; text-align: center; padding: 8px;}
@@ -53,28 +50,50 @@
 }
 	</style>
 -->
-	<style id="style_spinner">
-		#spinner{ visibility: hidden; width: 80px; height: 80px; border: 2px solid #f3f3f3;	border-top:3px solid #f25a41; border-radius: 100%;
-				position: absolute; top:0; bottom:0; left:0; right: 0; margin: auto; animation: spin 1s infinite linear; }
-		@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-		#spinner.show { visibility: visible; }
+
+
+
+	
+	
+	<style id="style_body">
+		:root { --background-color: #1a1919; --foreground-color: rgba(255, 255, 255, 0.7); --transition: 250ms ease-out;}
+		* { padding: 0; margin: 0; box-sizing: border-box; }
+		body { background-color:#0dd;}
+		body1 { background: linear-gradient(#549471,#93a5cf) ;}
+		body.hidebody {opacity: 0; visibility:"hidden";}
 	</style>
 	
-	<style id="style_switch">
-		.switch { position: relative; display: inline-block; height: 34px; width: 60px; }
-		.switch input { opacity: 0; width: 0; height: 0;}
-		.switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;}
-		.switch .slider:before {background-color: #aa1414; position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;  -webkit-transition: .4s; transition: .4s;}
-		.switch input:checked + .slider { background-color: #2196F3;}
-		.switch input:checked + .slider:before { background-color: #02ff39; -webkit-transform: translateX(26px); -ms-transform: translateX(26px); transform: translateX(26px);}
+	<style id="style_header">
+		/*height:var(--header-height); width: auto;*/
+		header { background-color: #333;  padding:20px; top: 0; width:100%; white-space: nowrap; }
+		header * { font-size:18px;  font-family: Tahoma, Arial; }
 	</style>
-	
-	<style>
-		header.navbar { overflow: hidden;	background-color: #333; position: fixed; top: 0; width: 100%; height: 200px;}
-		header#myInfo { overflow: hidden;	width: 12px; }
-		#div_main {margin-top: 210px;}
-		div#template_post {opacity:0; display:none;}
+	<style id="style_header_namepswd">
+		header section input { width: 6em; }
+		header section input:nth-child(1) {width:6em;}
 		
+		/* <button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button> */
+		.header-button {display:inline-block;  box-sizing: border-box; width:72px; height: 44px; border:none; text-decoration:none;}
+		.header-button {background-color:#37f; color:white; text-align:center; transition: 0.2s;}
+		.header-button {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
+		.Nheader-button:hover {color:#f00; background-color:#527;}
+		.header-button:active{background-color:#139; box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15);}
+		.header-button:focus {outline:0;}
+		/* <label class="header-toggle"><input type="checkbox" id="chkFetch"/><span>עדכן</span></label> */
+		.header-toggle { position: relative; display: inline-block; width:72px; height: 44px; line-height: 44px;  text-align: center; }
+		.header-toggle {-webkit-user-select: none; -ms-user-select: none; user-select: none;}
+		.header-toggle input { opacity: 0;  width: 0; height:0; background-color: #000;}
+		.header-toggle span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
+		.header-toggle span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
+		.header-toggle input:checked ~ span { background-color: #6B5;}
+		.Nheader-toggle input:not(:focus):hover~span { background-color: #484;}
+	</style>
+	<!--
+	<style>
+		header#myInfo1 { overflow: hidden;	width: 12px; display:inline-block; }
+		
+		main {margin-top: 210px;}
+		div#template_post {opacity:0; display:none;}	
 		img {max-width:900px; width:100%;}
 	</style>
 	
@@ -85,7 +104,7 @@
 		.forumTitles>tr>td:nth-child(2){  min-width:4em; width:4em;  }
 		.forumTitles>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
 		.forumTitles>tr>td:nth-child(4){ color:red; min-width:6em; width:6em;  }
-		.forumTitles>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:9em; width:9em; direction: ltr;}
+		.forumTitles>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:10em; width:10em; direction: ltr;}
 		.forumTitles>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
 	</style>
 	
@@ -93,34 +112,63 @@
 		@keyframes debug_div { from {border-width: 0px;} to {border-width: 5px;} }
 		div {border:#333 1px solid; animation: debug_div 5s linear infinite alternate pause;}
 	</style>
+	
+
 	<style>
-		body.hidebody1{visibility: hidden; display: none; opacity: 0;}
-		body.hidebody{ opacity: 0;}
+	.toggle { display: normal; width:100%} 
+	.toggle-lbl { display: inline-block; margin-top: 12px; padding: 5px 11px; background-color: #ff7; border: 1px solid; border-radius: 3px; }
+	.toggle:checked ~ .toggle-lbl { background-color: #ccc;}
+
+	</style>
+	-->
+	
+
+	<style id="style_spinner">
+		#spinner{ visibility: hidden; width: min(30vw,30vh); height: min(30vw,30vh); border: 2px solid #f3f3f3;	border-top:3px solid #f25a41; border-radius: 100%;
+				position: absolute; top:0; bottom:0; left:0; right: 0; margin: auto; animation: spin 1s infinite linear; }
+		@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+		#spinner.showspinner { visibility: visible; }
 	</style>
 </head>
 
 <!-- *************************************************************BODY****************************************************************** -->
 <body dir="rtl" class="hidebody">
-	
-<header class="navbar">
-	<a href="http://siders.co.il">פורום סיידרס</a>
-	<p id="datetime" ></p>
-	<p id="myInfo">-</p>
 
-	<div id="user_namepwd">
-		<button class="btn1" onclick="handleUser.eraseStorage()">מחק</button>
-		<input type="text" id="inputUserNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
-		<input type="password" id="inputUserCipher" placeholder="ססמה"onfocusout="handleUser.setStorageCipher(this.value)"> 
-		<label class="switch"><input type="checkbox" id="chkFetch" checked><span class="slider"></span></label>
-		<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">כותרות</button>
-		<button type="button" class="btn1" onclick="btnStartNewThread()">כתוב הודעה חדשה</button>
-		<button type="button" class="btn1" onclick="btnCreateRandomTable(10)">צור טבלה</button>
-	</div>
+
+<header>
+	<section>
+		<!--span id="inpNickname" contenteditable="true">sdfsd</span-->
+		<input type="text" id="inpNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
+		<input type="text" id="inpCipher" placeholder="צופן" onfocusout="handleUser.setStorageCipher(this.value)">
+		<button onclick="handleUser.eraseStorage()">מחק</button>
+	</section>
+	<nav>
+		<button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button>
+		<button class="header-button" type="button" onclick="btnStartNewThread()">כתוב</button>
+		<button class="header-button" type="button" onclick="btnCreateRandomTable(10)">טבלה</button>
+		<label class="header-toggle"><input type="checkbox" id="chkFetch" checked><span >עדכן</span></label>
+		<label class="header-toggle"><input type="checkbox" id="chkFetch1"/><span>שונות</span></label>
+	</nav>
 </header>
+<div>asfgasgr</div>
+<div>asfgasgr</div>
+<div>asfgasgr</div>
+<div>asfgasgr</div>
+<div>asfgasgr</div>
+<div>asfgasgr</div>
 
-<div id="div_main">
-</div>
-<div id="spinner" class="show"></div> 
+
+<div>asfgasgr</div>
+
+
+<a href="http://siders.co.il">סיידרס</a>
+<p id="myInfo">-</p>
+<p id="datetime" ></p>
+
+<main>
+</main>
+
+<div id="spinner" class="showspinner"></div> 
 
 <div id="div_titles">
 
@@ -169,7 +217,7 @@
 	
 	"use strict";
 	const forumstates = {INIT:"Init",TITLES:"Titles", THREAD:"Thread", WRITE:"Write", REPLY:"Reply", EDIT:"Edit"}
-	const div_main = document.getElementById("div_main");
+	const elem_main = document.getElementsByTagName("main")[0];
 
 	const forumDisplay = new class Forum{
 		
@@ -235,7 +283,7 @@
 		constructor() {
 			this.elem_spinner = document.getElementById("spinner");
     	}
-		show() { spinner.className = "show"; setTimeout(() => spinnerManager.hide(), 3000); }
+		show() { spinner.className = "showspinner"; setTimeout(() => spinnerManager.hide(), 3000); }
 		hide() { spinner.className = ""; }
 	};
 	
@@ -481,9 +529,8 @@
 <script id="script_namesecret">
 	const handleUser = new class{
 		constructor(){
-			this.elem_div_user_namepwd = document.getElementById("user_namepwd");
-			this.elem_nickname = document.getElementById("inputUserNickname");
-			this.elem_cipher = document.getElementById("inputUserCipher");
+			this.elem_nickname = document.getElementById("inpNickname");
+			this.elem_cipher = document.getElementById("inpCipher");
 			this.loadFromStorage();
 		}
 		loadFromStorage(){
@@ -683,8 +730,8 @@
 		show()
 		{
 			mylog(this.myname,'show')
-			div_main.appendChild(this.elem_div_thread);
-			console.assert(div_main.children.length==1, 'handleThread, only single div should be displayd')
+			elem_main.appendChild(this.elem_div_thread);
+			console.assert(elem_main.children.length==1, 'handleThread, only single div should be displayd')
 		}
 		
 		getTitleFromMap(post_id){ return this.map_titles.get(post_id);}
@@ -753,8 +800,8 @@
 		show()
 		{
 			mylog(this.myname,'show')
-			div_main.appendChild(this.elem_div_titles);
-			console.assert(div_main.children.length==1, 'handleTitles, only single div should be displayd')
+			elem_main.appendChild(this.elem_div_titles);
+			console.assert(elem_main.children.length==1, 'handleTitles, only single div should be displayd')
 		}
 		
 		parseDataForTitles(data1)
@@ -798,18 +845,18 @@
 		}
 
 
-		updateForum(header_data) {
+		updateForum(msghead_data) {
 			
-			let isNewDataAvailable = Array.isArray(header_data);
+			let isNewDataAvailable = Array.isArray(msghead_data);
 			let updated = false;
 			let rcvd_msg_id = -999;
 			if (isNewDataAvailable){ 
-				console.assert(header_data.length==2, "length should b 2")
-				let header = header_data[0], data = header_data[1];
-				rcvd_msg_id = Number(header['msg_id']);
-				let rpost_id = Number(header['rpost_id']);
-				let n_replies = Number(header['n_replies']);
-				let n_edits = Number(header['n_edits']);
+				console.assert(msghead_data.length==2, "length should b 2")
+				let msghead = msghead_data[0], data = msghead_data[1];
+				rcvd_msg_id = Number(msghead['msg_id']);
+				let rpost_id = Number(msghead['rpost_id']);
+				let n_replies = Number(msghead['n_replies']);
+				let n_edits = Number(msghead['n_edits']);
 				let is_n_replies_changes = !this.map_n_replies.has(rpost_id) || this.map_n_replies.get(rpost_id)!=n_replies;
 				let is_n_edits_changes = !this.map_n_edits.has(rpost_id) || this.map_n_edits.get(rpost_id)!=n_edits;
 				console.assert(is_n_replies_changes || is_n_edits_changes, "at least one should be different")
@@ -823,9 +870,9 @@
 					handleThread.parseDataForThread(data);
 				updated = true;
 			}
-			else if (header_data>0) //msg_id, no new data
+			else if (msghead_data>0) //msg_id, no new data
 			{
-				rcvd_msg_id = Number(header_data);
+				rcvd_msg_id = Number(msghead_data);
 				let rpost_id = forumDisplay.getRpostID();
 				if (rpost_id==0) //main titles
 				{
@@ -904,7 +951,7 @@
 	forumDisplay.setInfo(document.lastModified);
 	performance.mark('myMark-start');
 
-	if(USE_PREFRETCH) (async function prefetchCall() {const x = await fetchPingFormData0; fetchManager.updateForum(x)})();
+	if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x)})();
 	fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload= ()=> fetchManager.startForumTimer(); //use with src=config 
 
 	

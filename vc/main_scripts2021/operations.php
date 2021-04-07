@@ -6,6 +6,9 @@ unset( $_GET );
 
 $t0 = microtime(true);
 
+require 'autoloader.inc.php';
+// https://www.sitepoint.com/php-authorization-jwt-json-web-tokens/
+
 require_once('DB.php'); 
 
 // check if valid

@@ -3,6 +3,7 @@
 if(!isset($_POST["up"])) {echo 0; return;}
 unset( $_GET );
 
+require 'autoloader.inc.php';
 
 require_once('DB.php'); 
 
