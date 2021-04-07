@@ -13,7 +13,7 @@
 	</script>
 <head>
 	<meta charset="UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=0.1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>סיידרס</title>
 	<!--script id="script_config" src="config" defer></script-->
 	<link rel="icon" type="image/png" href="favicon.png?v=2"/>
@@ -56,7 +56,7 @@
 	
 	
 	<style id="style_body">
-		:root { --background-color: #1a1919; --foreground-color: rgba(255, 255, 255, 0.7); --transition: 250ms ease-out;}
+		:root {--headerH:72px; --background-color: #1a1919; --foreground-color: rgba(255, 255, 255, 0.7); --transition: 250ms ease-out;}
 		* { padding: 0; margin: 0; box-sizing: border-box; }
 		body { background-color:#0dd;}
 		body1 { background: linear-gradient(#549471,#93a5cf) ;}
@@ -64,29 +64,32 @@
 	</style>
 	
 	<style id="style_header">
-		/*height:var(--header-height); width: auto;*/
-		header { background-color: #333;  padding:20px; top: 0; width:100%; white-space: nowrap; }
-		header * { font-size:18px;  font-family: Tahoma, Arial; }
-	</style>
+		.nav-up { top: calc(-1*var(--headerH));} /* same as header height. https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c */
+		body { padding-top: var(--headerH);} /* same as header height*/
+		header { position: fixed; top: 0;right:0;left:0; height: var(--headerH); width:100%; transition: top 0.2s ease-in-out; }
+		header { background-color: #333; white-space: nowrap; display: flex; overflow-x:auto; overflow-y: hidden; }
+		header * { font-size:18px; font-family: Tahoma, Arial;}
+		header section 	{ display: inline-block; line-height: var(--headerH); padding:0px 12px; border-left: 3px solid rgb(0, 0, 0);}
+	</style> 
 	<style id="style_header_namepswd">
-		header section input { width: 6em; }
-		header section input:nth-child(1) {width:6em;}
+		header section input:nth-of-type(1) {width:6em; text-align: center;}
+		header section input:nth-of-type(2) {width:2.2em; }
 		
 		/* <button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button> */
 		.header-button {display:inline-block;  box-sizing: border-box; width:72px; height: 44px; border:none; text-decoration:none;}
-		.header-button {background-color:#37f; color:white; text-align:center; transition: 0.2s;}
+		.header-button {background-color:#37f; color:white; text-align:center; transition: 0.2s;  }
 		.header-button {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
-		.Nheader-button:hover {color:#f00; background-color:#527;}
+		.header-button:hover {color:#f00; background-color:#527;}
 		.header-button:active{background-color:#139; box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15);}
 		.header-button:focus {outline:0;}
 		/* <label class="header-toggle"><input type="checkbox" id="chkFetch"/><span>עדכן</span></label> */
 		.header-toggle { position: relative; display: inline-block; width:72px; height: 44px; line-height: 44px;  text-align: center; }
 		.header-toggle {-webkit-user-select: none; -ms-user-select: none; user-select: none;}
-		.header-toggle input { opacity: 0;  width: 0; height:0; background-color: #000;}
+		.header-toggle input {opacity: 0;  width: 0; height:0; background-color: #000;}
 		.header-toggle span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
 		.header-toggle span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
 		.header-toggle input:checked ~ span { background-color: #6B5;}
-		.Nheader-toggle input:not(:focus):hover~span { background-color: #484;}
+		.header-toggle input:not(:focus):hover~span { background-color: #484;}
 	</style>
 	<!--
 	<style>
@@ -138,21 +141,22 @@
 <header>
 	<section>
 		<!--span id="inpNickname" contenteditable="true">sdfsd</span-->
+		<button class="header-button" onclick="handleUser.hide()">הסתר</button>
 		<input type="text" id="inpNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
-		<input type="text" id="inpCipher" placeholder="צופן" onfocusout="handleUser.setStorageCipher(this.value)">
-		<button onclick="handleUser.eraseStorage()">מחק</button>
+		<input type="text" id="inpCipher"   placeholder="צופן"  onfocusout="handleUser.setStorageCipher(this.value)">
+		<button class="header-button" onclick="handleUser.eraseStorage()">מחק</button>
 	</section>
-	<nav>
-		<button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button>
-		<button class="header-button" type="button" onclick="btnStartNewThread()">כתוב</button>
-		<button class="header-button" type="button" onclick="btnCreateRandomTable(10)">טבלה</button>
+	<section>
+		<button class="header-button" onclick="btnBackToTitles(this,event)">כותרות</button>
+		<button class="header-button" onclick="btnStartNewThread()">כתוב</button>
+		<button class="header-button" onclick="btnCreateRandomTable(10)">טבלה</button>
 		<label class="header-toggle"><input type="checkbox" id="chkFetch" checked><span >עדכן</span></label>
 		<label class="header-toggle"><input type="checkbox" id="chkFetch1"/><span>שונות</span></label>
-	</nav>
+	</section>
 </header>
-<div>asfgasgr</div>
-<div>asfgasgr</div>
-<div>asfgasgr</div>
+<div>aaaaa</div>
+<div>bbbbbb</div>
+<div>ccccccc</div>
 <div>asfgasgr</div>
 <div>asfgasgr</div>
 <div>asfgasgr</div>
