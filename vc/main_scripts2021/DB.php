@@ -115,10 +115,10 @@ class DB {
 	}	
 	//post_id ppost_id tmprpost_id rpost_id user_id created nickname secret title content blockedit blockreply
 	public function getForumTitles() {
-		$sql = "SELECT post_id, created, nickname, title FROM posts WHERE ppost_id=0;";
+		$sql = "SELECT post_id, UNIX_TIMESTAMP(created), nickname, title FROM posts WHERE ppost_id=0;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute();
-		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);//(PDO::FETCH_ASSOC);
+		$data = $stmt->fetchAll(PDO::FETCH_NUM);// FETCH_NUM vs FETCH_ASSOC: output.length: 43162 vs 61806
 		return $data;
 	}
 	public function getPost($post_id) { //post and replies

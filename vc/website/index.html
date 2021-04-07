@@ -15,66 +15,27 @@
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>סיידרס</title>
-	<!--script id="script_config" src="config" defer></script-->
 	<link rel="icon" type="image/png" href="favicon.png?v=2"/>
-<!--
-	<style> 
-		#jojoj { width:80vw; padding:0; margin:0 auto; box-sizing: border-box; }
-		body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: rgb(153, 98, 139)}
-		body11 { background: linear-gradient( 45deg, #1e7752, #e73c7e, #23a6d5, #23d5ab); background-attachment: fixed; background-size: 400% 400%; animation: AnimationName 10s ease infinite;}
-		<!--@keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }-->
-		<!--
-		h1 { margin-top:2vh; padding:0; text-align:center; text-transform: uppercase; font-weight: 300; font-size:4vw; letter-spacing: 0.2vw; color:#a1215170; }
-		h1::after { content:""; display:flex; border-top: 2px solid #585858; margin-top: .2em;}
-		header {background-color: #22222277;overflow: hidden;text-align: center;font-size: 37px;}
-		header a {color: #f2f2f2;text-decoration: none;}
-	 	footer {background-color: #22222277; color: white; padding: 15px; position: fixed; left: 0; bottom: 0; width: 100%;}
 
-
-		#inputAddRow { height:48px; background:#bfb5; border:none; padding: 8px 18px; font-family:"Raleway", sans-serif; font-size:32px; }
-		#inputAddRow:focus {outline:none;}
-
-
-		table {font-family: arial, sans-serif; border-collapse: collapse; width: 100%;}
-		th {border: 1px solid #dddddd; text-align: center; padding: 8px;}
-		td {border: 1px solid #dddddd; text-align: right; padding: 8px;}
-		tr:nth-child(even) {background-color: #dddddd;}
-		tbody.forumTitles tr:hover {background-color: #fbc93d; cursor:default;}
-		#div_editbox {background-color: #827;}
-		#writingPostTitle, #writingPostContent {width:80%;padding:.375rem 2.75rem;margin:16px; margin-right:30px; font-size:1rem;
-		font-weight:400;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:3px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
-		textarea, input { background: #6f6f6f !important;color: #f2f2f2 !important; border: none !important;}
-		::placeholder { color: #f2f2f2 !important; opacity: 1; /* Firefox */} /* Chrome, Firefox, Opera, Safari 10.1+ */
-		article {white-space: pre-wrap;	min-height: 5em; min-width: 5em;min-width: 80em; background-color:#386;}
-		iframe{ width: 640px; height: calc((640px/1.77));
-}
-	</style>
--->
-
-
-
-	
-	
 	<style id="style_body">
-		:root {--headerH:72px; --background-color: #1a1919; --foreground-color: rgba(255, 255, 255, 0.7); --transition: 250ms ease-out;}
+		:root {--headerH:72px;}
 		* { padding: 0; margin: 0; box-sizing: border-box; }
-		body { background-color:#0dd;}
+		body { background-color:#add; font-family: Arial,Tahoma, Arial;}
 		body1 { background: linear-gradient(#549471,#93a5cf) ;}
 		body.hidebody {opacity: 0; visibility:"hidden";}
 	</style>
 	
 	<style id="style_header">
 		.nav-up { top: calc(-1*var(--headerH));} /* same as header height. https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c */
-		body { padding-top: var(--headerH);} /* same as header height*/
-		header { position: fixed; top: 0;right:0;left:0; height: var(--headerH); width:100%; transition: top 0.2s ease-in-out; }
-		header { background-color: #333; white-space: nowrap; display: flex; overflow-x:auto; overflow-y: hidden; }
-		header * { font-size:18px; font-family: Tahoma, Arial;}
+		body1 { padding-top: var(--headerH);} /* same as header height*/
+		header { position: sticky; top: 0;right:0;left:0; height: var(--headerH); width:auto; z-index: 1;}
+		header { background-color: #333; white-space: nowrap; display: block; overflow-x:auto; overflow-y:hidden;}
+		header * { font-size:18px; border:none;}
 		header section 	{ display: inline-block; line-height: var(--headerH); padding:0px 12px; border-left: 3px solid rgb(0, 0, 0);}
-	</style> 
-	<style id="style_header_namepswd">
-		header section input:nth-of-type(1) {width:6em; text-align: center;}
-		header section input:nth-of-type(2) {width:2.2em; }
-		
+		.header-input {background-color: rgb(192, 185, 173); height: 36px;}
+		.header-input:nth-of-type(1) {width:6em; text-align: center;}
+		.header-input:nth-of-type(2) {width:2.2em; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.8);}
+		.header-input:nth-of-type(2):focus {width:2.2em; color: rgba(0,0,0,0.2); text-shadow: 0 0 8px rgba(0,0,0,0.95);}
 		/* <button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button> */
 		.header-button {display:inline-block;  box-sizing: border-box; width:72px; height: 44px; border:none; text-decoration:none;}
 		.header-button {background-color:#37f; color:white; text-align:center; transition: 0.2s;  }
@@ -89,61 +50,61 @@
 		.header-toggle span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
 		.header-toggle span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
 		.header-toggle input:checked ~ span { background-color: #6B5;}
-		.header-toggle input:not(:focus):hover~span { background-color: #484;}
+		.header-toggle input:not(:focus):hover~span { color:#00a; background-color: #484;}
 	</style>
-	<!--
+	
 	<style>
-		header#myInfo1 { overflow: hidden;	width: 12px; display:inline-block; }
-		
-		main {margin-top: 210px;}
-		div#template_post {opacity:0; display:none;}	
+		#myInfo16 { width: 12px; display:inline-block; }
 		img {max-width:900px; width:100%;}
 	</style>
 	
 	<style id="style_titles">
-		table { border-collapse: collapse;  border-spacing: 0px; width:auto; font-size:1em; table-layout: fixed; }
-		td, th { border: 1px solid #449;  padding: 0rem 0.5rem; text-align: center;}
-		.forumTitles>tr>td:nth-child(1){  min-width:4em; width:4em;  }
-		.forumTitles>tr>td:nth-child(2){  min-width:4em; width:4em;  }
-		.forumTitles>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
-		.forumTitles>tr>td:nth-child(4){ color:red; min-width:6em; width:6em;  }
-		.forumTitles>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:10em; width:10em; direction: ltr;}
-		.forumTitles>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
+		.titlesTable1 { border-collapse: collapse;  border-spacing: 0px;  font-size:15px; table-layout: auto; width: 100vh;}
+		.titlesTable>tbody>tr>td, .titlesTable>thead>tr>th { border: 1px solid #449;  padding: 0px 8px; text-align: center;}
+		.titlesBody>tr:nth-child(even) {background-color: #8cc;}
+		.titlesBody>tr:hover {background-color: #3c9ac5; cursor:default;}
+		.titlesBody>tr>td:nth-child(1){ min-width:4em; width:4em;  }
+		.titlesBody>tr>td:nth-child(2){ min-width:4em; width:4em;  }
+		.titlesBody>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
+		.titlesBody>tr>td:nth-child(4){ color:red; min-width:6em; width:6em;  }
+		.titlesBody>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:10em; width:10em; direction: ltr;}
+		.titlesBody>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
 	</style>
 	
+	<style> 
+		#div_editbox {background-color: #827;}
+		#writingPostTitle, #writingPostContent {width:80%;padding:.375rem 2.75rem;margin:16px; margin-right:30px; font-size:16px;
+			font-weight:400;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:3px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+		#div_editbox textarea, #div_editbox input { background: #6f6f6f !important;color: #f2f2f2 !important; border: none !important;}
+		#div_editbox ::placeholder { color: #f2f2f2 !important; opacity: 1; /* Firefox */} /* Chrome, Firefox, Opera, Safari 10.1+ */
+		article {white-space: pre-wrap;	min-height: 5em; min-width: 5em;min-width: auto; background-color:#386;}
+		iframe { width: 640px; height: calc((640px/1.77));}
+	</style>
+	<!--
 	<style id="style_debug">
-		@keyframes debug_div { from {border-width: 0px;} to {border-width: 5px;} }
-		div {border:#333 1px solid; animation: debug_div 5s linear infinite alternate pause;}
-	</style>
+		* {border:#333 1px solid; animation: debug_div 5s linear 1 forwards running;}
+		@keyframes debug_div { from {border-width: 1px;margin:0px} to {border-width: 2px;margin: 10px;} }
+	</style>       -->
 	
-
-	<style>
-	.toggle { display: normal; width:100%} 
-	.toggle-lbl { display: inline-block; margin-top: 12px; padding: 5px 11px; background-color: #ff7; border: 1px solid; border-radius: 3px; }
-	.toggle:checked ~ .toggle-lbl { background-color: #ccc;}
-
-	</style>
-	-->
 	
 
 	<style id="style_spinner">
-		#spinner{ visibility: hidden; width: min(30vw,30vh); height: min(30vw,30vh); border: 2px solid #f3f3f3;	border-top:3px solid #f25a41; border-radius: 100%;
+		div#spinner {visibility: hidden; width: min(30vw,30vh); height: min(30vw,30vh); border: 2px solid #f3f3f3;	border-top:3px solid #f25a41; border-radius: 100%;
 				position: absolute; top:0; bottom:0; left:0; right: 0; margin: auto; animation: spin 1s infinite linear; }
 		@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-		#spinner.showspinner { visibility: visible; }
+		div#spinner.showspinner { visibility: visible; }
 	</style>
 </head>
 
 <!-- *************************************************************BODY****************************************************************** -->
 <body dir="rtl" class="hidebody">
 
-
 <header>
 	<section>
 		<!--span id="inpNickname" contenteditable="true">sdfsd</span-->
-		<button class="header-button" onclick="handleUser.hide()">הסתר</button>
-		<input type="text" id="inpNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
-		<input type="text" id="inpCipher"   placeholder="צופן"  onfocusout="handleUser.setStorageCipher(this.value)">
+		<button class="header-button" onclick="handleUser.hideShowInputs()">הסתר</button>
+		<input class="header-input" type="text" id="inpNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
+		<input class="header-input" type="text" id="inpCipher"   placeholder="צופן"  onfocusout="handleUser.setStorageCipher(this.value)">
 		<button class="header-button" onclick="handleUser.eraseStorage()">מחק</button>
 	</section>
 	<section>
@@ -154,55 +115,45 @@
 		<label class="header-toggle"><input type="checkbox" id="chkFetch1"/><span>שונות</span></label>
 	</section>
 </header>
+
 <div>aaaaa</div>
 <div>bbbbbb</div>
-<div>ccccccc</div>
-<div>asfgasgr</div>
-<div>asfgasgr</div>
-<div>asfgasgr</div>
 
 
-<div>asfgasgr</div>
-
-
-<a href="http://siders.co.il">סיידרס</a>
 <p id="myInfo">-</p>
 <p id="datetime" ></p>
-
-<main>
-</main>
-
 <div id="spinner" class="showspinner"></div> 
 
-<div id="div_titles">
+<main></main>
 
+
+<div id="div_titles">
 	<div id="titles_anchor_editbox"></div>
-	<table>
-		<thead><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></thead>
-		<tbody class="forumTitles" id="forumtitles"></tbody>
+	<table class="titlesTable">
+		<thead class="titlesHeader"><tr><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></tr></thead>
+		<tbody class="titlesBody" id="forumtitles"></tbody>
 	</table>
 </div>
 
 <div id="div_thread">
-</div>
-
-<div id="template_post" >
-	<li data-post_id="0000000">
-		<p class="PostID"></p>
-		<h2 class="Nickname"></h2>
-		<h3 class="ReplyTitle" ></h2>
-		<article class="ReplyContent"></article>
-		<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">בטל וחזור</button>
-		<button type="button" class="btn1" onclick="btnStartEditPost(this,event)">ערוך הודעה</button>
-		<button type="button" class="btn1" onclick="btnDeletePost(this,event)">מחק הודעה</button>
-		<button type="button" class="btn1" onclick="btnStartReply(this,event)">תגובה</button>
-		<div></div>
-		<ul></ul>
-	</li>
+	<div id="template_post" >
+		<li data-post_id="0000000">
+			<p class="PostID"></p>
+			<h2 class="Nickname"></h2>
+			<h3 class="ReplyTitle" ></h2>
+			<article class="ReplyContent"></article>
+			<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">בטל וחזור</button>
+			<button type="button" class="btn1" onclick="btnStartEditPost(this,event)">ערוך הודעה</button>
+			<button type="button" class="btn1" onclick="btnDeletePost(this,event)">מחק הודעה</button>
+			<button type="button" class="btn1" onclick="btnStartReply(this,event)">תגובה</button>
+			<div></div>
+			<ul></ul>
+		</li>
+	</div>
 </div>
 
 <div id="div_editbox" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-	<input type="text" id="writingPostTitle" placeholder="Title" oninput="handleEditBox.oninputTitle();">
+	<input type="text" id="writingPostTitle" placeholder="כותרת" oninput="handleEditBox.oninputTitle();">
 	<textarea id="writingPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="handleEditBox.oninputContent();"  cols="50" maxlength="1000" > </textarea>
 	<input type="file" class="btn1" id="inp" onchange="uploadfiles(this.files)" multiple />
 	<button class="btn1" onclick="btnCancelWrite()">בטל תגובה</button>
@@ -530,20 +481,30 @@
 
 <code class="scripts_handlers">
 
-<script id="script_namesecret">
+<script id="script_handleUser">
 	const handleUser = new class{
 		constructor(){
 			this.elem_nickname = document.getElementById("inpNickname");
 			this.elem_cipher = document.getElementById("inpCipher");
 			this.loadFromStorage();
 		}
+		
+		showInputs(){ //after clear
+			this.elem_nickname.style.display=this.elem_cipher.style.display="";
+		}
+		hideShowInputs(){
+			if(this.elem_nickname.style.display=="") this.elem_nickname.style.display=this.elem_cipher.style.display="none";
+			else this.elem_nickname.style.display=this.elem_cipher.style.display="";
+		}
 		loadFromStorage(){
 			this.elem_nickname.value = localStorage.getItem('usernickname');
 			this.elem_cipher.value = localStorage.getItem('usercipher');
 		 }
 		eraseStorage(){
-			localStorage.setItem('usernickname','john doe');
-			localStorage.setItem('usercipher','123456'); 
+			localStorage.setItem('usernickname','doe');
+			localStorage.setItem('usercipher','123');
+			this.loadFromStorage();
+			this.showInputs();
 		}
 		setStorageNickname(newnickname){ localStorage.setItem('usernickname',newnickname) }
 		setStorageCipher(newcipher){ localStorage.setItem('usercipher',newcipher) }
@@ -551,16 +512,16 @@
 		getCipher(){ return this.mad(this.elem_cipher.value); }
 		
 		cyr(str) {
-			let h1 = 0xdeadbeef ^ 19, h2 = 0x41c6ce57 ^ 19, h3 = 0x54d3f12c ^ 19;
+			let a1 = 0xdeadbeef ^ 19, a2 = 0x41c6ce57 ^ 19, a3 = 0x54d3f12c ^ 19;
 			for (let i = 0, ch; i < str.length; i++) {
-				h1 = Math.imul(h1 ^ str.charCodeAt(i), 2654435761);
-				h2 = Math.imul(h2 ^ str.charCodeAt(i), 1597334677);
-				h3 = ((h3 << 5) - h3 + h1^h2 + str.charCodeAt(i)) << 0;
+				a1 = Math.imul(a1 ^ str.charCodeAt(i), 2654435761);
+				a2 = Math.imul(a2 ^ str.charCodeAt(i), 1597334677);
+				a3 = ((a3 << 5) - a3 + a1^a2 + str.charCodeAt(i)) << 0;
 			}
-			h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
-			h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
-			return (4294967296 * (2097151 & h2) + (h1>>>0)) + (new Uint32Array([h3])[0])
-			//return (4294967296 * (2097151 & h2) + (h1>>>0)).toString(16) + (new Uint32Array([h3])[0]).toString(16);
+			a1 = Math.imul(a1 ^ (a1>>>16), 2246822507) ^ Math.imul(a2 ^ (a2>>>13), 3266489909);
+			a2 = Math.imul(a2 ^ (a2>>>16), 2246822507) ^ Math.imul(a1 ^ (a1>>>13), 3266489909);
+			return (4294967296 * (2097151 & a2) + (a1>>>0)) + (new Uint32Array([a3])[0])
+			//return (4294967296 * (2097151 & a2) + (a1>>>0)).toString(16) + (new Uint32Array([a3])[0]).toString(16);
 		}
 		
 		mad(str) {
@@ -610,7 +571,7 @@
 		
 </script>
 		
-<script id="script_editbox">
+<script id="script_handleEditBox">
 	"use strict";
 
 	const handleEditBox = new class EditBox{
@@ -706,16 +667,18 @@
 	
 </script>
 
-<script id="script_thread">
+<script id="script_handleThread">
 	"use strict";
 	
 	const handleThread = new class{
 		constructor(){
-			this.elem_div_thread = document.getElementById("div_thread");
 			this.template_post = document.getElementById("template_post").children[0];
-			this.updated_datetime = new Date();
+			this.elem_div_thread = document.getElementById("div_thread");
+			this.fragment_post = document.createDocumentFragment();
 			this.fragment = document.createDocumentFragment();
 			this.fragment.appendChild(this.elem_div_thread);
+			this.fragment_post.appendChild(this.template_post);
+			this.updated_datetime = new Date();
 			this.myname=this.constructor.name;
 			this.isdirty = true;
 			this.map_nicknames = new Map();
@@ -779,7 +742,7 @@
 	
 </script>
 
-<script id="script_titles">
+<script id="script_handleTitles">
 	
 	const handleTitles = new class Titles{
 		constructor() {
@@ -810,11 +773,14 @@
 		
 		parseDataForTitles(data1)
 		{
-			let new_rows=""; 
+			let f = new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit', hour:'2-digit', minute:'2-digit'});
+			let new_rows="";
+			
 			for (let i=data1.length-1, k=1; i>=0; i--,k++) 
 			{
 				let d=data1[i];
-				new_rows += `\t<tr><td>${k}</td><td>${d["post_id"]}</td><td ${this.touchEvent}=btnGetThread(${d["post_id"]})>${d["title"]}</td><td>${d["nickname"]}</td><td>${d["created"]}</td><td>${125005}</td>\n`;
+				let date = f.format(Number(d[1])*1000)
+				new_rows += `\t<tr><td>${k}</td><td>${d[0]}</td><td ${this.touchEvent}=btnGetThread(${d[0]})>${d[3]}</td><td>${d[2]}</td><td>${date}</td><td>${125005}</td>\n`;
 			}
 			this.elem_forumtitles.innerHTML = new_rows;
 			this.isdirty = false;
@@ -828,7 +794,7 @@
 
 
 
-<script id="script_timer_fetchtitles">
+<script id="script_timer_fetchManager">
 	"use strict";
 	
 	const fetchManager = new class FetchManager{
@@ -956,7 +922,7 @@
 	performance.mark('myMark-start');
 
 	if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x)})();
-	fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload= ()=> fetchManager.startForumTimer(); //use with src=config 
+	fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload = ()=> fetchManager.startForumTimer(); //use with src=config 
 
 	
 </script>

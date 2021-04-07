@@ -44,7 +44,7 @@ switch ($op) {
 		else 
 			$output = $msg_id; //same
 
-	  break;
+	  break; 
 	case 'getpost':
 		$post_id = $_POST['post_id']; // var_dump($_POST);
 		$data = $db->getPost($post_id); // var_dump($data);

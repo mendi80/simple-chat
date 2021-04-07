@@ -2,7 +2,7 @@
 *todo
 	dont convert small images. make clipboard file process as drag. give it a name and send it to handle file.
 	try to compress raw png.
-
+	move to timestamp ..?
 
 *ab
 	ab -c 4 -n 2000 http://46.117.188.240:60111/mdispatch.php
