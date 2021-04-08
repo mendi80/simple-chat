@@ -58,7 +58,7 @@
 	</style>
 	
 	<style>
-		#myInfo16 { width: 12px; display:inline-block; }
+		#myInfo { width: 12px; display:inline-block; opacity:0; }
 		img {max-width:900px; width:100%;}
 	</style>
 	
@@ -72,16 +72,17 @@
 		.titlesBody>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
 		.titlesBody>tr>td:nth-child(4){ color:red; min-width:6em; width:6em;  }
 		.titlesBody>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:10em; width:10em; direction: ltr;}
-		.titlesBody>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
+		.titlesBody>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:3em; width:3em; }
+		.titlesBody>tr>td:nth-child(7){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
 	</style>
 	
 	<style id="style_post"> 
 		.ReplyContent {white-space: pre-wrap;}
 	</style>
 	<style id="style_editbox"> 
-		#div_editbox {background-color: DarkBlue; border-radius: 12px; padding: 20px; margin: 20px; font-size:16px;}
-		#writingPostTitle, #writingPostContent {min-width:100%; display:block; overflow:hidden;}
-		#previewPostTitle, #previewPostContent {background:lightgray; white-space: pre-wrap;}
+		#div_editbox {background-color: DarkBlue; border-radius: 12px; padding: 20px; margin: 20px; font-size:16px; }
+		#writingPostTitle, #writingPostContent {min-width:100%; display:block; overflow:hidden; font-weight: bold;} 
+		.ReplyTitle, .ReplyContent, #previewPostTitle, #previewPostContent {background:lightgray; white-space: pre-wrap; padding:10px; font-weight: bold;}
 		#previewPostTitle:empty:after {content:'תצוגה מקדימה';}
 		iframe { width: 640px; height: calc((640px/1.77));}
 	</style>
@@ -122,9 +123,6 @@
 	</section>
 </header>
 
-<div>aaaaa</div>
-<div>bbbbbb</div>
-
 
 <p id="myInfo">-</p>
 <p id="datetime" ></p>
@@ -136,7 +134,7 @@
 <div id="div_titles">
 	<div id="titles_anchor_editbox"></div>
 	<table class="titlesTable">
-		<thead class="titlesHeader"><tr><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>צפיות</th></tr></thead>
+		<thead class="titlesHeader"><tr><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>תגובות</th><th>צפיות</th></tr></thead>
 		<tbody class="titlesBody" id="forumtitles"></tbody>
 	</table>
 </div>
@@ -148,10 +146,10 @@
 			<h2 class="Nickname"></h2>
 			<h2 class="ReplyTitle" ></h2>
 			<article class="ReplyContent"></article>
-			<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">בטל וחזור</button>
-			<button type="button" class="btn1" onclick="btnStartEditPost(this,event)">ערוך הודעה</button>
-			<button type="button" class="btn1" onclick="btnDeletePost(this,event)">מחק הודעה</button>
-			<button type="button" class="btn1" onclick="btnStartReply(this,event)">תגובה</button>
+			<button type="button" class="header-button" onclick="btnBackToTitles(this,event)">חזור</button>
+			<button type="button" class="header-button" onclick="btnStartEditPost(this,event)">ערוך</button>
+			<button type="button" class="header-button" onclick="btnDeletePost(this,event)">מחק</button>
+			<button type="button" class="header-button" onclick="btnStartReply(this,event)">תגובה</button>
 			<div></div>
 			<ul></ul>
 		</li>
@@ -161,9 +159,9 @@
 <div id="div_editbox" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
 	<input type="text" id="writingPostTitle" placeholder="כותרת" oninput="handleEditBox.oninputTitle();">
 	<textarea id="writingPostContent" placeholder="תוכן" oninput="handleEditBox.oninputContent();" maxlength="1000" > </textarea>
-	<input type="file" class="btn1" id="inp" onchange="uploadfiles(this.files)" multiple />
-	<button class="btn1" onclick="btnCancelWrite()">בטל תגובה</button>
-	<button class="btn1" id="btnSendPost" onclick="btnSendPost()">שדר תגובה</button>
+	<input type="file" class="header-button" id="inp" onchange="uploadfiles(this.files)" multiple />
+	<button class="header-button" onclick="btnCancelWrite()">בטל</button>
+	<button class="header-button" id="btnSendPost" onclick="btnSendPost()">שדר</button>
 	<h2 id="previewPostTitle"  placeholder="כינוי"></h2>
 	<article id="previewPostContent">
 		
@@ -259,8 +257,8 @@
 		handleTitles.show();
 		
 		// debug dropHandler
-		forumDisplay.setForumState(forumstates.WRITE)
-		handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
+		//forumDisplay.setForumState(forumstates.WRITE)
+		//handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
 	}
 	function btnGetThread(post_id)
 	{
@@ -787,8 +785,8 @@
 			for (let i=data1.length-1, k=1; i>=0; i--,k++) 
 			{
 				let d=data1[i];
-				let date = f.format(Number(d[1])*1000)
-				new_rows += `\t<tr><td>${k}</td><td>${d[0]}</td><td ${this.touchEvent}=btnGetThread(${d[0]})>${d[3]}</td><td>${d[2]}</td><td>${date}</td><td>${125005}</td>\n`;
+				let date = f.format(Number(d[3])*1000);
+				new_rows += `\t<tr><td>${k}</td><td>${d[0]}</td><td ${this.touchEvent}=btnGetThread(${d[0]})>${d[5]}</td><td>${d[4]}</td><td>${date}</td><td>${d[1]}</td><td>${d[2]}</td>\n`;
 			}
 			this.elem_forumtitles.innerHTML = new_rows;
 			this.isdirty = false;
