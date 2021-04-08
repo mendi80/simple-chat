@@ -18,20 +18,24 @@
 	<link rel="icon" type="image/png" href="favicon.png?v=2"/>
 
 	<style id="style_body">
-		:root {--headerH:72px;}
-		* { padding: 0; margin: 0; box-sizing: border-box; }
-		body { background-color:#add; font-family: Arial,Tahoma, Arial;}
+		:root {--headerH:72px; }
+		* { margin:0; padding:0; box-sizing: border-box;}
+		html{background-color: DodgerBlue;}
+		body {min-height: 100vh; max-width: 960px; margin: 0 auto; font-family: Arial,Tahoma, Arial;}
+		body { background-color:PowderBlue; }
 		body1 { background: linear-gradient(#549471,#93a5cf) ;}
 		body.hidebody {opacity: 0; visibility:"hidden";}
+		input, select, textarea, button{font-family:inherit; font-size:inherit;}
 	</style>
 	
 	<style id="style_header">
+		/* https://htmlcolorcodes.com/color-names/ */
 		.nav-up { top: calc(-1*var(--headerH));} /* same as header height. https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c */
 		body1 { padding-top: var(--headerH);} /* same as header height*/
 		header { position: sticky; top: 0;right:0;left:0; height: var(--headerH); width:auto; z-index: 1;}
-		header { background-color: #333; white-space: nowrap; display: block; overflow-x:auto; overflow-y:hidden;}
+		header { background-color: MidnightBlue; white-space: nowrap; display: block; overflow-x:auto; overflow-y:hidden;}
 		header * { font-size:18px; border:none;}
-		header section 	{ display: inline-block; line-height: var(--headerH); padding:0px 12px; border-left: 3px solid rgb(0, 0, 0);}
+		header>section 	{ display: inline-block; line-height: var(--headerH); padding:0px 12px; border-left: 3px solid rgb(0, 0, 0);}
 		.header-input {background-color: rgb(192, 185, 173); height: 36px;}
 		.header-input:nth-of-type(1) {width:6em; text-align: center;}
 		.header-input:nth-of-type(2) {width:2.2em; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.8);}
@@ -46,11 +50,11 @@
 		/* <label class="header-toggle"><input type="checkbox" id="chkFetch"/><span>עדכן</span></label> */
 		.header-toggle { position: relative; display: inline-block; width:72px; height: 44px; line-height: 44px;  text-align: center; }
 		.header-toggle {-webkit-user-select: none; -ms-user-select: none; user-select: none;}
-		.header-toggle input {opacity: 0;  width: 0; height:0; background-color: #000;}
-		.header-toggle span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
-		.header-toggle span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
-		.header-toggle input:checked ~ span { background-color: #6B5;}
-		.header-toggle input:not(:focus):hover~span { color:#00a; background-color: #484;}
+		.header-toggle>input {opacity: 0;  width: 0; height:0; background-color: #000;}
+		.header-toggle>span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
+		.header-toggle>span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
+		.header-toggle>input:checked ~ span { background-color: #6B5;}
+		.header-toggle>input:not(:focus):hover~span { color:#00a; background-color: #484;}
 	</style>
 	
 	<style>
@@ -61,8 +65,8 @@
 	<style id="style_titles">
 		.titlesTable1 { border-collapse: collapse;  border-spacing: 0px;  font-size:15px; table-layout: auto; width: 100vh;}
 		.titlesTable>tbody>tr>td, .titlesTable>thead>tr>th { border: 1px solid #449;  padding: 0px 8px; text-align: center;}
-		.titlesBody>tr:nth-child(even) {background-color: #8cc;}
-		.titlesBody>tr:hover {background-color: #3c9ac5; cursor:default;}
+		.titlesBody>tr:nth-child(even) {background-color: LightBlue;}
+		.titlesBody>tr:hover {background-color: DodgerBlue; cursor:default;}
 		.titlesBody>tr>td:nth-child(1){ min-width:4em; width:4em;  }
 		.titlesBody>tr>td:nth-child(2){ min-width:4em; width:4em;  }
 		.titlesBody>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
@@ -72,14 +76,15 @@
 	</style>
 	
 	<style> 
-		#div_editbox {background-color: #827;}
-		#writingPostTitle, #writingPostContent {width:80%;padding:.375rem 2.75rem;margin:16px; margin-right:30px; font-size:16px;
-			font-weight:400;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:3px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
-		#div_editbox textarea, #div_editbox input { background: #6f6f6f !important;color: #f2f2f2 !important; border: none !important;}
-		#div_editbox ::placeholder { color: #f2f2f2 !important; opacity: 1; /* Firefox */} /* Chrome, Firefox, Opera, Safari 10.1+ */
-		article {white-space: pre-wrap;	min-height: 5em; min-width: 5em;min-width: auto; background-color:#386;}
+		#div_editbox {background-color: DarkBlue; border-radius: 12px; padding: 20px; margin: 20px; font-size:16px;}
+		#writingPostTitle, #writingPostContent {min-width:100%; display:block;}
+		#previewPostTitle {background:lightgray;}
+		#previewPostTitle:empty:after {content:'תצוגה מקדימה';}
+		
+		#previewPostContent {background:lightgray;}
 		iframe { width: 640px; height: calc((640px/1.77));}
 	</style>
+
 	<!--
 	<style id="style_debug">
 		* {border:#333 1px solid; animation: debug_div 5s linear 1 forwards running;}
@@ -154,15 +159,17 @@
 
 <div id="div_editbox" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
 	<input type="text" id="writingPostTitle" placeholder="כותרת" oninput="handleEditBox.oninputTitle();">
-	<textarea id="writingPostContent" name="postcontent" dirname="postcontent.dir" placeholder="תוכן" oninput="handleEditBox.oninputContent();"  cols="50" maxlength="1000" > </textarea>
+	<textarea id="writingPostContent" placeholder="תוכן" oninput="handleEditBox.oninputContent();" maxlength="1000" > </textarea>
 	<input type="file" class="btn1" id="inp" onchange="uploadfiles(this.files)" multiple />
 	<button class="btn1" onclick="btnCancelWrite()">בטל תגובה</button>
 	<button class="btn1" id="btnSendPost" onclick="btnSendPost()">שדר תגובה</button>
-	<h2 id="previewPostTitle" class="PostTitle"></h1>
-	<article id="previewPostContent" class="PostContent"></article>
+	<h2 id="previewPostTitle"  placeholder="כינוי"></h2>
+	<article id="previewPostContent">
+		
+	</article>
 </div>
 
-
+<!-- name="postcontent" dirname="postcontent.dir" -->
 
 <!-- ************************************************************SCRIPTS******************************************************************* -->
 
@@ -251,8 +258,8 @@
 		handleTitles.show();
 		
 		// debug dropHandler
-		//forumDisplay.setForumState(forumstates.WRITE)
-		//handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
+		forumDisplay.setForumState(forumstates.WRITE)
+		handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
 	}
 	function btnGetThread(post_id)
 	{
