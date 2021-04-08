@@ -4,6 +4,11 @@
 	try to compress raw png.
 	move to timestamp ..?
 
+*commit to production
+atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9tZGlzcGF0Y2gucGhw") = btoa("http://siders.ddns.net:60777/mdispatch.php")
+atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDY2Ni9tZGlzcGF0Y2gucGhw") = btoa("http://siders.ddns.net:60666/mdispatch.php")
+
+
 *ab
 	ab -c 4 -n 2000 http://46.117.188.240:60111/mdispatch.php
 

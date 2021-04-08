@@ -4,7 +4,7 @@
 	<script>
 		var USE_PREFRETCH = true;
 		var fetchPingFormData0=""; 
-		var operfetch = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9tZGlzcGF0Y2gucGhw");
+		var operfetch = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDY2Ni9tZGlzcGF0Y2gucGhw");
 		if(USE_PREFRETCH) {
 			pingFormData0 = new FormData(); 
 			pingFormData0.set('op', "fetch");
@@ -75,13 +75,14 @@
 		.titlesBody>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
 	</style>
 	
-	<style> 
+	<style id="style_post"> 
+		.ReplyContent {white-space: pre-wrap;}
+	</style>
+	<style id="style_editbox"> 
 		#div_editbox {background-color: DarkBlue; border-radius: 12px; padding: 20px; margin: 20px; font-size:16px;}
-		#writingPostTitle, #writingPostContent {min-width:100%; display:block;}
-		#previewPostTitle {background:lightgray;}
+		#writingPostTitle, #writingPostContent {min-width:100%; display:block; overflow:hidden;}
+		#previewPostTitle, #previewPostContent {background:lightgray; white-space: pre-wrap;}
 		#previewPostTitle:empty:after {content:'תצוגה מקדימה';}
-		
-		#previewPostContent {background:lightgray;}
 		iframe { width: 640px; height: calc((640px/1.77));}
 	</style>
 
@@ -145,7 +146,7 @@
 		<li data-post_id="0000000">
 			<p class="PostID"></p>
 			<h2 class="Nickname"></h2>
-			<h3 class="ReplyTitle" ></h2>
+			<h2 class="ReplyTitle" ></h2>
 			<article class="ReplyContent"></article>
 			<button type="button" class="btn1" onclick="btnBackToTitles(this,event)">בטל וחזור</button>
 			<button type="button" class="btn1" onclick="btnStartEditPost(this,event)">ערוך הודעה</button>
