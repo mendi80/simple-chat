@@ -2,20 +2,46 @@
 <!doctype html>
 <html lang="en">
 	<script>
-		var USE_PREFRETCH = true;
-		var fetchPingFormData0=""; 
-		var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
-		if(USE_PREFRETCH) {
-			pingFormData0 = new FormData(); 
-			pingFormData0.set('op', "fetch");
-			fetchPingFormData0 = fetch(operfetch, {method: 'POST', body: pingFormData0 }).then(res => res.json());
+		var INIT_THREAD_TARGET=0;
+		var redirect = sessionStorage.redirect;
+		console.log(redirect);
+		delete sessionStorage.redirect;
+		if (redirect && redirect != location.href && !redirect.endsWith('/0')  && !redirect.endsWith('/') ) {
+			console.log(redirect)
+			history.replaceState(null, null, redirect);
+			console.log(window.location.pathname);
+			if(window.location.pathname.length>1 && !isNaN(parseFloat(window.location.pathname.substring(1))))
+				INIT_THREAD_TARGET=parseFloat(window.location.pathname.substring(1));
+		}
+		var IS_VALID_PROTOCOL=(location.protocol === 'http:');
+		if(IS_VALID_PROTOCOL)
+		{
+			var USE_PREFRETCH = true && INIT_THREAD_TARGET==0;
+			var fetchPingFormData0=""; 
+			var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
+			if(USE_PREFRETCH) {
+				pingFormData0 = new FormData(); 
+				pingFormData0.set('op', "fetch");
+				fetchPingFormData0 = fetch(operfetch, {method: 'POST', body: pingFormData0 }).then(res => res.json());
+			}
 		}
 	</script>
 <head>
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>סיידרס</title>
-	<link rel="icon" type="image/png" href="favicon.png?v=2"/>
+	<title>Siders</title>
+	<!--link rel="icon" type="image/png" href="favicon.png?v=2"/-->
+	<link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0
+	AAACjklEQVRYR+1XXWhSYRh+vpMjNNGQOZmK7Uc4U3M3LdYGgkSNLoYbNQt2HRR1VzcVCxZRBF1EUFHQVRfBWutii12NXSwr21qwNTQ2qPCYYs7UTDcd
+	euKc2tncyIF4tAvP3Xm/8z3v8z3nfZ+Xj2CQpfpMuEIonAOLepTjIQiyOTx47sVN0jfEDhCC6+XIuzUHy+IqcQ6zgbKdfCsDgiBxPmPZSpx+PWeVQFW
+	B/1uByFIEiW+JbU1isBlA7aK2xYMfgkj/TOfF5fVy1NK1/2y0ggokAgn43QwWXy4h8ysjgNiv2aE2qfNAc9kcxs+PY+XHihBvsDeAdtBQ6BXFEeB2BW
+	YD8L3ygXnDCCB0L43W/tY80MhiBN4XXnAqrD+WUxaYT5gL2syONcARSIaS8Ax7kEn+UWHvPiWO3u7KA/aMeCDZLcHck7nSE0iFU1j+tJynQvfDbkhVUi
+	GZ65YLpuMmTA5MikNAIpVg5v6MAN52tg2Nhxv592wmC/cdN8xOMyYuTYhDQH9Ij7EzY8DfyaFr16HzYiefLDQfQvRLFBqrRjwCxmNGHjz6OconrZHVwP
+	HYAUpC4ePTeeja9SCEiEtgYWgB3hHvRjsO2qE2qzF1Ywq2yzbEvsbEJcC12uYio3tomHpb8P7RLDoudPDqiFYD3C9gcyxGT48KpqQ0KGE5aeHNh1sXnQ
+	CnvfuuG8zrDVPSHtTC2m+FQqcoPYHk9yT87/xYja2C6wKVUcW74vS9aaEOOC/gPCHOxHkCm1u16UgTWnpo7NHIi7PisCeMuC8ubG7uasZaag0+l0+Iyd
+	QyaA9owbxlkI7nDyLuI24O1O2vK45AQRMv0eKOs6BEeaoKVBUooEClr2YVv5xW+nr+G6WEgZ7Y0VfjAAAAAElFTkSuQmCC"
+	>
+
 
 	<style id="style_body">
 		:root {--headerH:72px; }
@@ -202,6 +228,7 @@
 			console.assert(newrpost_id>=0, 'rpost_id must be non negative');
 			this.rpost_id = newrpost_id;
 			this.last_rpost_id = newrpost_id;
+			history.replaceState({},'', newrpost_id>0 ? newrpost_id: '');
 			console.log(`setRootPostID(${newrpost_id})`)
 		}
 		isValidState(state) { return Object.values(forumstates).indexOf(state)>0}
@@ -359,8 +386,8 @@
 		let pat_twitter= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
 		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)/igm
 		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)\b/igm
-		let operfile = atob("aHR0cDovL3NpZGVycy5kZG5zLm5ldDo2MDc3Ny9maWxlcy8=");
-
+		let operfile = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvZmlsZXMv");
+		
 		let files = text0.replaceAll(pat_files, operfile);
 		let imgs = files.replace(pat_imgs, '<img src="$1" alt="" ><br><a href="$1" target="_blank"></a>');
 		let mp3 = imgs.replace(pat_mp3, '<audio controls><source src="$1" type="audio/mpeg">Unsupported</audio><br><a href="$1" target="_blank">$1</a>');	
@@ -798,8 +825,6 @@
 	
 </script>
 
-
-
 <script id="script_timer_fetchManager">
 	"use strict";
 	
@@ -918,6 +943,7 @@
 </code>
 
 <script id="script_init">
+	
 	const DEBUG_DISPLAY = true;
 	function mylog(what_class,what_method)
 	{
@@ -925,13 +951,27 @@
 			console.log(`${what_class}::${what_method}()`)
 	}
 	
-	gotoTitles();
-	forumDisplay.setInfo(document.lastModified);
-	performance.mark('myMark-start');
+	if (IS_VALID_PROTOCOL)
+	{
+		gotoTitles();
+		forumDisplay.setInfo(document.lastModified);
+		performance.mark('myMark-start');
 
-	if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x)})();
-	fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload = ()=> fetchManager.startForumTimer(); //use with src=config 
-
+		//if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x); INIT_THREAD_TARGET>0 ? btnGetThread(INIT_THREAD_TARGET):0;})();
+		if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x);})();
+		if(INIT_THREAD_TARGET>0) btnGetThread(INIT_THREAD_TARGET);
+		
+		fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload = ()=> fetchManager.startForumTimer(); //use with src=config 
+	}
+	else
+	{
+		setTimeout(function() {
+			var url0="http://siders.co.il"+window.location.pathname;
+			var url=window.location.href.replace("https:","http:").replace("www.","");
+			document.write(`<h3>Please use this link</h3> <a href=${url}>${url}</a>`);
+			document.body.className="";
+		}, 100);
+	}
 	
 </script>
 

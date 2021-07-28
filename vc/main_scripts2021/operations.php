@@ -29,13 +29,17 @@ switch ($op) {
 		
 	case 'fetch':
 		if(isset($_POST['msg_id'])){
-		$msg_id = $_POST['msg_id'];
-		$rpost_id = $_POST['rpost_id'];
-		$n_replies = $_POST['n_replies'];
-		$n_edits = $_POST['n_edits'];
-		} else { $msg_id = $rpost_id= $n_replies= $n_edits= $n_edits=0;}
+			$msg_id = $_POST['msg_id'];
+			$rpost_id0 = $_POST['rpost_id'];
+			$n_replies = $_POST['n_replies'];
+			$n_edits = $_POST['n_edits'];
+		} else { 
+			$msg_id = $rpost_id0 = $n_replies= $n_edits= $n_edits=0;
+		}
+		$rpost_id = $db->getRootPostID($rpost_id0);
 		$post_state = $db->getSingleRowFromThreads($rpost_id);
-		if($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits']) {
+		
+		if($post_state && ($n_replies!=$post_state['n_replies'] || $n_edits!=$post_state['n_edits'])) {
 			if($rpost_id==0)	
 				$data = $db->getForumTitles();
 			 else 

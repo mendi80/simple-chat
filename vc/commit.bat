@@ -9,6 +9,7 @@ REM git add -v --all -- ':!index.html' && git commit -vm "base" && git add . && 
 REM git remote add origin git@siders:vcorona-israel/website.git && git push -u --force origin main
 
 copy /Y %DRV%\xampp\htdocs\vc\website\index.html %tmpdir% || goto :error
+copy /Y %DRV%\xampp\htdocs\vc\website\404.html %tmpdir% || goto :error
 cd /D %tmpdir% || goto :error
 REM powershell -Command "(gc index.html) -replace 'aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA3NzcvbWRpc3BhdGNoLnBocA', 'aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA' | Out-File index.html" || goto :error
 REM git pull --rebase --allow-unrelated-histories || goto :error

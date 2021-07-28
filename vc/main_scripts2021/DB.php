@@ -20,6 +20,31 @@ class DB {
 			echo "databse connection failed: " . $e->getMessage();
 		}
 	}
+	public function getRootPostID($post_id){
+		if($post_id>0)
+		{
+			$sql = "SELECT * FROM thread_counters WHERE post_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
+			$stmt = $this->con->prepare($sql);
+			$stmt->execute([max(1,$post_id)]);
+			$data = $stmt->fetch(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC;
+			if($data)
+				$rpostid=$post_id;
+			else
+			{
+				$sql = "SELECT rpost_id FROM posts WHERE post_id=? LIMIT 1;";
+				$stmt = $this->con->prepare($sql);
+				$stmt->execute([max(1,$post_id)]);
+				$data = $stmt->fetch(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC;
+				if($data)
+					$rpostid=$data['rpost_id'];
+				else
+					$rpostid=0;
+			}
+		}
+		else
+			$rpostid=0;
+		return $rpostid;
+	}
 	public function getSingleRowFromThreads($post_id){
 		if($post_id>0)
 			$sql = "SELECT * FROM thread_counters WHERE post_id=? LIMIT 1;"; // It's already as fast as can be without LIMIT 1. LIMIT 1 is effectively implied anyway.
@@ -44,7 +69,7 @@ class DB {
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC;
 		return $data;
 	}
-	private function getRootPostID($post_id){
+	private function getRootPostIDOld($post_id){
 		$sql = "SELECT rpost_id FROM posts WHERE post_id=? LIMIT 1;";
 		$stmt = $this->con->prepare($sql);
 		$stmt->execute([$post_id]);
