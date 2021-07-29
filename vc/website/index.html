@@ -13,7 +13,7 @@
 			if(window.location.pathname.length>1 && !isNaN(parseFloat(window.location.pathname.substring(1))))
 				INIT_THREAD_TARGET=parseFloat(window.location.pathname.substring(1));
 		}
-		var IS_VALID_PROTOCOL=(location.protocol === 'http:');
+		var IS_VALID_PROTOCOL=(location.protocol !== 'https:');
 		if(IS_VALID_PROTOCOL)
 		{
 			var USE_PREFRETCH = true && INIT_THREAD_TARGET==0;
@@ -141,7 +141,7 @@
 		<button class="header-button" onclick="handleUser.eraseStorage()">מחק</button>
 	</section>
 	<section>
-		<button class="header-button" onclick="btnBackToTitles(this,event)">כותרות</button>
+		<button class="header-button" onclick="goToTitles(this,event)">כותרות</button>
 		<button class="header-button" onclick="btnStartNewThread()">כתוב</button>
 		<button class="header-button" onclick="btnCreateRandomTable(10)">טבלה</button>
 		<label class="header-toggle"><input type="checkbox" id="chkFetch" checked><span >עדכן</span></label>
@@ -228,7 +228,7 @@
 			console.assert(newrpost_id>=0, 'rpost_id must be non negative');
 			this.rpost_id = newrpost_id;
 			this.last_rpost_id = newrpost_id;
-			history.replaceState({},'', newrpost_id>0 ? newrpost_id: '');
+			history.replaceState({},'', newrpost_id>0 ? newrpost_id: '/');
 			console.log(`setRootPostID(${newrpost_id})`)
 		}
 		isValidState(state) { return Object.values(forumstates).indexOf(state)>0}
@@ -274,9 +274,8 @@
 		show() { spinner.className = "showspinner"; setTimeout(() => spinnerManager.hide(), 3000); }
 		hide() { spinner.className = ""; }
 	};
-	
-	
-	function gotoTitles() //init
+		
+	function gotoTitlesOnInit() //init
 	{
 		forumDisplay.setRootPostID(0);
 		forumDisplay.setForumState(forumstates.TITLES);
@@ -318,6 +317,15 @@
 	{
 		let post_id=me.parentElement.dataset.post_id
 		if(confirm("Are you sure?")) handleThread.deletePost(post_id)
+	}
+	
+	function goToTitles(me,ev){
+		handleEditBox.hide_soft();
+		handleThread.hide_soft();
+		forumDisplay.setRootPostID(0);
+		if(!forumDisplay.isCurrentState(forumstates.TITLES)) forumDisplay.setForumState(forumstates.TITLES);
+		fetchManager.requestFetch();
+		handleTitles.show();
 	}
 	
 	function btnBackToTitles(me,ev){
@@ -720,6 +728,13 @@
 		}
 	
 		isHidden(){return this.elem_div_thread.parentNode == this.fragment;}
+		hide_soft(toClear=true) {
+			mylog(this.myname,'hide_soft')
+			this.isdirty = true;
+			if(toClear) this.elem_div_thread.innerHTML = "";
+			//console.assert(!this.isHidden(), 'handleThread should be be hidden')
+			if(!this.isHidden()){ this.fragment.appendChild(this.elem_div_thread);}; 
+		}
 		hide(toClear=true) {
 			mylog(this.myname,'hide')
 			this.isdirty = true;
@@ -953,7 +968,7 @@
 	
 	if (IS_VALID_PROTOCOL)
 	{
-		gotoTitles();
+		gotoTitlesOnInit();
 		forumDisplay.setInfo(document.lastModified);
 		performance.mark('myMark-start');
 

@@ -54,6 +54,7 @@ switch ($op) {
 				this.showInputs();
 				console.log(this.elem_nickname.value);
 				}";
+			$script = "console.log('dynamic script')";
 			$output = json_encode([$header,$data,$script],JSON_PRETTY_PRINT);
 		}
 		else 
