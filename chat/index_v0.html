@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<h1>Real Time Messaging</h1>
+		<pre id="messages" style="height: 200px; overflow: scroll"></pre>
+		<input type="text" id="nameBox" placeholder="Name" style="display: block; width: 10%; margin-bottom: 10px; padding: 10px;" />
+		<input type="text" id="messageBox" placeholder="Type your message here" style="display: block; width: 80%; margin-bottom: 10px; padding: 10px;" />
+		<button id="send" onclick="sendBtn()" title="Send Message!" style="width: 100%; height: 30px;">Send Message</button>
+		
+		<script>
+			const messages = document.querySelector('#messages');
+			const nameBox = document.querySelector('#nameBox');
+			const messageBox = document.querySelector('#messageBox');
+			
+			var ws = null;
+			
+			function initWS() {
+				if (ws) { ws.onerror = ws.onopen = ws.onclose = null; ws.close(); }
+				ws = new WebSocket('ws://localhost:8088');
+				ws.onopen = () => console.log('Connection opened!');
+				ws.onmessage = (event) => {console.log(event.data); showMessage(event.data);}
+				ws.onclose = function() {ws=null; console.log('Connection closed!'); }
+				nameBox.focus();
+			}
+			
+			function showMessage(data) {
+				if(typeof(data) !== 'string' || data.length<2) return;
+				let datajson = JSON.parse(data);
+				if (typeof(datajson)!=='object') return;
+				messages.textContent += `${datajson.name}:\t ${datajson.msg}\n`;
+				messages.scrollTop = messages.scrollHeight;
+				messageBox.value = '';
+				messageBox.focus();
+			}
+			
+			function sendBtn() {
+				if (!ws) {showMessage(JSON.stringify({ "name": "", "msg": "No WebSocket connection" })); return;}
+				if(messageBox.value.length==0) return;
+				var data = JSON.stringify({ "name": nameBox.value, "msg": messageBox.value });
+				showMessage(data);
+				ws.send(data);
+			}
+			
+			document.addEventListener("keyup", function(event) {((event.code==='Enter'||event.code==='NumpadEnter'))? sendBtn() : 0;});
+			
+			initWS();
+		
+		</script>
+	</body>
+</html>
