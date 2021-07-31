@@ -1,0 +1,995 @@
+
+<!doctype html>
+<html lang="en">
+	<script>
+		var INIT_THREAD_TARGET=0;
+		var redirect = sessionStorage.redirect;
+		console.log(redirect);
+		delete sessionStorage.redirect;
+		if (redirect && redirect != location.href && !redirect.endsWith('/0')  && !redirect.endsWith('/') ) {
+			console.log(redirect)
+			history.replaceState(null, null, redirect);
+			console.log(window.location.pathname);
+			if(window.location.pathname.length>1 && !isNaN(parseFloat(window.location.pathname.substring(1))))
+				INIT_THREAD_TARGET=parseFloat(window.location.pathname.substring(1));
+		}
+		var IS_VALID_PROTOCOL=(location.protocol !== 'https:');
+		if(IS_VALID_PROTOCOL)
+		{
+			var USE_PREFRETCH = true && INIT_THREAD_TARGET==0;
+			var fetchPingFormData0=""; 
+			var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA==");
+			if(USE_PREFRETCH) {
+				pingFormData0 = new FormData(); 
+				pingFormData0.set('op', "fetch");
+				fetchPingFormData0 = fetch(operfetch, {method: 'POST', body: pingFormData0 }).then(res => res.json());
+			}
+		}
+	</script>
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Siders</title>
+	<!--link rel="icon" type="image/png" href="favicon.png?v=2"/-->
+	<link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0
+	AAACjklEQVRYR+1XXWhSYRh+vpMjNNGQOZmK7Uc4U3M3LdYGgkSNLoYbNQt2HRR1VzcVCxZRBF1EUFHQVRfBWutii12NXSwr21qwNTQ2qPCYYs7UTDcd
+	euKc2tncyIF4tAvP3Xm/8z3v8z3nfZ+Xj2CQpfpMuEIonAOLepTjIQiyOTx47sVN0jfEDhCC6+XIuzUHy+IqcQ6zgbKdfCsDgiBxPmPZSpx+PWeVQFW
+	B/1uByFIEiW+JbU1isBlA7aK2xYMfgkj/TOfF5fVy1NK1/2y0ggokAgn43QwWXy4h8ysjgNiv2aE2qfNAc9kcxs+PY+XHihBvsDeAdtBQ6BXFEeB2BW
+	YD8L3ygXnDCCB0L43W/tY80MhiBN4XXnAqrD+WUxaYT5gL2syONcARSIaS8Ax7kEn+UWHvPiWO3u7KA/aMeCDZLcHck7nSE0iFU1j+tJynQvfDbkhVUi
+	GZ65YLpuMmTA5MikNAIpVg5v6MAN52tg2Nhxv592wmC/cdN8xOMyYuTYhDQH9Ij7EzY8DfyaFr16HzYiefLDQfQvRLFBqrRjwCxmNGHjz6OconrZHVwP
+	HYAUpC4ePTeeja9SCEiEtgYWgB3hHvRjsO2qE2qzF1Ywq2yzbEvsbEJcC12uYio3tomHpb8P7RLDoudPDqiFYD3C9gcyxGT48KpqQ0KGE5aeHNh1sXnQ
+	CnvfuuG8zrDVPSHtTC2m+FQqcoPYHk9yT87/xYja2C6wKVUcW74vS9aaEOOC/gPCHOxHkCm1u16UgTWnpo7NHIi7PisCeMuC8ubG7uasZaag0+l0+Iyd
+	QyaA9owbxlkI7nDyLuI24O1O2vK45AQRMv0eKOs6BEeaoKVBUooEClr2YVv5xW+nr+G6WEgZ7Y0VfjAAAAAElFTkSuQmCC"
+	>
+
+
+	<style id="style_body">
+		:root {--headerH:72px; }
+		* { margin:0; padding:0; box-sizing: border-box;}
+		html{background-color: DodgerBlue;}
+		body {min-height: 100vh; max-width: 960px; margin: 0 auto; font-family: Arial,Tahoma, Arial;}
+		body { background-color:PowderBlue; }
+		body1 { background: linear-gradient(#549471,#93a5cf) ;}
+		body.hidebody {opacity: 0; visibility:"hidden";}
+		input, select, textarea, button{font-family:inherit; font-size:inherit;}
+	</style>
+	
+	<style id="style_header">
+		/* https://htmlcolorcodes.com/color-names/ */
+		.nav-up { top: calc(-1*var(--headerH));} /* same as header height. https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c */
+		body1 { padding-top: var(--headerH);} /* same as header height*/
+		header { position: sticky; top: 0;right:0;left:0; height: var(--headerH); width:auto; z-index: 1;}
+		header { background-color: MidnightBlue; white-space: nowrap; display: block; overflow-x:auto; overflow-y:hidden;}
+		header * { font-size:18px; border:none;}
+		header>section 	{ display: inline-block; line-height: var(--headerH); padding:0px 12px; border-left: 3px solid rgb(0, 0, 0);}
+		.header-input {background-color: rgb(192, 185, 173); height: 36px;}
+		.header-input:nth-of-type(1) {width:6em; text-align: center;}
+		.header-input:nth-of-type(2) {width:2.2em; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.8);}
+		.header-input:nth-of-type(2):focus {width:2.2em; color: rgba(0,0,0,0.2); text-shadow: 0 0 8px rgba(0,0,0,0.95);}
+		/* <button class="header-button" type="button" onclick="btnBackToTitles(this,event)">כותרות</button> */
+		.header-button {display:inline-block;  box-sizing: border-box; width:72px; height: 44px; border:none; text-decoration:none;}
+		.header-button {background-color:#37f; color:white; text-align:center; transition: 0.2s;  }
+		.header-button {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
+		.header-button:hover {color:#f00; background-color:#527;}
+		.header-button:active{background-color:#139; box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15);}
+		.header-button:focus {outline:0;}
+		/* <label class="header-toggle"><input type="checkbox" id="chkFetch"/><span>עדכן</span></label> */
+		.header-toggle { position: relative; display: inline-block; width:72px; height: 44px; line-height: 44px;  text-align: center; }
+		.header-toggle {-webkit-user-select: none; -ms-user-select: none; user-select: none;}
+		.header-toggle>input {opacity: 0;  width: 0; height:0; background-color: #000;}
+		.header-toggle>span {box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);}
+		.header-toggle>span {background-color: #241; color:black; position:absolute;top:0;left:0;right:0;bottom:0;-webkit-transition:0.5s;transition: 0.5s;}
+		.header-toggle>input:checked ~ span { background-color: #6B5;}
+		.header-toggle>input:not(:focus):hover~span { color:#00a; background-color: #484;}
+	</style>
+	
+	<style>
+		#myInfo { width: 12px; display:inline-block; opacity:0; }
+		img {max-width:900px; width:100%;}
+	</style>
+	
+	<style id="style_titles">
+		.titlesTable1 { border-collapse: collapse;  border-spacing: 0px;  font-size:15px; table-layout: auto; width: 100vh;}
+		.titlesTable>tbody>tr>td, .titlesTable>thead>tr>th { border: 1px solid #449;  padding: 0px 8px; text-align: center;}
+		.titlesBody>tr:nth-child(even) {background-color: LightBlue;}
+		.titlesBody>tr:hover {background-color: DodgerBlue; cursor:default;}
+		.titlesBody>tr>td:nth-child(1){ min-width:4em; width:4em;  }
+		.titlesBody>tr>td:nth-child(2){ min-width:4em; width:4em;  }
+		.titlesBody>tr>td:nth-child(3){ color:black; font-weight: bold; min-width:20em;  text-align: right;}
+		.titlesBody>tr>td:nth-child(4){ color:red; min-width:6em; width:6em;  }
+		.titlesBody>tr>td:nth-child(5){ color:rgb(152, 67, 201); min-width:10em; width:10em; direction: ltr;}
+		.titlesBody>tr>td:nth-child(6){ color:rgb(18, 90, 48); min-width:3em; width:3em; }
+		.titlesBody>tr>td:nth-child(7){ color:rgb(18, 90, 48); min-width:4em; width:4em; }
+	</style>
+	
+	<style id="style_post"> 
+		.ReplyContent {white-space: pre-wrap;}
+	</style>
+	<style id="style_editbox"> 
+		#div_editbox {background-color: DarkBlue; border-radius: 12px; padding: 20px; margin: 20px; font-size:16px; }
+		#writingPostTitle, #writingPostContent {min-width:100%; display:block; overflow:hidden; font-weight: bold;} 
+		.ReplyTitle, .ReplyContent, #previewPostTitle, #previewPostContent {background:lightgray; white-space: pre-wrap; padding:10px; font-weight: bold;}
+		#previewPostTitle:empty:after {content:'תצוגה מקדימה';}
+		iframe { width: 640px; height: calc((640px/1.77));}
+	</style>
+
+	<!--
+	<style id="style_debug">
+		* {border:#333 1px solid; animation: debug_div 5s linear 1 forwards running;}
+		@keyframes debug_div { from {border-width: 1px;margin:0px} to {border-width: 2px;margin: 10px;} }
+	</style>       -->
+	
+	
+
+	<style id="style_spinner">
+		div#spinner {visibility: hidden; width: min(30vw,30vh); height: min(30vw,30vh); border: 2px solid #f3f3f3;	border-top:3px solid #f25a41; border-radius: 100%;
+				position: absolute; top:0; bottom:0; left:0; right: 0; margin: auto; animation: spin 1s infinite linear; }
+		@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+		div#spinner.showspinner { visibility: visible; }
+	</style>
+</head>
+
+<!-- *************************************************************BODY****************************************************************** -->
+<body dir="rtl" class="hidebody">
+
+<header>
+	<section>
+		<!--span id="inpNickname" contenteditable="true">sdfsd</span-->
+		<button class="header-button" onclick="handleUser.hideShowInputs()">הסתר</button>
+		<input class="header-input" type="text" id="inpNickname" placeholder="כינוי" onfocusout="handleUser.setStorageNickname(this.value)">
+		<input class="header-input" type="text" id="inpCipher"   placeholder="צופן"  onfocusout="handleUser.setStorageCipher(this.value)">
+		<button class="header-button" onclick="handleUser.eraseStorage()">מחק</button>
+	</section>
+	<section>
+		<button class="header-button" onclick="goToTitles(this,event)">כותרות</button>
+		<button class="header-button" onclick="btnStartNewThread()">כתוב</button>
+		<button class="header-button" onclick="btnCreateRandomTable(10)">טבלה</button>
+		<label class="header-toggle"><input type="checkbox" id="chkFetch" checked><span >עדכן</span></label>
+		<label class="header-toggle"><input type="checkbox" id="chkFetch1"/><span>שונות</span></label>
+	</section>
+</header>
+
+
+<p id="myInfo">-</p>
+<p id="datetime" ></p>
+<div id="spinner" class="showspinner"></div> 
+
+<main></main>
+
+
+<div id="div_titles">
+	<div id="titles_anchor_editbox"></div>
+	<table class="titlesTable">
+		<thead class="titlesHeader"><tr><th>מספר</th><th>ID</th><th>כותרת</th><th>שם הכותב</th><th>תאריך כתיבה</th><th>תגובות</th><th>צפיות</th></tr></thead>
+		<tbody class="titlesBody" id="forumtitles"></tbody>
+	</table>
+</div>
+
+<div id="div_thread">
+	<div id="template_post" >
+		<li data-post_id="0000000">
+			<p class="PostID"></p>
+			<h2 class="Nickname"></h2>
+			<h2 class="ReplyTitle" ></h2>
+			<article class="ReplyContent"></article>
+			<button type="button" class="header-button" onclick="btnBackToTitles(this,event)">חזור</button>
+			<button type="button" class="header-button" onclick="btnStartEditPost(this,event)">ערוך</button>
+			<button type="button" class="header-button" onclick="btnDeletePost(this,event)">מחק</button>
+			<button type="button" class="header-button" onclick="btnStartReply(this,event)">תגובה</button>
+			<div></div>
+			<ul></ul>
+		</li>
+	</div>
+</div>
+
+<div id="div_editbox" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+	<input type="text" id="writingPostTitle" placeholder="כותרת" oninput="handleEditBox.oninputTitle();">
+	<textarea id="writingPostContent" placeholder="תוכן" oninput="handleEditBox.oninputContent();" maxlength="1000" > </textarea>
+	<input type="file" class="header-button" id="inp" onchange="uploadfiles(this.files)" multiple />
+	<button class="header-button" onclick="btnCancelWrite()">בטל</button>
+	<button class="header-button" id="btnSendPost" onclick="btnSendPost()">שדר</button>
+	<h2 id="previewPostTitle"  placeholder="כינוי"></h2>
+	<article id="previewPostContent">
+		
+	</article>
+</div>
+
+<!-- name="postcontent" dirname="postcontent.dir" -->
+
+<!-- ************************************************************SCRIPTS******************************************************************* -->
+
+
+<code class="code_forumstate">
+<script id="script_forumstate">
+	
+	"use strict";
+	const forumstates = {INIT:"Init",TITLES:"Titles", THREAD:"Thread", WRITE:"Write", REPLY:"Reply", EDIT:"Edit"}
+	const elem_main = document.getElementsByTagName("main")[0];
+
+	const forumDisplay = new class Forum{
+		
+		constructor() {
+			this.elem_myInfo=document.getElementById("myInfo");
+			this.current_forumstate = forumstates.INIT;
+			this.prev_forumstate = forumstates.INIT;
+			this.rpost_id = 0;
+			this.last_rpost_id = 0;
+			this.last_modified = document.lastModified;
+    	}
+		setInfo(x) {this.elem_myInfo.innerHTML=x;}
+		getRpostID() {return this.rpost_id;}
+		getToDisplayTitles() {return this.rpost_id==0;}
+		getToDisplayThread() {return this.rpost_id>0;}
+		
+		setRootPostID(newrpost_id)
+		{
+			console.assert(typeof(newrpost_id)==typeof(1)); //number
+			console.assert(this.rpost_id==this.last_rpost_id,`rpost_id changed from outside and its not allowed, ${this.rpost_id}  ${this.last_rpost_id}`)
+			console.assert(newrpost_id>=0, 'rpost_id must be non negative');
+			this.rpost_id = newrpost_id;
+			this.last_rpost_id = newrpost_id;
+			history.replaceState({},'', newrpost_id>0 ? newrpost_id: '/');
+			console.log(`setRootPostID(${newrpost_id})`)
+		}
+		isValidState(state) { return Object.values(forumstates).indexOf(state)>0}
+		isCurrentState(state) { console.assert((this.isValidState(state))); return this.current_forumstate==state;}
+		setForumState(newstate, params)
+		{
+			//console.assert(Object.values(forumstates).indexOf(newstate)>0,`error in setForumState. newstate=${newstate} not exist`);
+			console.assert(newstate!=this.current_forumstate)
+			this.prev_forumstate = this.current_forumstate;
+			this.current_forumstate = newstate;
+			console.assert(this.rpost_id>=0,'bad rpost_d') //regular checking
+			
+			//handleEditBox  handleThread handleTitles
+			switch(newstate)
+			{
+				case forumstates.TITLES: 	console.assert(this.rpost_id==0);	break;
+				case forumstates.WRITE: 	console.assert(this.rpost_id==0);	break;
+				case forumstates.THREAD:	console.assert(this.rpost_id>0);	break;
+				case forumstates.REPLY:		console.assert(this.rpost_id>0);	break;
+				case forumstates.EDIT:		console.assert(this.rpost_id>0);	break;
+				default:console.error(`setForumState newstate=${newstate} not exists. rpost_id=${this.rpost_id}`);
+			}
+		}
+	}
+
+	var touchManager = new class Touch{
+		constructor() {
+			this.isMobile = 'ontouchstart' in window;
+			this.tTitleTouchStarted = performance.now();
+			this.tTitleTouchEnded = performance.now();
+			this.tScrolled = performance.now();
+			window.onscroll = function() { this.tScrolled = performance.now(); }; //var y = window.scrollY
+    	}
+		settTitleTouchEnded() {  this.tTitleTouchEnded = performance.now(); }
+		startedTouchingTitle() { this.tTitleTouchStarted = performance.now(); }
+		isValidClick(){return !this.isMobile || this.tTitleTouchEnded-this.tTitleTouchStarted<300 && this.tTitleTouchEnded-this.tScrolled>200}
+	};
+	
+	var spinnerManager = new class Spinner{
+		constructor() {
+			this.elem_spinner = document.getElementById("spinner");
+    	}
+		show() { spinner.className = "showspinner"; setTimeout(() => spinnerManager.hide(), 3000); }
+		hide() { spinner.className = ""; }
+	};
+		
+	function gotoTitlesOnInit() //init
+	{
+		forumDisplay.setRootPostID(0);
+		forumDisplay.setForumState(forumstates.TITLES);
+		//fetchManager.requestFetch();
+		handleTitles.show();
+		
+		// debug dropHandler
+		//forumDisplay.setForumState(forumstates.WRITE)
+		//handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
+	}
+	function btnGetThread(post_id)
+	{
+		touchManager.settTitleTouchEnded();
+		if(touchManager.isValidClick())
+		{
+			handleTitles.hide();
+			forumDisplay.setRootPostID(post_id)
+			forumDisplay.setForumState(forumstates.THREAD);
+			fetchManager.requestFetch();
+			handleThread.show();
+		}
+	}
+	function btnStartNewThread(){
+		if (forumDisplay.isCurrentState(forumstates.WRITE)) return;
+		forumDisplay.setForumState(forumstates.WRITE)
+		handleEditBox.show(document.getElementById("titles_anchor_editbox"),-1,0);
+	}
+	function btnStartReply(me,ev){
+		forumDisplay.setForumState(forumstates.REPLY)
+		handleEditBox.show(me.parentElement.getElementsByTagName("div")[0],-1,me.parentElement.dataset.post_id);
+	}
+	function btnStartEditPost(me,ev)
+	{
+		let post_id=me.parentElement.dataset.post_id
+		handleEditBox.show(me.parentElement.getElementsByTagName("div")[0], post_id, post_id, handleThread.getTitleFromMap(post_id), handleThread.getContentFromMap(post_id));
+		forumDisplay.setForumState(forumstates.EDIT);
+	}
+	function btnDeletePost(me,ev)
+	{
+		let post_id=me.parentElement.dataset.post_id
+		if(confirm("Are you sure?")) handleThread.deletePost(post_id)
+	}
+	
+	function goToTitles(me,ev){
+		handleEditBox.hide_soft();
+		handleThread.hide_soft();
+		forumDisplay.setRootPostID(0);
+		if(!forumDisplay.isCurrentState(forumstates.TITLES)) forumDisplay.setForumState(forumstates.TITLES);
+		fetchManager.requestFetch();
+		handleTitles.show();
+	}
+	
+	function btnBackToTitles(me,ev){
+		handleEditBox.hide_soft();
+		handleThread.hide();
+		forumDisplay.setRootPostID(0);
+		forumDisplay.setForumState(forumstates.TITLES);
+		fetchManager.requestFetch();
+		handleTitles.show();
+	}
+	function btnCancelWrite(me,ev){
+		handleEditBox.hide();
+		forumDisplay.setForumState(forumDisplay.isCurrentState(forumstates.WRITE)?forumstates.TITLES:forumstates.THREAD);
+	}
+	function btnSendPost()
+	{
+		handleEditBox.sendPost();
+	}
+	function afterPostSent()
+	{
+		handleEditBox.clearText();
+		handleEditBox.hide();
+		forumDisplay.setForumState(forumDisplay.isCurrentState(forumstates.WRITE)?forumstates.TITLES:forumstates.THREAD);
+		fetchManager.requestFetch(200);
+	}
+	
+	function btnCreateRandomTable(N)
+	{
+		let newRows = new FormData();
+		newRows.set('op', "create_random_table");
+		newRows.set('nickname', handleUser.getNickname());
+		newRows.set('secret', handleUser.getCipher());
+		newRows.set('nrows', N);
+		fetch(operfetch, {method: 'POST', body: newRows})
+		.then(res => res.text())
+		.then(res => console.log(`CreateRandomTable N=${N} time=${res}`))
+		.catch(e => console.error('Error, sendPost(), ' + e))
+	}
+</script>
+</code>
+
+<code class="code_files">
+
+<script id="script_linkify">
+	//	/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig
+	
+	function wrapURLs(text, new_window=true) {
+		//let url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/igm;
+		let url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?(?![^<>]*>)/igm;
+		let target = new_window === true ? '_blank' : '';
+		function tohref(url) {
+			let protocol_pattern = /^(?:(?:https?|ftp):\/\/)/igm;
+			let href = protocol_pattern.test(url) ? url : 'http://' + url;
+			return '<a href="' + href + '" target="' + target + '">' + url + '</a>';
+		}
+		return text.replace(url_pattern, tohref)
+	}
+	
+	function imagify(text0) {
+		// https://regex101.com/r/vS2jJ4/63
+		let pat_files= 'http://sidersfile/' 
+		let pat_imgs= /(https?:\/\/\S+\.(?:png|jpg|gif|svg|webp|jpeg))/igm 
+		let pat_mp3= /(https?:\/\/\S+\.mp3)/igm 
+		let pat_mp4= /(https?:\/\/\S+\.mp4)/igm 
+		let pat_youtube= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
+		let pat_twitter= /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/igm
+		let pat_http=   /(https?:\/\/[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)/igm
+		let pat_www= 		/\b(www\.[a-z0-9\_\.\/\?\=\&\#\-\%\:]+)(?![^<>]*>)\b/igm
+		let operfile = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvZmlsZXMv");
+		
+		let files = text0.replaceAll(pat_files, operfile);
+		let imgs = files.replace(pat_imgs, '<img src="$1" alt="" ><br><a href="$1" target="_blank"></a>');
+		let mp3 = imgs.replace(pat_mp3, '<audio controls><source src="$1" type="audio/mpeg">Unsupported</audio><br><a href="$1" target="_blank">$1</a>');	
+		let mp4 = imgs.replace(pat_mp4, '<video controls><source src="$1" type="video/mp4">Unsupported</video><br><a href="$1" target="_blank">$1</a>');	
+		let yt = mp4.replace(pat_youtube, '<iframe width="640" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+		//let yt = mp3.replace(pat_twitter, '<iframe width="640" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+
+		function tohref(url0) {
+			url=decodeURI(url0);
+			let href = /^(?:(?:https?|ftp):\/\/)/igm.test(url) ? url : 'http://' + url;
+			return '<a href="' + href + '" target="_blank">' + url + '</a>';
+		}
+		let htt = yt.replace(pat_http, tohref);
+		let ww = htt.replace(pat_www, tohref);
+		
+		return ww;
+	}
+	</script>
+
+<script id="script_uploadfiles">
+	const upload_settings = {max_size:10*1024*1024}
+	
+	const inp = document.getElementById("inp");
+	var elem_ijpg = document.getElementById('ijpg');
+	const wait = (ms, result) =>  new Promise( (res,rej)=> ms>=0 ? setTimeout(function(){res(result);}, ms) : rej(new Error('ms<0')) )
+	consolelog = e=>console.log(e);
+	consoleerr = e=>console.log(`Error: ${e}`);
+	function links2editbox(newlinks)
+	{
+		if(newlinks.length>0){
+			txt="\n";
+			for(let i=0;i<newlinks.length;i++)
+				txt += `${newlinks[i]}\n`;
+			handleEditBox.addTextToContent(txt)
+		}
+		console.log(`links: ${newlinks.length}`)
+	}
+	function uploadfiles(files)
+	{
+		if(!Array.isArray(files)) files=[files]; //make single file array of files
+		let formData = new FormData();
+		formData.set('up', 'down');
+		formData.set('nickname', handleUser.getNickname());
+		formData.set('secret', handleUser.getCipher());
+		for (const file of files) 
+			if(file.size<=upload_settings.max_size)
+				formData.append('files[]', file);
+			
+		fetch(operfetch, {method: 'POST',body: formData})
+		.then((response) => response.json())
+		.then(links2editbox)
+		.catch(consolelog);
+	}
+	</script>
+	
+<script id="script_images"> // paste image. convert to jpeg and resize
+
+	const image_import_settings = {target_width:1024, max_height:720, jpg_quality:0.80}
+
+	function jpgToFile(jpgblob, name="clipboard.jpg") {
+		console.log(`jpg.size=${jpgblob.size/1000}KB`);
+		return new File([jpgblob], name)
+	}
+	function resize(pngimg) { 
+		return new Promise((resolve, _) => {
+			var canvas = document.createElement('canvas');
+			let canvas_context = canvas.getContext('2d');
+			let iis = image_import_settings, ar = pngimg.width/pngimg.height;
+			let width = Math.min(iis.target_width, pngimg.width), height = Math.round(width/ar);
+			if(height > iis.max_height) {hr = height/iis.max_height; width = Math.round(width/hr); height = iis.max_height;}
+			canvas.width = width;	canvas.height = height;
+			canvas_context.drawImage(pngimg,0,0,width,height);
+			canvas.toBlob( resolve ,'image/jpeg', iis.jpg_quality);
+	})}
+	function toImage(fileblob) {
+		return new Promise((resolve, reject) => {
+			let src = URL.createObjectURL(fileblob);
+			let pngimg = new Image();
+			pngimg.onload = () => {resolve(pngimg); URL.revokeObjectURL(src);}
+			pngimg.onerror = () => {reject(pngimg); URL.revokeObjectURL(src);}
+			pngimg.src = src;
+	})}
+
+</script>
+
+<script id="script_paste">
+	function clipboardToFile(pasteEvent) {
+		return new Promise((resolve, reject) => {
+			let item = pasteEvent.clipboardData.items[0]; // consider the first item (can be easily extended for multiple items)
+			item.type.startsWith("image") ? resolve(item.getAsFile()) : reject("not image");
+	})}
+	onPasteEditBox = pasteEvent => clipboardToFile(pasteEvent).then(toImage).then(resize).then(jpgToFile).then(uploadfiles).catch(consoleerr);
+	//document.onpaste = onPaste;
+</script>
+
+<script id="script_drag">
+	async function handle_dragged_files(file,index)
+	{
+		const isImageExtension = (name)=> name.match(/.(jpg|jpeg|png|gif|webp)$/i);
+		result =  isImageExtension(file.name) ? await toImage(file).then(resize).then(jpg=>jpgToFile(jpg,file.name)).catch(consoleerr) : file;
+		console.log(`handle_dragged_files: index=${index}, sizes=${file.size/1000}KB-${result.size/1000}KB name=${file.name}`);
+		return result;
+	}
+	function dragOverHandler(ev) {ev.preventDefault();}// Prevent default behavior (Prevent file from being opened)
+	async function dropHandler(ev) {
+		console.log('File(s) dropped');
+		ev.preventDefault(); // Prevent default behavior (Prevent file from being opened)
+		if (ev.dataTransfer.items) { // Use DataTransferItemList interface to access the file(s)
+			const items_files = Array.from(ev.dataTransfer.items).filter(item => item.kind === 'file');
+			const files_orig = items_files.map(itemfile => itemfile.getAsFile());
+			const files_fixed = await Promise.all( files_orig.map(handle_dragged_files) );
+			console.log(`dropHandler: await done. files_fixed.length=${files_fixed.length} items_files.length=${items_files.length}`)
+			uploadfiles(files_fixed)
+			
+		} else { // Use DataTransfer interface to access the file(s)
+			console.assert('no DataTransfer');
+			for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+				console.log('method2 ... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+			}
+		}
+	}
+</script>
+</code>
+
+<code class="scripts_handlers">
+
+<script id="script_handleUser">
+	const handleUser = new class {
+		constructor(){
+			this.elem_nickname = document.getElementById("inpNickname");
+			this.elem_cipher = document.getElementById("inpCipher");
+			this.loadFromStorage();
+		}
+		
+		showInputs(){ //after clear
+			this.elem_nickname.style.display=this.elem_cipher.style.display="";
+		}
+		hideShowInputs(){
+			if(this.elem_nickname.style.display=="") this.elem_nickname.style.display=this.elem_cipher.style.display="none";
+			else this.elem_nickname.style.display=this.elem_cipher.style.display="";
+		}
+		loadFromStorage(){
+			this.elem_nickname.value = localStorage.getItem('usernickname');
+			this.elem_cipher.value = localStorage.getItem('usercipher');
+		 }
+		eraseStorage(){
+			localStorage.setItem('usernickname','doe');
+			localStorage.setItem('usercipher','123');
+			this.loadFromStorage();
+			this.showInputs();
+		}
+		setStorageNickname(newnickname){ localStorage.setItem('usernickname',newnickname) }
+		setStorageCipher(newcipher){ localStorage.setItem('usercipher',newcipher) }
+		getNickname(){ return this.elem_nickname.value;}
+		getCipher(){ return this.mad(this.elem_cipher.value); }
+		
+		cyr(str) {
+			let a1 = 0xdeadbeef ^ 19, a2 = 0x41c6ce57 ^ 19, a3 = 0x54d3f12c ^ 19;
+			for (let i = 0, ch; i < str.length; i++) {
+				a1 = Math.imul(a1 ^ str.charCodeAt(i), 2654435761);
+				a2 = Math.imul(a2 ^ str.charCodeAt(i), 1597334677);
+				a3 = ((a3 << 5) - a3 + a1^a2 + str.charCodeAt(i)) << 0;
+			}
+			a1 = Math.imul(a1 ^ (a1>>>16), 2246822507) ^ Math.imul(a2 ^ (a2>>>13), 3266489909);
+			a2 = Math.imul(a2 ^ (a2>>>16), 2246822507) ^ Math.imul(a1 ^ (a1>>>13), 3266489909);
+			return (4294967296 * (2097151 & a2) + (a1>>>0)) + (new Uint32Array([a3])[0])
+			//return (4294967296 * (2097151 & a2) + (a1>>>0)).toString(16) + (new Uint32Array([a3])[0]).toString(16);
+		}
+		
+		mad(str) {
+			const hc="0123456789abcdef", scramble=600;
+			function rh(n) {var j,s="";for(j=0;j<=3;j++) s+=hc.charAt((n>>(j*8+4))&0x0F)+hc.charAt((n>>(j*8))&0x0F);return s;}
+			function ad(x,y) {var l=(x&0xFFFF)+(y&0xFFFF);var m=(x>>16)+(y>>16)+(l>>16);return (m<<16)|(l&0xFFFF);}
+			function rl(n,c)            {return (n<<c)|(n>>>(32-c));}
+			function cm(q,a,b,x,s,t)    {return ad(rl(ad(ad(a,q),ad(x,t)),s),b);}
+			function ff(a,b,c,d,x,s,t)  {return cm((b&c)|((~b)&d),a,b,x,s,t);}
+			function gg(a,b,c,d,x,s,t)  {return cm((b&d)|(c&(~d)),a,b,x,s,t);}
+			function hh(a,b,c,d,x,s,t)  {return cm(b^c^d,a,b,x,s,t);}
+			function ii(a,b,c,d,x,s,t)  {return cm(c^(b|(~d)),a,b,x,s,t);}
+			function sb(x) {
+				var i;var nblk=((x.length+8)>>6)+1;var blks=new Array(nblk*16);for(i=0;i<nblk*16;i++) blks[i]=0;
+				for(i=0;i<x.length;i++) blks[i>>2]|=x.charCodeAt(i)<<((i%4)*8);
+				blks[i>>2]|=0x80<<((i%4)*8);blks[nblk*16-2]=x.length*8;return blks;
+			}
+			var i,x=sb(str),a=1732584193,b=-271733879,c=-1732584194,d=271733878,olda,oldb,oldc,oldd;
+			for(i=0;i<x.length;i+=16) {olda=a;oldb=b;oldc=c;oldd=d;
+				a=ff(a,b,c,d,x[i+ 0], 7, -680876936);d=ff(d,a,b,c,x[i+ 1],12, -389564586);c=ff(c,d,a,b,x[i+ 2],17,  606105819+scramble);
+				b=ff(b,c,d,a,x[i+ 3],22,-1044525330);a=ff(a,b,c,d,x[i+ 4], 7, -176418897);d=ff(d,a,b,c,x[i+ 5],12, 1200080426+scramble);
+				c=ff(c,d,a,b,x[i+ 6],17,-1473231341);b=ff(b,c,d,a,x[i+ 7],22,  -45705983);a=ff(a,b,c,d,x[i+ 8], 7, 1770035416+scramble);
+				d=ff(d,a,b,c,x[i+ 9],12,-1958414417);c=ff(c,d,a,b,x[i+10],17,     -42063);b=ff(b,c,d,a,x[i+11],22,-1990404162+scramble);
+				a=ff(a,b,c,d,x[i+12], 7, 1804603682);d=ff(d,a,b,c,x[i+13],12,  -40341101);c=ff(c,d,a,b,x[i+14],17,-1502002290+scramble);
+				b=ff(b,c,d,a,x[i+15],22, 1236535329);a=gg(a,b,c,d,x[i+ 1], 5, -165796510);d=gg(d,a,b,c,x[i+ 6], 9,-1069501632+scramble);
+				c=gg(c,d,a,b,x[i+11],14,  643717713);b=gg(b,c,d,a,x[i+ 0],20, -373897302);a=gg(a,b,c,d,x[i+ 5], 5, -701558691+scramble);
+				d=gg(d,a,b,c,x[i+10], 9,   38016083);c=gg(c,d,a,b,x[i+15],14, -660478335);b=gg(b,c,d,a,x[i+ 4],20, -405537848+scramble);
+				a=gg(a,b,c,d,x[i+ 9], 5,  568446438);d=gg(d,a,b,c,x[i+14], 9,-1019803690);c=gg(c,d,a,b,x[i+ 3],14, -187363961+scramble);
+				b=gg(b,c,d,a,x[i+ 8],20, 1163531501);a=gg(a,b,c,d,x[i+13], 5,-1444681467);d=gg(d,a,b,c,x[i+ 2], 9,  -51403784+scramble);
+				c=gg(c,d,a,b,x[i+ 7],14, 1735328473);b=gg(b,c,d,a,x[i+12],20,-1926607734);a=hh(a,b,c,d,x[i+ 5], 4,    -378558+scramble);
+				d=hh(d,a,b,c,x[i+ 8],11,-2022574463);c=hh(c,d,a,b,x[i+11],16, 1839030562);b=hh(b,c,d,a,x[i+14],23,  -35309556+scramble);
+				a=hh(a,b,c,d,x[i+ 1], 4,-1530992060);d=hh(d,a,b,c,x[i+ 4],11, 1272893353);c=hh(c,d,a,b,x[i+ 7],16, -155497632+scramble);
+				b=hh(b,c,d,a,x[i+10],23,-1094730640);a=hh(a,b,c,d,x[i+13], 4,  681279174);d=hh(d,a,b,c,x[i+ 0],11, -358537222+scramble);
+				c=hh(c,d,a,b,x[i+ 3],16, -722521979);b=hh(b,c,d,a,x[i+ 6],23,   76029189);a=hh(a,b,c,d,x[i+ 9], 4, -640364487+scramble);
+				d=hh(d,a,b,c,x[i+12],11, -421815835);c=hh(c,d,a,b,x[i+15],16,  530742520);b=hh(b,c,d,a,x[i+ 2],23, -995338651+scramble);
+				a=ii(a,b,c,d,x[i+ 0], 6, -198630844);d=ii(d,a,b,c,x[i+ 7],10, 1126891415);c=ii(c,d,a,b,x[i+14],15,-1416354905+scramble);
+				b=ii(b,c,d,a,x[i+ 5],21,  -57434055);a=ii(a,b,c,d,x[i+12], 6, 1700485571);d=ii(d,a,b,c,x[i+ 3],10,-1894986606+scramble);
+				c=ii(c,d,a,b,x[i+10],15,   -1051523);b=ii(b,c,d,a,x[i+ 1],21,-2054922799);a=ii(a,b,c,d,x[i+ 8], 6, 1873313359+scramble);
+				d=ii(d,a,b,c,x[i+15],10,  -30611744);c=ii(c,d,a,b,x[i+ 6],15,-1560198380);b=ii(b,c,d,a,x[i+13],21, 1309151649+scramble);
+				a=ii(a,b,c,d,x[i+ 4], 6, -145523070);d=ii(d,a,b,c,x[i+11],10,-1120210379);c=ii(c,d,a,b,x[i+ 2],15,  718787259+scramble);
+				b=ii(b,c,d,a,x[i+ 9],21, -343485551);a=ad(a,olda);b=ad(b,oldb);c=ad(c,oldc);d=ad(d,oldd);
+			}
+			return rh(a)+rh(b)+rh(c)+rh(d);
+		}
+
+	}
+		
+</script>
+		
+<script id="script_handleEditBox">
+	"use strict";
+
+	const handleEditBox = new class EditBox{
+		constructor() {
+			this.elem_div_editbox = document.getElementById("div_editbox");
+			this.elem_writingPostTitle=document.getElementById("writingPostTitle");
+			this.elem_writingPostContent=document.getElementById("writingPostContent");
+			this.elem_previewPostTitle=document.getElementById("previewPostTitle");
+			this.elem_previewPostContent=document.getElementById("previewPostContent");
+			this.fragment = document.createDocumentFragment();
+			this.fragment.appendChild(this.elem_div_editbox);
+			this.myname=this.constructor.name;
+			this.post_id = 0;
+			this.ppost_id = 0;
+			this.newPost = new FormData(); 
+			this.newPost.set('op', "setpost");
+			//this.elem_writingPostContent.onpaste = onPasteEditBox;
+			document.onpaste = onPasteEditBox;
+		}
+		
+		setEditBoxState(post_id, ppost_id){
+			this.post_id=post_id; this.ppost_id=ppost_id;
+			console.log(`setEditBoxState(${post_id}, ${ppost_id})`)
+		}
+		
+		isHidden(){return this.elem_div_editbox.parentNode == this.fragment;}
+		hide_soft() {	// allow hide without warning
+			if(!this.isHidden()){ this.setEditBoxState(-1,-1); this.fragment.appendChild(this.elem_div_editbox); 	}; 
+		}
+		hide() {	
+			mylog(this.myname,'hide')
+			console.assert(!this.isHidden(), 'handleEditBox should be be hidden')
+			if(!this.isHidden()){ this.setEditBoxState(-1,-1); this.fragment.appendChild(this.elem_div_editbox); 	}; 
+			console.assert(this.post_id==-1 && this.ppost_id==-1,'should be -1 when hidden');
+		}
+		show(parent,post_id,ppost_id, titleValue="", contentValue="")
+		{
+			mylog(this.myname,'show')
+			if (titleValue.length) this.elem_writingPostTitle.value=titleValue;
+			if (contentValue.length) this.elem_writingPostContent.value=contentValue;
+			this.oninputTitle(); this.oninputContent();
+			this.setEditBoxState(post_id,ppost_id);
+			parent.appendChild(this.elem_div_editbox);
+		}
+		clearText(){
+			this.elem_writingPostTitle.value="";
+			this.elem_writingPostContent.value="";
+			this.oninputTitle(); this.oninputContent();
+		}
+		addTextToContent(txt)
+		{
+			if(this.isHidden()) return;
+			let el = this.elem_writingPostContent;
+			const [start, end] = [el.selectionStart, el.selectionEnd];
+			el.focus()
+			//el.setRangeText(txt, start, end, 'select');
+			document.execCommand('insertText', false, txt);
+			this.oninputContent();
+		}
+		oninputTitle()
+		{
+			this.elem_previewPostTitle.innerHTML = this.elem_writingPostTitle.value;
+			this.elem_previewPostTitle.dir = this.elem_writingPostTitle.dir;
+		}
+		oninputContent()
+		{
+			let text0 = this.elem_writingPostContent.value;
+			let text1 = imagify(text0);
+			this.elem_previewPostContent.innerHTML = text1;
+			this.elem_previewPostContent.dir = this.elem_writingPostContent.dir;
+			
+			this.elem_writingPostContent.style.height = "auto";
+			this.elem_writingPostContent.style.height = Math.max(60,this.elem_writingPostContent.scrollHeight) + "px";
+		}
+	
+		sendPost() {
+			this.newPost.set('post_id', this.post_id);
+			this.newPost.set('ppost_id', this.ppost_id);
+			this.newPost.set('nickname',handleUser.getNickname());
+			this.newPost.set('secret',handleUser.getCipher());
+			this.newPost.set('title',this.elem_writingPostTitle.value);
+			this.newPost.set('content',this.elem_writingPostContent.value);
+
+			fetch(operfetch, {method: 'POST', body: this.newPost})
+			.then(res => res.text())
+			.then(res => { console.log(res); (res=="1")?afterPostSent():''; })
+			.catch(e => console.error('Error, sendPost(), ' + e))
+		}
+	}
+	
+
+
+	
+</script>
+
+<script id="script_handleThread">
+	"use strict";
+	
+	const handleThread = new class{
+		constructor(){
+			this.template_post = document.getElementById("template_post").children[0];
+			this.elem_div_thread = document.getElementById("div_thread");
+			this.fragment_post = document.createDocumentFragment();
+			this.fragment = document.createDocumentFragment();
+			this.fragment.appendChild(this.elem_div_thread);
+			this.fragment_post.appendChild(this.template_post);
+			this.updated_datetime = new Date();
+			this.myname=this.constructor.name;
+			this.isdirty = true;
+			this.map_nicknames = new Map();
+			this.map_titles = new Map();
+			this.map_contents = new Map();
+		}
+	
+		isHidden(){return this.elem_div_thread.parentNode == this.fragment;}
+		hide_soft(toClear=true) {
+			mylog(this.myname,'hide_soft')
+			this.isdirty = true;
+			if(toClear) this.elem_div_thread.innerHTML = "";
+			//console.assert(!this.isHidden(), 'handleThread should be be hidden')
+			if(!this.isHidden()){ this.fragment.appendChild(this.elem_div_thread);}; 
+		}
+		hide(toClear=true) {
+			mylog(this.myname,'hide')
+			this.isdirty = true;
+			if(toClear) this.elem_div_thread.innerHTML = "";
+			console.assert(!this.isHidden(), 'handleThread should be be hidden')
+			if(!this.isHidden()){ this.fragment.appendChild(this.elem_div_thread);}; 
+		}
+		show()
+		{
+			mylog(this.myname,'show')
+			elem_main.appendChild(this.elem_div_thread);
+			console.assert(elem_main.children.length==1, 'handleThread, only single div should be displayd')
+		}
+		
+		getTitleFromMap(post_id){ return this.map_titles.get(post_id);}
+		getContentFromMap(post_id){ return this.map_contents.get(post_id);}
+		deletePost(post_id) {}
+		parseDataForThread(data)
+		{
+			//console.log(data);
+			//fields: post_id, ppost_id, rpost_id, created, nickname, title, content
+			console.assert(data[0]["post_id"]==data[0]["rpost_id"]  && data[0]["ppost_id"]==0, "error in post data reply");
+			let postid2idx = new Map();	for (let i=0, N=data.length; i<N; i++) postid2idx.set(data[i]["post_id"],i);		//map from post_id to array index
+			let all_replytitles = [], all_replywithcontent = []
+			for (let i=0, N=data.length; i<N; i++) {
+				let d=data[i];
+				if(i>0)	console.assert(d["post_id"]>0&&d["ppost_id"]>0,'d["post_id"]>0&&d["ppost_id"]>0')
+				else	console.assert(d["post_id"]>0&&d["ppost_id"]==0,'d["post_id"]>0&&d["ppost_id"]==0')
+				
+				this.map_nicknames.set(d["post_id"],d["nickname"])
+				this.map_titles.set(d["post_id"],d["title"])
+				this.map_contents.set(d["post_id"],d["content"])
+				
+				let cln2 = this.template_post.cloneNode(true);
+				cln2.setAttribute('data-post_id',d["post_id"]);
+				cln2.children[0].innerHTML=`idx=${i}/${N} post_id=${d["post_id"]}, ppost_id=${d["ppost_id"]}, rpost_id=${d["rpost_id"]}`;
+				cln2.children[1].innerHTML=d["nickname"];
+				cln2.children[2].innerHTML=d["title"];
+				cln2.children[3].innerHTML=imagify(d["content"]);
+				all_replywithcontent.push(cln2);
+			}
+			
+			// structure reply
+			const idx_ul2=Array.from(this.template_post.children).indexOf(this.template_post.getElementsByTagName("ul")[0]); console.assert(idx_ul2>=0, "idx_ul2<0")
+			for (let i=1, N=data.length; i<N; i++) 	all_replywithcontent[postid2idx.get(data[i]["ppost_id"])].children[idx_ul2].appendChild(all_replywithcontent[i]);
+			let final = "<ul>"+all_replywithcontent[0].outerHTML.replaceAll("<ul></ul>\n","").replaceAll("\t","")+"</ul>";
+			this.elem_div_thread.innerHTML = final;
+			this.isdirty = false;
+			this.updated_datetime.setTime(Date.now());
+			document.getElementById('datetime').innerHTML = this.updated_datetime.toDateString() + ' ' + this.updated_datetime.toLocaleTimeString();
+		}
+	}
+	
+</script>
+
+<script id="script_handleTitles">
+	
+	const handleTitles = new class Titles{
+		constructor() {
+			this.elem_div_titles = document.getElementById("div_titles");
+			this.elem_forumtitles = document.getElementById("forumtitles");
+			this.updated_datetime = new Date();
+			this.touchEvent = touchManager.isMobile ? 'ontouchstart=touchManager.startedTouchingTitle() ontouchend' : 'onclick';
+			this.fragment = document.createDocumentFragment();
+			this.fragment.appendChild(this.elem_div_titles);
+			this.myname=this.constructor.name;
+			this.isdirty = true;
+		}
+		
+		isHidden(){return this.elem_div_titles.parentNode == this.fragment;}
+		hide() {
+			mylog(this.myname,'hide')
+			console.assert(!this.isHidden(), 'handleTitles should be be hidden')
+			this.isdirty = true;
+			this.fragment.appendChild(this.elem_div_titles);
+		}
+
+		show()
+		{
+			mylog(this.myname,'show')
+			elem_main.appendChild(this.elem_div_titles);
+			console.assert(elem_main.children.length==1, 'handleTitles, only single div should be displayd')
+		}
+		
+		parseDataForTitles(data1)
+		{
+			let f = new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit', hour:'2-digit', minute:'2-digit'});
+			let new_rows="";
+			
+			for (let i=data1.length-1, k=1; i>=0; i--,k++) 
+			{
+				let d=data1[i];
+				let date = f.format(Number(d[3])*1000);
+				new_rows += `\t<tr><td>${k}</td><td>${d[0]}</td><td ${this.touchEvent}=btnGetThread(${d[0]})>${d[5]}</td><td>${d[4]}</td><td>${date}</td><td>${d[1]}</td><td>${d[2]}</td>\n`;
+			}
+			this.elem_forumtitles.innerHTML = new_rows;
+			this.isdirty = false;
+			this.updated_datetime.setTime(Date.now());
+			document.getElementById('datetime').innerHTML = this.updated_datetime.toDateString() + ' ' + this.updated_datetime.toLocaleTimeString();
+		}
+	}
+	
+	
+</script>
+
+<script id="script_timer_fetchManager">
+	"use strict";
+	
+	const fetchManager = new class FetchManager{
+		constructor()
+		{
+			this.chkFetch = document.getElementById("chkFetch");
+			this.pingFormData = new FormData(); 
+			this.pingFormData.set('op', "fetch");
+			this.msg_id = 0;
+			this.map_data = new Map();
+			this.map_n_replies = new Map();
+			this.map_n_edits = new Map();
+			this.t0Fetch = performance.now()-5*1000;
+			this.t1Fetch = performance.now()-5*1000;
+			this.prev_rpost_id = "";
+			this.add2ip = x=>  `${x>>>24}.${(x>>16 & 255)}.${x>>8 & 255}.${x & 255}`
+			this.ip2add = x=> x.split('.').reduce( (ipInt, octet) => (ipInt<<8) + parseInt(octet, 10), 0) >>> 0;
+		}
+
+
+		updateForum(msghead_data) {
+			let isNewDataAvailable = Array.isArray(msghead_data);
+			let updated = false;
+			let rcvd_msg_id = -999;
+			if (isNewDataAvailable){ 
+				console.assert(msghead_data.length==3, "length should b 2")
+				let msghead = msghead_data[0], data = msghead_data[1], customscript = msghead_data[2];
+				rcvd_msg_id = Number(msghead['msg_id']);
+				let rpost_id = Number(msghead['rpost_id']);
+				let n_replies = Number(msghead['n_replies']);
+				let n_edits = Number(msghead['n_edits']);
+				let is_n_replies_changes = !this.map_n_replies.has(rpost_id) || this.map_n_replies.get(rpost_id)!=n_replies;
+				let is_n_edits_changes = !this.map_n_edits.has(rpost_id) || this.map_n_edits.get(rpost_id)!=n_edits;
+				console.assert(is_n_replies_changes || is_n_edits_changes, "at least one should be different")
+				
+				this.map_data.set(rpost_id,data);
+				this.map_n_replies.set(rpost_id,n_replies);
+				this.map_n_edits.set(rpost_id,n_edits);
+				if (rpost_id==0) //main titles
+					handleTitles.parseDataForTitles(data);
+				else // inside post
+					handleThread.parseDataForThread(data);
+				updated = true;
+				var newScript = document.createElement("script");
+				var inlineScript = document.createTextNode(customscript);
+				newScript.appendChild(inlineScript);
+				document.body.appendChild(newScript);
+			}
+			else if (msghead_data>0) //msg_id, no new data
+			{
+				rcvd_msg_id = Number(msghead_data);
+				let rpost_id = forumDisplay.getRpostID();
+				if (rpost_id==0) //main titles
+				{
+					if(handleTitles.isdirty = true) 
+						{handleTitles.parseDataForTitles(this.map_data.get(rpost_id)); updated = true;};
+				}
+				else // inside post
+				{
+					if(handleThread.isdirty = true) 
+						{handleThread.parseDataForThread(this.map_data.get(rpost_id)); updated = true;};
+				}
+			}
+
+			this.t1Fetch = performance.now();
+			console.log(`pingAndFetch done, rcvd_msg_id=${rcvd_msg_id} isNewDataAvailable=${isNewDataAvailable}. updated= ${updated}, runtime=${(this.t1Fetch-this.t0Fetch).toFixed(1)} ms`);
+			spinnerManager.hide();
+			document.body.className="";
+			performance.mark('myMark-end');
+			performance.measure('myPerfMarker', 'myMark-start', 'myMark-end');
+		}
+		
+		pingAndFetch() {
+			let BW_DELAY=300;
+			let tNow = performance.now(), tFromPrev = tNow-this.t0Fetch;
+			let rpost_id = forumDisplay.getRpostID();
+			
+			if(this.prev_rpost_id==rpost_id && tFromPrev<BW_DELAY) return;// setTimeout(function(){fetchManager.pingAndFetch()}, BW_DELAY);
+			spinnerManager.show();
+			this.msg_id++;
+			this.prev_rpost_id = rpost_id;
+			this.t0Fetch = performance.now();
+			this.pingFormData.set('msg_id', this.msg_id);
+			this.pingFormData.set('rpost_id', rpost_id);
+			this.pingFormData.set('n_replies', this.map_n_replies.has(rpost_id) ? this.map_n_replies.get(rpost_id): -1);
+			this.pingFormData.set('n_edits', this.map_n_edits.has(rpost_id) ? this.map_n_edits.get(rpost_id): -1);
+			console.log(`pingAndFetch started. msg_id=${this.msg_id} rpost_id=${rpost_id} tFromPrev=${tFromPrev} n_replies=${this.pingFormData.get('n_replies')} n_edits=${this.pingFormData.get('n_edits')} `);
+			fetch(operfetch, {method: 'POST', body: this.pingFormData }) //.then(res => {console.log(res); return res;})
+			.then(res => res.json())
+			.then(res => this.updateForum(res))
+			.catch(e => console.error('Error, pingAndFetch(), ' + e));
+			//fetch("http://46.117.188.240:60111/dispatch.js", {method: 'POST', body: fetchManager.pingFormData }).then(res => res.json()).then(consolelog)
+		}
+
+		
+		requestFetch(delay = 0)
+		{
+			(delay>0) ? setTimeout(function reqFetch(){fetchManager.pingAndFetch()}, delay): fetchManager.pingAndFetch();
+		}
+		forumTimer(){
+			setTimeout(function ticFetch(){fetchManager.forumTimer();}, 2*1000);
+			if (chkFetch.checked)	
+			{
+				this.pingAndFetch();
+				chkFetch.checked = false;
+			}
+		}
+		
+		isForumTimerStarted=false;
+		//startForumTimer() {if(this.isForumTimerStarted==false) {this.isForumTimerStarted=true; this.forumTimer();}}
+		startForumTimer(delay) {if(this.isForumTimerStarted==false) {this.isForumTimerStarted=true; setTimeout(function (){fetchManager.forumTimer();}, delay);}}
+	}
+</script>
+
+</code>
+
+<script id="script_init">
+	
+	const DEBUG_DISPLAY = true;
+	function mylog(what_class,what_method)
+	{
+		if(DEBUG_DISPLAY)
+			console.log(`${what_class}::${what_method}()`)
+	}
+	
+	if (IS_VALID_PROTOCOL)
+	{
+		gotoTitlesOnInit();
+		forumDisplay.setInfo(document.lastModified);
+		performance.mark('myMark-start');
+
+		//if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x); INIT_THREAD_TARGET>0 ? btnGetThread(INIT_THREAD_TARGET):0;})();
+		if(USE_PREFRETCH) (async function prefetchCall() {chkFetch.checked = false; const x = await fetchPingFormData0; fetchManager.updateForum(x);})();
+		if(INIT_THREAD_TARGET>0) btnGetThread(INIT_THREAD_TARGET);
+		
+		fetchManager.startForumTimer(USE_PREFRETCH?2000:0);  // window.onload = ()=> fetchManager.startForumTimer(); //use with src=config 
+	}
+	else
+	{
+		setTimeout(function() {
+			var url0="http://siders.co.il"+window.location.pathname;
+			var url=window.location.href.replace("https:","http:").replace("www.","");
+			document.write(`<h3>Please use this link</h3> <a href=${url}>${url}</a>`);
+			document.body.className="";
+		}, 100);
+	}
+	
+</script>
+
+</body>
+</html>
+ 

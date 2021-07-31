@@ -5,7 +5,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const fs = require('fs');
 
-const port = 8088;
+const addr='0.0.0.0'; port = 21666;
 const chatfilepath = 'chat.txt';
 
 var chatmem = fs.existsSync(chatfilepath) ? fs.readFileSync(chatfilepath).toString().replace(/\r\n/g,'\n').split('\n') : new Array();
@@ -37,6 +37,6 @@ wss.on('connection', function connection(ws){
 })
 
 
-server.listen(port, 'localhost', function(err){
+server.listen(port,addr, function(err){
 	console.log(err ? err: `Server listening on port ${server.address().address}:${server.address().port} , mode=${app.settings.env}`);
 })

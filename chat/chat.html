@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		
-	</head>
+	<head></head>
 	<body>
 		<h1>Real Time Messaging</h1>
 		<pre id="messages" style="height: 200px; overflow: scroll"></pre>
-		<input type="text" id="nameBox" placeholder="Name" style="display: block; width: 10%; margin-bottom: 10px; padding: 10px;" />
-		<input type="text" id="messageBox" placeholder="Type your message here" style="display: block; width: 80%; margin-bottom: 10px; padding: 10px;" />
+		<input type="text" id="nameBox" placeholder="Name" style="display: inline-block; width: 10%; margin-bottom: 10px; padding: 10px;" />
+		<input type="text" id="messageBox" placeholder="Type your message here" style="display: inline-block; width: 80%; margin-bottom: 10px; padding: 10px;" />
 		<button id="send" onclick="sendBtn()" title="Send Message!" style="width: 100%; height: 30px;">Send Message</button>
 		
 		<script>
-			const messages = document.querySelector('#messages');
-			const nameBox = document.querySelector('#nameBox');
-			const messageBox = document.querySelector('#messageBox');
+			const messages = document.getElementById('messages');
+			const nameBox = document.getElementById('nameBox');
+			const messageBox = document.getElementById('messageBox');
 			
-			var ws = null;
-			
+			var ws = null, date = new Date(), countmsgs = 0;
+
 			function initWS() {
 				if (ws) { ws.onerror = ws.onopen = ws.onclose = null; ws.close(); }
-				ws = new WebSocket('ws://localhost:8088');
+				ws = new WebSocket('ws://siders2.ddns.net:61666');
 				ws.onopen = () => console.log('Connection opened!');
 				ws.onmessage = (event) => {console.log(event.data); showMessage(event.data);}
 				ws.onclose = function() {ws=null; console.log('Connection closed!'); }
@@ -31,16 +29,21 @@
 				if(typeof(data) !== 'string' || data.length<2) return;
 				let datajson = JSON.parse(data);
 				if (typeof(datajson)!=='object') return;
-				messages.textContent += `${datajson.name}:\t ${datajson.msg}\n`;
+				countmsgs++;
+				date.setTime(datajson.date);
+				messages.textContent += `${countmsgs.toString().padStart(5)}  `+
+											`${date.toLocaleString('en-GB')}  | `+
+											`${datajson.name.trim().padEnd(8)}: `+ 
+											`${datajson.msg.trim()}\n`;
 				messages.scrollTop = messages.scrollHeight;
 				messageBox.value = '';
 				messageBox.focus();
 			}
 			
 			function sendBtn() {
-				if (!ws) {showMessage(JSON.stringify({ "name": "", "msg": "No WebSocket connection" })); return;}
+				if (!ws) {showMessage(JSON.stringify({"date":Date.now(), "name": " ", "msg": "No WebSocket connection"})); return;}
 				if(messageBox.value.length==0) return;
-				var data = JSON.stringify({ "name": nameBox.value, "msg": messageBox.value });
+				var data = JSON.stringify({ "date":Date.now(), "name": nameBox.value.trim(), "msg": messageBox.value.trim()});
 				showMessage(data);
 				ws.send(data);
 			}

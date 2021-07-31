@@ -7,3 +7,4 @@ vc/main_files2021/*
 vc/main_router2021/*
 !vc/main_router2021/mdispatch.php
 
+chat/node_modules
