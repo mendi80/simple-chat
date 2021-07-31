@@ -13,13 +13,14 @@
 			if(window.location.pathname.length>1 && !isNaN(parseFloat(window.location.pathname.substring(1))))
 				INIT_THREAD_TARGET=parseFloat(window.location.pathname.substring(1));
 		}
-		var IS_VALID_PROTOCOL=(location.protocol !== 'https:') || true;
+		IS_HTTP =  (location.protocol !== 'https:');
+		var IS_VALID_PROTOCOL= IS_HTTP || false;
 		if(IS_VALID_PROTOCOL)
 		{
 			var USE_PREFRETCH = true && INIT_THREAD_TARGET==0;
 			var fetchPingFormData0=""; 
-			//var operfetch = atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA=="); //http
-			var operfetch = atob("aHR0cHM6Ly9zaWRlcnMyLmRkbnMubmV0OjYwNjY2L21kaXNwYXRjaC5waHA="); //https
+			var operfetch = IS_HTTP ? atob("aHR0cDovL3NpZGVyczIuZGRucy5uZXQ6NjA2NjYvbWRpc3BhdGNoLnBocA=="):
+									  atob("aHR0cHM6Ly9zaWRlcnMyLmRkbnMubmV0OjYwNjY2L21kaXNwYXRjaC5waHA=");
 			if(USE_PREFRETCH) {
 				pingFormData0 = new FormData(); 
 				pingFormData0.set('op', "fetch");
